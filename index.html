@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dieta Smart - Chef Fabrizio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .chef-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .accent-gradient { background: linear-gradient(135deg, #d97706 0%, #b45309 100%); }
+        .glass-panel { background: rgba(255, 255, 255, 0.98); border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        
+        select { 
+            appearance: none; 
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); 
+            background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; 
+        }
+        select:disabled { background-color: #f1f5f9; cursor: not-allowed; opacity: 0.7; }
+
+        /* Loader */
+        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #d97706; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 pb-12 flex flex-col">
+
+    <header class="chef-gradient text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-utensils text-amber-500 text-2xl"></i>
+                <h1 class="text-xl font-bold tracking-tight">Smart Diet <span class="font-light opacity-80 text-sm hidden sm:inline">| AOU Maggiore Novara</span></h1>
+            </div>
+            <div class="flex items-center gap-4 text-sm font-medium">
+                <div id="auth-status" class="flex items-center gap-2 text-slate-300">
+                    <div class="loader" id="auth-loader"></div>
+                    <span id="auth-text">Connessione...</span>
+                </div>
+                <span class="bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full"><i class="fa-solid fa-fire mr-1"></i> 1800 Kcal</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow w-full">
+        
+        <!-- COLONNA SINISTRA: Form di Inserimento (Il Menù) -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass-panel rounded-2xl p-6 sm:p-8">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-slate-100 pb-4">
+                    <h2 class="text-2xl font-bold text-slate-800"><i class="fa-regular fa-calendar-plus text-amber-600 mr-2"></i>Componi Giornata</h2>
+                    <select id="day-select" class="bg-slate-100 border border-slate-200 rounded-xl py-2 pl-4 pr-10 font-bold text-slate-800 cursor-pointer focus:ring-2 focus:ring-amber-500 outline-none shadow-sm">
+                        <option value="Lunedì">Lunedì</option>
+                        <option value="Martedì">Martedì</option>
+                        <option value="Mercoledì">Mercoledì</option>
+                        <option value="Giovedì">Giovedì</option>
+                        <option value="Venerdì">Venerdì</option>
+                        <option value="Sabato">Sabato</option>
+                        <option value="Domenica">Domenica</option>
+                    </select>
+                </div>
+
+                <div class="space-y-6">
+                    
+                    <!-- COLAZIONE -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3"><i class="fa-solid fa-mug-hot mr-2"></i>Colazione</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Liquidi / Latticini</label>
+                                <select id="colazione-liquido" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                                    <option value="" disabled selected>Seleziona...</option>
+                                    <option value="Yogurt greco magro (150g)">Yogurt greco bianco magro (150g)</option>
+                                    <option value="Yogurt intero bianco (125g)">Yogurt intero bianco (125g)</option>
+                                    <option value="Kefir (200ml)">Kefir (200ml)</option>
+                                    <option value="Latte p.s. (200ml)">Latte parz. scremato (200ml)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Solidi / Carboidrati</label>
+                                <select id="colazione-solido" onchange="handleBurroArachidi()" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                                    <option value="" disabled selected>Seleziona...</option>
+                                    <option value="Cereali/Avena (40g)">Cereali / Fiocchi d'avena (40g)</option>
+                                    <option value="Fette biscottate (40g)">Fette biscottate (40g)</option>
+                                    <option value="Biscotti secchi (40g)">Biscotti secchi (40g)</option>
+                                    <option value="Pane tostato (50g)">Pane tostato (50g)</option>
+                                    <option value="Pane (40g) + Crema Arachidi (15g)" data-peanut="1">🥜 Pane (40g) + Crema Arachidi (15g)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-2 italic">*Tè, caffè e tisane liberi. Possibile usare stevia.</p>
+                    </div>
+
+                    <!-- PRANZO -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3"><i class="fa-solid fa-sun mr-2"></i>Pranzo <span class="text-xs font-normal lowercase">(Verdure libere e 15g Olio inclusi)</span></h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Carboidrati</label>
+                                <select id="pranzo-carb" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                                    <option value="" disabled selected>Seleziona...</option>
+                                    <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
+                                    <option value="Farro/Orzo/Cereali (80g)">Farro/Orzo/Altri cereali (80g)</option>
+                                    <option value="Pane comune (100g)">Pane comune (100g)</option>
+                                    <option value="Patate (250g)">Patate (250g)</option>
+                                    <option value="Ravioli/Pasta all'uovo (120g)" data-special="pasta_uovo">Ravioli/Pasta uovo (120g) - Max 1/sett</option>
+                                    <option value="Gnocchi (250g)" data-special="gnocchi">Gnocchi (250g) - Max 1/sett</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Secondo Piatto</label>
+                                <select id="pranzo-pro" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                                    <option value="" disabled selected>Seleziona fonte proteica...</option>
+                                    <optgroup label="Carni (150g)">
+                                        <option value="Carne Bianca (150g)" data-cost="bianca">Carne Bianca (Tacchino/Pollo/Coniglio)</option>
+                                        <option value="Carne Rossa (150g)" data-cost="rossa">Carne Rossa priva di grasso</option>
+                                    </optgroup>
+                                    <optgroup label="Salumi (120g)">
+                                        <option value="Salumi magri (120g)" data-cost="salumi">Bresaola/Cotto/Crudo/Tacchino/Salmone</option>
+                                    </optgroup>
+                                    <optgroup label="Formaggi">
+                                        <option value="Formaggi Magri (120g)" data-cost="formaggi">Meno Grassi (Ricotta, Fiocchi, Tofu) 120g</option>
+                                        <option value="Formaggi Semi (100g)" data-cost="formaggi">Semi-Grassi (Mozzarella, Certosa) 100g</option>
+                                        <option value="Formaggi Grassi (80g)" data-cost="formaggi">Grassi (Grana, Gorgonzola, Fontina) 80g</option>
+                                    </optgroup>
+                                    <optgroup label="Altro">
+                                        <option value="Pesce (180-200g)" data-cost="pesce">Pesce fresco/surgelato (180-200g)</option>
+                                        <option value="Pesce Scatola (100g)" data-cost="pesce">Pesce in scatola sgocciolato (100g)</option>
+                                        <option value="Uova (N°2)" data-cost="uova">Uova (N° 2)</option>
+                                        <option value="Legumi (150g)" data-cost="legumi">Legumi freschi/scatola (150g) o Secchi (50g)</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CENA -->
+                    <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                        <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3"><i class="fa-solid fa-moon mr-2"></i>Cena <span class="text-xs font-normal lowercase">(Verdure libere e 15g Olio inclusi)</span></h3>
+                        
+                        <div class="mb-4">
+                            <label class="flex items-center gap-2 text-sm text-slate-700 font-medium cursor-pointer">
+                                <input type="checkbox" id="cena-pizza" onchange="togglePizza()" class="w-4 h-4 text-amber-600 focus:ring-amber-500 border-slate-300 rounded">
+                                <i class="fa-solid fa-pizza-slice text-amber-500"></i> Sostituisci con Pizza (Margherita/Verdure) - Max 1/sett
+                            </label>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="cena-standard-inputs">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Carboidrati</label>
+                                <select id="cena-carb" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                                    <option value="" disabled selected>Seleziona...</option>
+                                    <option value="Pane comune (100g)">Pane comune (100g)</option>
+                                    <option value="Patate (250g)">Patate (250g)</option>
+                                    <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
+                                    <option value="Farro/Orzo/Cereali (80g)">Farro/Orzo/Altri cereali (80g)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Secondo Piatto</label>
+                                <select id="cena-pro" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                                    <!-- Options injected via JS to match Pranzo -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SPUNTINI (Automated Info) -->
+                    <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100 flex flex-col sm:flex-row gap-4 text-sm text-blue-800">
+                        <div class="flex-1">
+                            <strong class="block mb-1"><i class="fa-solid fa-apple-whole mr-1"></i> Mattina (Fisso)</strong>
+                            Frutta fresca (150g) + Crackers/Grissini (30g)
+                        </div>
+                        <div class="flex-1">
+                            <strong class="block mb-1"><i class="fa-regular fa-clock mr-1"></i> Pomeriggio</strong>
+                            <span id="spuntino-pom-text">Frutta (150g) + Yogurt greco (150g)</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="mt-8">
+                    <button id="btn-salva" onclick="salvaGiornata()" class="w-full accent-gradient hover:shadow-lg hover:opacity-90 text-white font-bold py-4 px-6 rounded-xl transition-all flex justify-center items-center gap-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Salva Giornata in Cloud
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- COLONNA DESTRA: Dashboard -->
+        <div class="space-y-6">
+            
+            <!-- Widget Budget Settimanale -->
+            <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i class="fa-solid fa-chart-pie text-6xl text-slate-800"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-800 mb-5 border-b pb-2 relative z-10"><i class="fa-solid fa-scale-balanced text-amber-600 mr-2"></i>Limiti Settimanali</h3>
+                
+                <div class="space-y-4 relative z-10" id="budget-bars-container">
+                    <!-- Bars injected via JS -->
+                </div>
+
+                <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+                    <button onclick="resetSettimana()" class="text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Resetta Settimana
+                    </button>
+                </div>
+            </div>
+
+            <!-- Diario Giornate Salvate -->
+            <div class="glass-panel rounded-2xl p-6 flex flex-col h-[500px]">
+                <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2"><i class="fa-solid fa-book-open text-amber-600 mr-2"></i>Diario Settimanale</h3>
+                <div id="diario-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
+                    <div class="text-center text-slate-400 mt-10 text-sm italic" id="empty-diary">
+                        <div class="loader mx-auto mb-2"></div>
+                        Sincronizzazione dati...
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL CUSTOM -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all scale-95" id="modal-content">
+            <div class="text-center mb-6">
+                <div id="modal-icon" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                    <i class="fa-solid fa-hand text-3xl text-red-600"></i>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold text-slate-900 mb-2">Attenzione</h3>
+                <p id="modal-message" class="text-slate-600 text-sm leading-relaxed"></p>
+            </div>
+            <button onclick="closeModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-xl transition-colors">
+                Ho capito
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        let db, auth, currentUser;
+        let giornateSalvate = [];
+
+        // Budget Definitions (As per Chef's latest papers)
+        const budgetLimits = {
+            bianca: { name: "Carne Bianca", max: 3, icon: "fa-drumstick-bite", color: "bg-orange-400" },
+            rossa: { name: "Carne Rossa", max: 1, icon: "fa-steak", color: "bg-red-600" },
+            salumi: { name: "Salumi", max: 2, icon: "fa-bacon", color: "bg-rose-400" },
+            formaggi: { name: "Formaggi", max: 2, icon: "fa-cheese", color: "bg-yellow-400" },
+            pesce: { name: "Pesce", max: 3, icon: "fa-fish", color: "bg-blue-400" },
+            uova: { name: "Uova (x2)", max: 2, icon: "fa-egg", color: "bg-amber-300" }, // Updated to max 2
+            legumi: { name: "Legumi", max: 2, icon: "fa-seedling", color: "bg-green-500" },
+            pizza: { name: "Pizza", max: 1, icon: "fa-pizza-slice", color: "bg-red-500" },
+            speciale_carb: { name: "Ravioli/Gnocchi", max: 1, icon: "fa-bowl-food", color: "bg-stone-500" }
+        };
+
+        // Initialize Form
+        function initForm() {
+            // Copy Pranzo options to Cena
+            const pranzoPro = document.getElementById('pranzo-pro');
+            const cenaPro = document.getElementById('cena-pro');
+            cenaPro.innerHTML = pranzoPro.innerHTML;
+            renderBudgetBars();
+        }
+
+        // Setup Firebase
+        async function initFirebase() {
+            try {
+                if(Object.keys(firebaseConfig).length === 0) {
+                    throw new Error("Manca configurazione Firebase");
+                }
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (initialAuthToken) {
+                    const cred = await signInWithCustomToken(auth, initialAuthToken);
+                    currentUser = cred.user;
+                } else {
+                    const cred = await signInAnonymously(auth);
+                    currentUser = cred.user;
+                }
+
+                document.getElementById('auth-loader').classList.add('hidden');
+                document.getElementById('auth-text').innerHTML = '<i class="fa-solid fa-cloud-check text-green-400"></i> Connesso';
+                
+                listenToData();
+
+            } catch (error) {
+                console.error("Firebase Auth Error:", error);
+                document.getElementById('auth-loader').classList.add('hidden');
+                document.getElementById('auth-text').innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i> Modalità Offline';
+            }
+        }
+
+        function listenToData() {
+            if (!currentUser) return;
+            const giornateRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta_giornate');
+            const q = query(giornateRef); 
+
+            onSnapshot(q, (snapshot) => {
+                giornateSalvate = [];
+                snapshot.forEach((doc) => {
+                    giornateSalvate.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Sort by timestamp in memory
+                giornateSalvate.sort((a, b) => b.timestamp - a.timestamp);
+                updateDashboard();
+            }, (error) => {
+                console.error("Firestore Listen Error:", error);
+            });
+        }
+
+        window.salvaGiornata = async function() {
+            if (!currentUser) {
+                showModal("Errore Connessione", "Il database cloud non è connesso. Ricarica la pagina.");
+                return;
+            }
+
+            const btn = document.getElementById('btn-salva');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="loader border-t-white"></div> Salvataggio...';
+
+            const day = document.getElementById('day-select').value;
+            const colLiquido = document.getElementById('colazione-liquido').value;
+            const colSolido = document.getElementById('colazione-solido').value;
+            const pranzoCarb = document.getElementById('pranzo-carb').value;
+            const pranzoPro = document.getElementById('pranzo-pro');
+            const isPizza = document.getElementById('cena-pizza').checked;
+            const cenaCarb = document.getElementById('cena-carb').value;
+            const cenaPro = document.getElementById('cena-pro');
+
+            // Validate Selection
+            if (!colLiquido || !colSolido || !pranzoCarb || !pranzoPro.value || (!isPizza && (!cenaCarb || !cenaPro.value))) {
+                showModal("Compila tutto il menù", "Chef, non puoi lasciare pasti vuoti. Seleziona tutte le voci.");
+                resetBtn(btn); return;
+            }
+
+            // Check Budgets
+            let currentCosts = calculateCurrentCosts();
+            let newCosts = {};
+            
+            const checkCost = (option) => {
+                if(option && option.dataset.cost) newCosts[option.dataset.cost] = (newCosts[option.dataset.cost] || 0) + 1;
+                if(option && option.dataset.special) newCosts.speciale_carb = (newCosts.speciale_carb || 0) + 1;
+            };
+
+            checkCost(pranzoPro.options[pranzoPro.selectedIndex]);
+            checkCost(document.getElementById('pranzo-carb').options[document.getElementById('pranzo-carb').selectedIndex]);
+            
+            if(isPizza) {
+                newCosts.pizza = 1;
+            } else {
+                checkCost(cenaPro.options[cenaPro.selectedIndex]);
+                checkCost(document.getElementById('cena-carb').options[document.getElementById('cena-carb').selectedIndex]);
+            }
+
+            // Verify if exceeding
+            for (let category in newCosts) {
+                const total = (currentCosts[category] || 0) + newCosts[category];
+                if (total > budgetLimits[category].max) {
+                    showModal("Limite Superato!", `Non puoi aggiungere questo pasto. Hai esaurito il tetto settimanale per: ${budgetLimits[category].name} (Max ${budgetLimits[category].max} volte).`);
+                    resetBtn(btn); return;
+                }
+            }
+
+            const existingDay = giornateSalvate.find(g => g.giorno === day);
+            if(existingDay) {
+                showModal("Giorno già compilato", `Hai già salvato il menù per ${day}. Cancella prima la giornata dal diario se vuoi modificarla.`);
+                resetBtn(btn); return;
+            }
+
+            const docData = {
+                giorno: day,
+                colazione: `${colLiquido} + ${colSolido}`,
+                pranzo: `${pranzoCarb} + ${pranzoPro.options[pranzoPro.selectedIndex].text}`,
+                cena: isPizza ? "Pizza Integrale (Verdure/Margherita)" : `${cenaCarb} + ${cenaPro.options[cenaPro.selectedIndex].text}`,
+                costs: newCosts,
+                timestamp: Date.now()
+            };
+
+            try {
+                const giornateRef = collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta_giornate');
+                await addDoc(giornateRef, docData);
+                
+                const daySelect = document.getElementById('day-select');
+                if(daySelect.selectedIndex < daySelect.options.length - 1) daySelect.selectedIndex++;
+                
+                resetFormInputs();
+            } catch (e) {
+                console.error("Save Error:", e);
+                showModal("Errore", "C'è stato un problema di rete. Riprova.");
+            }
+            resetBtn(btn);
+        };
+
+        function resetBtn(btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Salva Giornata in Cloud';
+        }
+
+        window.deleteDay = async function(docId) {
+            if (!currentUser) return;
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta_giornate', docId));
+            } catch (e) { console.error("Delete Error", e); }
+        };
+
+        window.resetSettimana = function() {
+            document.getElementById('modal-title').innerText = "Reset Settimanale";
+            document.getElementById('modal-message').innerText = "Stai per svuotare completamente il tuo diario settimanale dal cloud e azzerare i budget. Confermi?";
+            document.getElementById('modal-icon').innerHTML = '<i class="fa-solid fa-trash-can text-3xl text-red-600"></i>';
+            
+            const btn = document.querySelector('#custom-modal button');
+            btn.textContent = "Sì, azzera tutto";
+            btn.className = "w-full bg-red-600 hover:bg-red-700 text-white font-medium py-3 rounded-xl transition-colors";
+            
+            btn.onclick = async () => {
+                btn.innerHTML = '<div class="loader mx-auto"></div>';
+                try {
+                    for (const g of giornateSalvate) {
+                        await deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta_giornate', g.id));
+                    }
+                } catch(e) { console.error(e); }
+                
+                closeModal();
+                btn.onclick = closeModal;
+                btn.className = "w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-xl transition-colors";
+            };
+            
+            document.getElementById('custom-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('custom-modal').classList.remove('opacity-0'), 10);
+        };
+
+        function calculateCurrentCosts() {
+            let costs = {};
+            giornateSalvate.forEach(g => {
+                if(g.costs) {
+                    for(let cat in g.costs) {
+                        costs[cat] = (costs[cat] || 0) + g.costs[cat];
+                    }
+                }
+            });
+            return costs;
+        }
+
+        function updateDashboard() {
+            const list = document.getElementById('diario-lista');
+            if (giornateSalvate.length === 0) {
+                list.innerHTML = `<div class="text-center text-slate-400 mt-10 text-sm italic"><i class="fa-regular fa-folder-open text-4xl mb-3 block opacity-30"></i>Settimana vuota.<br>Inizia a pianificare.</div>`;
+            } else {
+                list.innerHTML = '';
+                giornateSalvate.forEach(g => {
+                    const card = document.createElement('div');
+                    card.className = "bg-white border border-slate-200 rounded-xl p-4 shadow-sm relative group";
+                    card.innerHTML = `
+                        <button onclick="deleteDay('${g.id}')" class="absolute top-2 right-2 text-slate-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"><i class="fa-solid fa-circle-xmark text-lg"></i></button>
+                        <div class="font-bold text-amber-700 mb-2 border-b border-amber-100 pb-1">${g.giorno}</div>
+                        <div class="text-slate-600 text-sm mb-1 line-clamp-1"><i class="fa-solid fa-mug-hot text-slate-400 w-4"></i> ${g.colazione}</div>
+                        <div class="text-slate-600 text-sm mb-1 line-clamp-1"><i class="fa-solid fa-sun text-slate-400 w-4"></i> ${g.pranzo}</div>
+                        <div class="text-slate-600 text-sm line-clamp-1"><i class="fa-solid fa-moon text-slate-400 w-4"></i> ${g.cena}</div>
+                    `;
+                    list.appendChild(card);
+                });
+            }
+            renderBudgetBars();
+        }
+
+        function renderBudgetBars() {
+            const container = document.getElementById('budget-bars-container');
+            container.innerHTML = '';
+            let currentCosts = calculateCurrentCosts();
+
+            for (let key in budgetLimits) {
+                const limit = budgetLimits[key];
+                const consumed = currentCosts[key] || 0;
+                const percentage = Math.min((consumed / limit.max) * 100, 100);
+                
+                const html = `
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-700"><i class="fa-solid ${limit.icon} w-5 text-slate-400"></i> ${limit.name}</span>
+                        <span class="font-bold ${consumed > limit.max ? 'text-red-600' : 'text-slate-900'}">${consumed} / ${limit.max}</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                        <div class="${limit.color} h-2 rounded-full transition-all duration-500 ease-out" style="width: ${percentage}%"></div>
+                    </div>
+                </div>`;
+                container.innerHTML += html;
+            }
+        }
+
+        window.togglePizza = function() {
+            const isPizza = document.getElementById('cena-pizza').checked;
+            const standardInputs = document.getElementById('cena-standard-inputs');
+            if (isPizza) {
+                standardInputs.classList.add('opacity-30', 'pointer-events-none');
+                document.getElementById('cena-carb').value = "";
+                document.getElementById('cena-pro').value = "";
+            } else {
+                standardInputs.classList.remove('opacity-30', 'pointer-events-none');
+            }
+        };
+
+        window.handleBurroArachidi = function() {
+            const solido = document.getElementById('colazione-solido');
+            const selectedOpt = solido.options[solido.selectedIndex];
+            const pomText = document.getElementById('spuntino-pom-text');
+            
+            if (selectedOpt && selectedOpt.dataset.peanut) {
+                pomText.innerHTML = `<span class="text-amber-600 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Solo Frutta (150g)</span><br><span class="text-xs text-slate-500">Grassi consumati a colazione</span>`;
+            } else {
+                pomText.innerHTML = `Frutta (150g) + Yogurt greco (150g)`;
+            }
+        };
+
+        function resetFormInputs() {
+            document.getElementById('colazione-liquido').value = "";
+            document.getElementById('colazione-solido').value = "";
+            document.getElementById('pranzo-carb').value = "";
+            document.getElementById('pranzo-pro').value = "";
+            document.getElementById('cena-pizza').checked = false;
+            togglePizza();
+            handleBurroArachidi();
+        }
+
+        window.showModal = function(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            
+            const btn = document.querySelector('#custom-modal button');
+            btn.textContent = "Ho capito, correggo";
+            btn.className = "w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-xl transition-colors";
+            btn.onclick = closeModal;
+            document.getElementById('modal-icon').innerHTML = '<i class="fa-solid fa-hand text-3xl text-red-600"></i>';
+
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('modal-content').classList.remove('scale-95');
+            }, 10);
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('opacity-0');
+            document.getElementById('modal-content').classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        };
+
+        // Boot
+        initForm();
+        initFirebase();
+    </script>
+</body>
+</html>
