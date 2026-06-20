@@ -2,38 +2,37 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <!-- Blocco dello zoom su mobile per un'esperienza da "Vera App" -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
     <title>SmartFDiet</title>
     
-    <!-- Librerie esterne: Tailwind CSS, FontAwesome e Font Inter -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #f8fafc; 
-            overscroll-behavior-y: none; /* Previene il rimbalzo su iOS */
-            -webkit-tap-highlight-color: transparent; /* Rimuove il flash blu al tocco */
+            overscroll-behavior-y: none; 
+            -webkit-tap-highlight-color: transparent; 
         }
         
         .app-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
         .accent-gradient { background: linear-gradient(135deg, #059669 0%, #047857 100%); } 
         
         .glass-card { 
-            background: rgba(255, 255, 255, 0.95); 
+            background: rgba(255, 255, 255, 0.98); 
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4); 
+            border: 1px solid rgba(226, 232, 240, 0.8); 
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01); 
         }
         
-        /* Ottimizzazione Scrollbar */
         .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         
-        /* Select personalizzate per mobile */
         select { 
             appearance: none; 
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); 
@@ -42,27 +41,31 @@
             background-size: 1.2em; 
         }
         
-        /* Effetto tocco per i bottoni */
         button:active { transform: scale(0.97); transition: transform 0.1s; }
+
+        /* Vettoriale Logo Background */
+        .logo-bg { background: linear-gradient(135deg, #10B981 0%, #047857 100%); }
     </style>
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col relative pb-safe">
 
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center px-4 transition-opacity duration-500">
         <div class="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
-        <div class="relative z-10 w-full max-w-sm glass-card rounded-3xl p-8 text-center transform transition-all shadow-2xl">
+        <div class="relative z-10 w-full max-w-sm glass-card rounded-[2rem] p-8 text-center transform transition-all shadow-2xl">
             
-            <!-- Logo Provvisorio/Definitivo -->
-            <div class="mx-auto w-28 h-28 bg-white rounded-3xl flex items-center justify-center mb-6 shadow-md border border-emerald-100 overflow-hidden">
-                <img src="logo.png" onerror="this.src='https://placehold.co/150x150/ffffff/059669?text=SF'" alt="SmartFDiet Logo" class="w-full h-full object-cover">
+            <!-- Logo Vettoriale CSS (Nessuna immagine esterna!) -->
+            <div class="mx-auto w-28 h-28 logo-bg rounded-[1.5rem] flex items-center justify-center mb-6 shadow-lg border-4 border-white/20 transform rotate-3">
+                <div class="transform -rotate-3 text-white flex items-center justify-center">
+                    <span class="font-black text-5xl tracking-tighter">S</span>
+                    <span class="font-black text-5xl tracking-tighter text-emerald-200">F</span>
+                </div>
             </div>
             
-            <h1 class="text-3xl font-bold text-slate-800 mb-2">SmartFDiet</h1>
-            <p class="text-slate-500 mb-8 text-sm px-4">Inserisci il PIN di sicurezza per accedere al piano clinico.</p>
+            <h1 class="text-3xl font-black text-slate-800 mb-2 tracking-tight">SmartFDiet</h1>
+            <p class="text-slate-500 mb-8 text-sm px-4">Piano Clinico 1800 Kcal.<br>Inserisci il PIN per accedere.</p>
             
             <div class="space-y-4">
                 <div>
-                    <!-- Tastierino numerico su mobile -->
                     <input type="password" inputmode="numeric" id="login-code" placeholder="PIN" class="w-full bg-slate-50 border-2 border-slate-200 text-center text-4xl tracking-[0.4em] text-slate-800 rounded-2xl px-4 py-5 focus:outline-none focus:border-emerald-500 focus:bg-white transition-colors" onkeypress="handleLoginKey(event)">
                     <p id="login-error" class="text-red-500 text-sm font-medium mt-3 hidden animate-pulse"><i class="fa-solid fa-circle-exclamation mr-1"></i> PIN errato</p>
                 </div>
@@ -74,18 +77,18 @@
     </div>
 
     <div id="main-app" class="hidden flex-col min-h-screen w-full">
-        <!-- Header Mobile-Friendly -->
         <header class="app-gradient text-white shadow-md sticky top-0 z-40">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 bg-white rounded-xl overflow-hidden shadow-sm flex-shrink-0">
-                        <img src="logo.png" onerror="this.src='https://placehold.co/100x100/ffffff/059669?text=SF'" alt="Logo" class="w-full h-full object-cover">
+                    <!-- Mini Logo Vettoriale -->
+                    <div class="w-10 h-10 logo-bg rounded-xl flex items-center justify-center shadow-sm border border-emerald-400/30">
+                        <span class="font-black text-lg tracking-tighter text-white">S<span class="text-emerald-200">F</span></span>
                     </div>
                     <h1 class="text-xl font-bold tracking-tight">SmartFDiet</h1>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="bg-slate-800 border border-slate-600 text-emerald-400 px-3 py-1 rounded-full text-xs font-bold shadow-inner">
-                        <i class="fa-solid fa-fire mr-1"></i> 1800 Kcal
+                    <span class="bg-slate-800 border border-slate-600 text-emerald-400 px-3 py-1.5 rounded-full text-xs font-bold shadow-inner flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-amber-400"></i> 1800 Kcal
                     </span>
                     <button onclick="logout()" class="text-slate-300 hover:text-white p-2" title="Esci">
                         <i class="fa-solid fa-right-from-bracket text-lg"></i>
@@ -99,11 +102,11 @@
             <div class="lg:col-span-2 space-y-6">
                 <div class="glass-card rounded-3xl p-5 sm:p-8">
                     
-                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
-                        <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
-                            <i class="fa-regular fa-calendar-check text-emerald-600"></i> Menu del Giorno
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3 border-b border-slate-100 pb-4">
+                        <h2 class="text-2xl font-black text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-day text-emerald-500"></i> Menu del Giorno
                         </h2>
-                        <select id="day-select" class="w-full sm:w-auto bg-slate-100 border border-slate-200 rounded-xl py-3 pl-5 pr-12 font-bold text-slate-800 text-base focus:ring-2 focus:ring-emerald-500 outline-none shadow-sm">
+                        <select id="day-select" class="w-full sm:w-auto bg-slate-100 border border-slate-200 rounded-xl py-3 pl-5 pr-12 font-bold text-slate-800 text-base focus:ring-2 focus:ring-emerald-500 outline-none shadow-sm cursor-pointer">
                             <option value="Lunedì">Lunedì</option>
                             <option value="Martedì">Martedì</option>
                             <option value="Mercoledì">Mercoledì</option>
@@ -115,21 +118,19 @@
                     </div>
 
                     <div class="space-y-5">
-                        
-                        <!-- Colazione -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
-                            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <div class="bg-slate-50/50 p-5 rounded-2xl border border-slate-200 shadow-sm">
+                            <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                                 <i class="fa-solid fa-mug-hot text-emerald-500 text-base"></i> Colazione
                             </h3>
                             <div class="space-y-3">
-                                <select id="colazione-liquido" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                <select id="colazione-liquido" class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
                                     <option value="" disabled selected>1. Scegli Latticino/Liquido...</option>
                                     <option value="Yogurt greco magro (150g)">Yogurt greco bianco magro (150g)</option>
                                     <option value="Yogurt intero bianco (125g)">Yogurt intero bianco (125g)</option>
                                     <option value="Kefir (200ml)">Kefir (200ml)</option>
                                     <option value="Latte p.s. (200ml)">Latte parz. scremato (200ml)</option>
                                 </select>
-                                <select id="colazione-solido" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                <select id="colazione-solido" class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
                                     <option value="" disabled selected>2. Scegli Carboidrati Solidi...</option>
                                     <option value="Cereali/Fiocchi d'avena (40g)">Cereali / Fiocchi d'avena (40g)</option>
                                     <option value="Fette biscottate (40g)">Fette biscottate (40g)</option>
@@ -139,28 +140,26 @@
                             </div>
                         </div>
 
-                        <!-- Spuntini Fissi -->
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 flex flex-col justify-center text-center">
+                            <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 flex flex-col justify-center text-center shadow-sm">
                                 <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1"><i class="fa-solid fa-sun"></i> Spuntino Mattina</span>
                                 <span class="text-sm font-medium text-emerald-900 leading-tight">Frutta (150g)<br>+ Crackers (30g)</span>
                             </div>
-                            <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 flex flex-col justify-center text-center">
+                            <div class="bg-emerald-50 p-4 rounded-2xl border border-emerald-100 flex flex-col justify-center text-center shadow-sm">
                                 <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-1"><i class="fa-solid fa-cloud-sun"></i> Spuntino Pomeriggio</span>
                                 <span class="text-sm font-medium text-emerald-900 leading-tight">Frutta (150g)<br>+ Yogurt greco (150g)</span>
                             </div>
                         </div>
 
-                        <!-- Pranzo -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm">
+                        <div class="bg-slate-50/50 p-5 rounded-2xl border border-slate-200 shadow-sm">
                             <div class="flex justify-between items-center mb-3">
-                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                                     <i class="fa-solid fa-utensils text-emerald-500 text-base"></i> Pranzo
                                 </h3>
-                                <span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-2 py-1 rounded-md">Verdure libere + 15g Olio</span>
+                                <span class="text-[10px] font-medium text-slate-500 bg-slate-200/50 px-2 py-1 rounded-md border border-slate-200">Verdure libere + 15g Olio</span>
                             </div>
                             <div class="space-y-3">
-                                <select id="pranzo-carb" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                <select id="pranzo-carb" class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
                                     <option value="" disabled selected>Fonte di Carboidrati...</option>
                                     <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
                                     <option value="Farro/Orzo/Cereali (80g)">Farro/Orzo/Altri cereali (80g)</option>
@@ -169,7 +168,7 @@
                                     <option value="Ravioli/Pasta all'uovo (120g)" data-special="pasta_uovo">Ravioli/Pasta uovo (120g) - Max 1/sett</option>
                                     <option value="Gnocchi (250g)" data-special="gnocchi">Gnocchi (250g) - Max 1/sett</option>
                                 </select>
-                                <select id="pranzo-pro" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                <select id="pranzo-pro" class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
                                     <option value="" disabled selected>Secondo Piatto Proteico...</option>
                                     <optgroup label="Carni (150g)">
                                         <option value="Carne Bianca (150g)" data-cost="bianca">Carne Bianca (Tacchino/Pollo/Coniglio)</option>
@@ -179,9 +178,9 @@
                                         <option value="Salumi magri (120g)" data-cost="salumi">Bresaola/Cotto/Crudo/Arrosto/Speck/Salmone</option>
                                     </optgroup>
                                     <optgroup label="Formaggi">
-                                        <option value="Formaggi Magri (120g)" data-cost="formaggi">Meno Grassi (Ricotta, Tomino, Fiocchi, Tofu) 120g</option>
-                                        <option value="Formaggi Semi (100g)" data-cost="formaggi">Semi-Grassi (Mozzarella, Crescenza, Feta) 100g</option>
-                                        <option value="Formaggi Grassi (80g)" data-cost="formaggi">Grassi (Grana, Gorgonzola, Fontina) 80g</option>
+                                        <option value="Formaggi Magri (120g)" data-cost="formaggi">Meno Grassi (Ricotta, Tomino, Fiocchi) 120g</option>
+                                        <option value="Formaggi Semi (100g)" data-cost="formaggi">Semi-Grassi (Mozzarella, Feta) 100g</option>
+                                        <option value="Formaggi Grassi (80g)" data-cost="formaggi">Grassi (Grana, Gorgonzola) 80g</option>
                                     </optgroup>
                                     <optgroup label="Pesce e Uova">
                                         <option value="Pesce (180-200g)" data-cost="pesce">Pesce fresco o surgelato (180-200g)</option>
@@ -189,23 +188,21 @@
                                         <option value="Uova (N°2)" data-cost="uova">Uova (N° 2)</option>
                                     </optgroup>
                                     <optgroup label="Legumi">
-                                        <option value="Legumi Freschi (150g)" data-cost="legumi">Legumi freschi/surgelati/scatola (150g)</option>
+                                        <option value="Legumi Freschi (150g)" data-cost="legumi">Legumi freschi/scatola/surgelati (150g)</option>
                                         <option value="Legumi Secchi (50g)" data-cost="legumi">Legumi Secchi (50g)</option>
                                     </optgroup>
                                 </select>
                             </div>
                         </div>
 
-                        <!-- Cena -->
-                        <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm relative overflow-hidden">
+                        <div class="bg-slate-50/50 p-5 rounded-2xl border border-slate-200 shadow-sm relative overflow-hidden">
                             <div class="flex justify-between items-center mb-4 relative z-10">
-                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                                <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest flex items-center gap-2">
                                     <i class="fa-solid fa-moon text-indigo-500 text-base"></i> Cena
                                 </h3>
-                                <span class="text-[10px] font-medium text-slate-400 bg-slate-100 px-2 py-1 rounded-md">Verdure libere + 15g Olio</span>
+                                <span class="text-[10px] font-medium text-slate-500 bg-slate-200/50 px-2 py-1 rounded-md border border-slate-200">Verdure libere + 15g Olio</span>
                             </div>
                             
-                            <!-- Toggle Pizza -->
                             <div class="mb-4 relative z-10">
                                 <label class="flex items-center justify-between p-3 border border-amber-200 bg-amber-50 rounded-xl cursor-pointer active:bg-amber-100 transition-colors">
                                     <div class="flex items-center gap-3">
@@ -221,22 +218,22 @@
                             </div>
 
                             <div class="space-y-3 relative z-10 transition-opacity duration-300" id="cena-standard-inputs">
-                                <select id="cena-carb" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                <select id="cena-carb" class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
                                     <option value="" disabled selected>Fonte di Carboidrati...</option>
                                     <option value="Pane comune (100g)">Pane comune (100g)</option>
                                     <option value="Patate (250g)">Patate (250g)</option>
                                     <option value="Pasta o Riso (80g)">Pasta o Riso o Cereali (80g)</option>
                                 </select>
-                                <select id="cena-pro" class="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
-                                    <!-- Injected via JS to match Pranzo options -->
+                                <select id="cena-pro" class="w-full bg-white border border-slate-200 text-slate-800 rounded-xl px-4 py-3.5 text-base focus:ring-2 focus:ring-emerald-500 outline-none transition-all">
+                                    <!-- Options injected via JS from Pranzo -->
                                 </select>
                             </div>
                         </div>
 
                     </div>
 
-                    <div class="mt-6">
-                        <button id="btn-salva" onclick="salvaGiornata()" class="w-full accent-gradient shadow-xl shadow-emerald-600/20 text-white font-bold py-5 rounded-2xl flex justify-center items-center gap-3 text-lg">
+                    <div class="mt-8">
+                        <button id="btn-salva" onclick="salvaGiornata()" class="w-full accent-gradient shadow-xl shadow-emerald-600/20 text-white font-bold py-4 rounded-2xl flex justify-center items-center gap-3 text-lg">
                             <i class="fa-solid fa-check-circle text-xl"></i> Registra Giornata
                         </button>
                     </div>
@@ -249,16 +246,16 @@
                     <div class="absolute -top-4 -right-4 p-4 opacity-5 rotate-12 pointer-events-none">
                         <i class="fa-solid fa-chart-pie text-8xl text-slate-900"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-5 flex items-center gap-2 relative z-10">
-                        <i class="fa-solid fa-scale-balanced text-emerald-600"></i> Frequenze Settimanali
+                    <h3 class="text-lg font-black text-slate-800 mb-5 flex items-center gap-2 relative z-10">
+                        <i class="fa-solid fa-scale-balanced text-emerald-500"></i> Limiti Settimanali
                     </h3>
                     
                     <div class="space-y-4 relative z-10" id="budget-bars-container">
                         <!-- Bars injected via JS -->
                     </div>
 
-                    <div class="mt-6 pt-4 border-t border-slate-100 flex justify-center">
-                        <button onclick="resetSettimana()" class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-red-500 bg-red-50 rounded-xl hover:bg-red-100 transition-colors">
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex justify-center">
+                        <button onclick="resetSettimana()" class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-red-600 bg-red-50 rounded-xl hover:bg-red-100 transition-colors">
                             <i class="fa-solid fa-arrow-rotate-left"></i> Azzera Settimana
                         </button>
                     </div>
@@ -266,8 +263,8 @@
 
                 <!-- Diario -->
                 <div class="glass-card rounded-3xl p-6 flex flex-col h-[400px]">
-                    <h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-book-bookmark text-emerald-600"></i> Diario Pasti
+                    <h3 class="text-lg font-black text-slate-800 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-book-bookmark text-emerald-500"></i> Diario Pasti
                     </h3>
                     <div id="diario-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
                         <!-- Data injected via JS -->
@@ -277,7 +274,6 @@
         </main>
     </div>
 
-    <!-- Modal -->
     <div id="custom-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity opacity-0">
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 transform transition-all scale-95 text-center" id="modal-content">
             <div id="modal-icon" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 mb-4">
@@ -295,7 +291,7 @@
         const SECRET_CODE = "713";
         let giornateSalvate = [];
 
-        // LIMITI ESATTI ESTRATTI DAL REFERTO MEDICO (1800 Kcal)
+        // LIMITI ESATTI DA REFERTO (1800 Kcal) - Riveduti e Corretti
         const budgetLimits = {
             bianca: { name: "Carne Bianca", max: 3, icon: "fa-drumstick-bite", color: "bg-orange-400" },
             rossa: { name: "Carne Rossa", max: 1, icon: "fa-steak", color: "bg-red-500" },
@@ -344,7 +340,6 @@
                 errorMsg.classList.remove('hidden');
                 document.getElementById('login-code').value = "";
                 
-                // Shake effect for error
                 const card = document.querySelector('#login-screen .glass-card');
                 card.style.transform = "translateX(-10px)";
                 setTimeout(() => card.style.transform = "translateX(10px)", 100);
@@ -359,7 +354,6 @@
         }
 
         function initApp() {
-            // Clona le opzioni di pranzo nel menu della cena
             const pranzoPro = document.getElementById('pranzo-pro');
             const cenaPro = document.getElementById('cena-pro');
             cenaPro.innerHTML = pranzoPro.innerHTML;
@@ -411,13 +405,11 @@
             const cenaCarb = document.getElementById('cena-carb').value;
             const cenaPro = document.getElementById('cena-pro');
 
-            // 1. Validazione
             if (!colLiquido || !colSolido || !pranzoCarb || !pranzoPro.value || (!isPizza && (!cenaCarb || !cenaPro.value))) {
                 showModal("Dati Incompleti", "Seleziona tutte le portate della giornata prima di salvare.", "error");
                 return;
             }
 
-            // 2. Controllo Costi (Limiti)
             let currentCosts = calculateCurrentCosts();
             let newCosts = {};
             
@@ -439,25 +431,23 @@
             for (let category in newCosts) {
                 const total = (currentCosts[category] || 0) + newCosts[category];
                 if (total > budgetLimits[category].max) {
-                    showModal("Limite Superato", `Non puoi aggiungere questo alimento. Hai raggiunto il tetto settimanale per: ${budgetLimits[category].name}.`, "error");
+                    showModal("Limite Superato", `Hai raggiunto il tetto massimo settimanale per: ${budgetLimits[category].name}. Scegli un'altra proteina.`, "error");
                     return;
                 }
             }
 
-            // 3. Controllo duplicati
             const existingDayIndex = giornateSalvate.findIndex(g => g.giorno === day);
             if(existingDayIndex !== -1) {
-                showModal("Giorno già compilato", `Hai già salvato il menù di ${day}. Se vuoi rifarlo, eliminalo dal Diario.`, "error");
+                showModal("Giorno Esistente", `Hai già inserito ${day}. Se vuoi modificarlo, eliminalo prima dal Diario a destra.`, "error");
                 return;
             }
 
-            // 4. Salvataggio
             const docData = {
                 id: Date.now().toString(),
                 giorno: day,
                 colazione: `${colLiquido.split('(')[0]} + ${colSolido.split('(')[0]}`,
                 pranzo: `${pranzoCarb.split('(')[0]} + ${pranzoPro.options[pranzoPro.selectedIndex].text.split('(')[0]}`,
-                cena: isPizza ? "🍕 Pizza Margherita/Verdure" : `${cenaCarb.split('(')[0]} + ${cenaPro.options[cenaPro.selectedIndex].text.split('(')[0]}`,
+                cena: isPizza ? "🍕 Pizza (Margherita/Verdure)" : `${cenaCarb.split('(')[0]} + ${cenaPro.options[cenaPro.selectedIndex].text.split('(')[0]}`,
                 costs: newCosts,
                 timestamp: Date.now()
             };
@@ -465,7 +455,6 @@
             giornateSalvate.push(docData);
             saveLocalData();
             
-            // Feedback Visivo
             const btn = document.getElementById('btn-salva');
             const originalHTML = btn.innerHTML;
             btn.innerHTML = '<i class="fa-solid fa-check text-xl"></i> Salvato!';
@@ -506,13 +495,13 @@
                 list.innerHTML = '';
                 giornateSalvate.forEach(g => {
                     const card = document.createElement('div');
-                    card.className = "bg-white border border-slate-100 rounded-2xl p-4 shadow-sm relative group";
+                    card.className = "bg-white border border-slate-200 rounded-2xl p-4 shadow-sm relative group";
                     card.innerHTML = `
                         <button onclick="deleteDay('${g.id}')" class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-red-50 text-red-500 rounded-full hover:bg-red-500 hover:text-white transition-colors"><i class="fa-solid fa-xmark"></i></button>
                         <div class="font-black text-slate-800 mb-3 text-lg">${g.giorno}</div>
-                        <div class="text-slate-600 text-sm mb-2 flex items-start gap-2"><i class="fa-solid fa-mug-hot text-emerald-400 mt-1"></i> <span class="leading-tight">${g.colazione}</span></div>
-                        <div class="text-slate-600 text-sm mb-2 flex items-start gap-2"><i class="fa-solid fa-sun text-amber-400 mt-1"></i> <span class="leading-tight">${g.pranzo}</span></div>
-                        <div class="text-slate-600 text-sm flex items-start gap-2"><i class="fa-solid fa-moon text-indigo-400 mt-1"></i> <span class="leading-tight">${g.cena}</span></div>
+                        <div class="text-slate-600 text-sm mb-2 flex items-start gap-2"><i class="fa-solid fa-mug-hot text-emerald-500 mt-1"></i> <span class="leading-tight">${g.colazione}</span></div>
+                        <div class="text-slate-600 text-sm mb-2 flex items-start gap-2"><i class="fa-solid fa-sun text-amber-500 mt-1"></i> <span class="leading-tight">${g.pranzo}</span></div>
+                        <div class="text-slate-600 text-sm flex items-start gap-2"><i class="fa-solid fa-moon text-indigo-500 mt-1"></i> <span class="leading-tight">${g.cena}</span></div>
                     `;
                     list.appendChild(card);
                 });
@@ -532,7 +521,7 @@
                 const isOver = consumed >= limit.max;
                 
                 const html = `
-                <div class="bg-white p-3 rounded-xl border border-slate-100 shadow-sm">
+                <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-sm">
                     <div class="flex justify-between items-end mb-2">
                         <span class="text-xs font-bold text-slate-500 uppercase flex items-center gap-2"><i class="fa-solid ${limit.icon} ${isOver ? 'text-slate-300' : 'text-slate-400'}"></i> ${limit.name}</span>
                         <span class="text-sm font-black ${isOver ? 'text-red-500' : 'text-slate-800'}">${consumed} / ${limit.max}</span>
@@ -602,7 +591,6 @@
             }, 300);
         };
 
-        // Boot
         window.onload = checkAuthOnLoad;
     </script>
 </body>
