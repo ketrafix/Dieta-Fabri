@@ -12,11 +12,11 @@
     <meta name="apple-mobile-web-app-title" content="SmartFDiet">
     <meta name="theme-color" content="#16a34a">
     
-    <!-- Manifest Vettoriale per forzare l'installazione App su Android (Icona 60% centrata) -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22:%22SmartFDiet%22,%22short_name%22:%22SmartFDiet%22,%22display%22:%22standalone%22,%22start_url%22:%22./%22,%22background_color%22:%22%23f0fdf4%22,%22theme_color%22:%22%2316a34a%22,%22icons%22:[%7B%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f0fdf4'/%3E%3Cpath fill='%2316a34a' transform='translate(102.4, 102.4) scale(0.6)' d='M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z'/%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any maskable%22%7D]%7D">
+    <!-- Manifest Vettoriale per forzare l'installazione App su Android (Icona 60% centrata matematicamente) -->
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22:%22SmartFDiet%22,%22short_name%22:%22SmartFDiet%22,%22display%22:%22standalone%22,%22start_url%22:%22./%22,%22background_color%22:%22%23f0fdf4%22,%22theme_color%22:%22%2316a34a%22,%22icons%22:[%7B%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f0fdf4'/%3E%3Cg transform='translate(141, 102) scale(0.6)'%3E%3Cpath fill='%2316a34a' d='M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z'/%3E%3C/g%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any maskable%22%7D]%7D">
     
     <!-- Icona Foglia Centrata per il Browser Desktop (con angoli smussati) -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23f0fdf4'/%3E%3Cpath fill='%2316a34a' transform='translate(102.4, 102.4) scale(0.6)' d='M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z'/%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='112' fill='%23f0fdf4'/%3E%3Cg transform='translate(141, 102) scale(0.6)'%3E%3Cpath fill='%2316a34a' d='M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z'/%3E%3C/g%3E%3C/svg%3E">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
@@ -34,8 +34,10 @@
             ctx.fillStyle = '#f0fdf4';
             ctx.fillRect(0, 0, 512, 512);
             
-            // Centratura e ridimensionamento della foglia
-            ctx.translate(102.4, 102.4);
+            // Centratura MATEMATICA della foglia
+            // La foglia originale è larga 384 e alta 512. Scalandola a 0.6 diventa 230x307.
+            // (512 - 230)/2 = 141 | (512 - 307)/2 = 102
+            ctx.translate(141, 102);
             ctx.scale(0.6, 0.6);
             
             const p = new Path2D('M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z');
