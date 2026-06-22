@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartFDiet - Diario Glicemico</title>
+    <title>SmartFDiet - Dieta & Glicemia</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -13,12 +13,10 @@
                 extend: {
                     colors: {
                         medical: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9', // Azzurro medico
-                            600: '#0284c7',
-                            800: '#075985',
-                            900: '#0c4a6e', // Blu scuro affidabilità
+                            50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 800: '#075985', 900: '#0f172a',
+                        },
+                        chef: {
+                            50: '#fffbeb', 100: '#fef3c7', 500: '#f59e0b', 600: '#d97706', 800: '#92400e',
                         }
                     },
                     fontFamily: { sans: ['Inter', 'sans-serif'] }
@@ -27,16 +25,20 @@
         }
     </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; -webkit-tap-highlight-color: transparent; }
         .glass-card { background: rgba(255, 255, 255, 1); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01); border: 1px solid rgba(226, 232, 240, 0.8); }
-        .medical-gradient { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); }
+        .medical-gradient { background: linear-gradient(135deg, #0f172a 0%, #075985 100%); }
         .custom-scrollbar::-webkit-scrollbar { width: 5px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         select, input { appearance: none; }
         
-        /* Animazioni */
+        /* Animazioni e Tab state */
         .fade-in { animation: fadeIn 0.3s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .tab-btn.active { background-color: #ffffff; color: #0f172a; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); font-weight: 700; }
+        .tab-btn.inactive { background-color: rgba(255,255,255,0.1); color: #cbd5e1; font-weight: 500; }
+        .tab-btn.inactive:hover { background-color: rgba(255,255,255,0.2); color: #ffffff; }
     </style>
 </head>
 <body class="min-h-screen text-slate-800 flex flex-col">
@@ -44,15 +46,14 @@
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-500">
         <div class="w-full max-w-sm glass-card rounded-[2rem] p-8 text-center shadow-2xl fade-in">
             <div class="mx-auto w-20 h-20 bg-medical-50 text-medical-600 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-sm border border-medical-100">
-                <i class="fa-solid fa-droplet"></i>
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
-            
             <h1 class="text-3xl font-black text-slate-800 mb-2">SmartFDiet</h1>
-            <p class="text-sm text-slate-500 font-medium mb-8">Diario Glicemico Personale</p>
+            <p class="text-sm text-slate-500 font-medium mb-8">Pianificatore e Diario Clinico</p>
 
             <div class="space-y-4">
                 <input type="password" id="pin-input" placeholder="Codice PIN" inputmode="numeric" pattern="[0-9]*" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 rounded-xl px-5 py-4 text-center text-2xl font-bold tracking-[0.5em] focus:outline-none focus:border-medical-500 transition-colors placeholder:tracking-normal placeholder:text-lg">
-                <button onclick="checkPin()" class="w-full medical-gradient hover:opacity-90 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-medical-900/20 text-lg flex justify-center items-center gap-2">
+                <button onclick="checkPin()" class="w-full medical-gradient hover:opacity-90 text-white font-bold py-4 rounded-xl transition-all shadow-lg text-lg flex justify-center items-center gap-2">
                     <i class="fa-solid fa-unlock-keyhole"></i> Accedi
                 </button>
             </div>
@@ -62,62 +63,181 @@
 
     <div id="app-content" class="hidden flex-col min-h-screen">
         
-        <header class="medical-gradient text-white shadow-md sticky top-0 z-40">
-            <div class="max-w-3xl mx-auto px-4 h-16 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <i class="fa-solid fa-droplet text-medical-100 text-xl"></i>
-                    <h1 class="text-xl font-bold tracking-tight">SmartFDiet</h1>
+        <header class="medical-gradient shadow-md sticky top-0 z-40">
+            <div class="max-w-7xl mx-auto px-4 pt-4 pb-2">
+                <div class="flex items-center justify-between mb-4 text-white">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-white text-medical-800 rounded-lg flex items-center justify-center font-bold text-lg">F</div>
+                        <h1 class="text-xl font-bold tracking-tight">SmartFDiet</h1>
+                    </div>
+                    <button onclick="logout()" class="text-medical-100 hover:text-white transition-colors bg-white/10 px-3 py-1.5 rounded-lg text-sm font-medium">
+                        <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Esci
+                    </button>
                 </div>
-                <button onclick="logout()" class="text-medical-100 hover:text-white transition-colors bg-white/10 px-3 py-1.5 rounded-lg text-sm font-medium">
-                    <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Esci
-                </button>
+                
+                <div class="flex gap-2 p-1 bg-slate-900/40 rounded-xl overflow-x-auto custom-scrollbar">
+                    <button onclick="switchTab('dieta')" id="tab-dieta" class="tab-btn active flex-1 whitespace-nowrap py-2.5 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-utensils"></i> Menù Dieta
+                    </button>
+                    <button onclick="switchTab('glicemia')" id="tab-glicemia" class="tab-btn inactive flex-1 whitespace-nowrap py-2.5 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-droplet"></i> Diario Glicemico
+                    </button>
+                </div>
             </div>
         </header>
 
-        <main class="max-w-3xl mx-auto w-full px-4 mt-6 flex-grow flex flex-col gap-6 pb-12">
+        <main class="max-w-7xl mx-auto w-full px-4 mt-6 flex-grow flex flex-col pb-12">
             
-            <!-- Pannello Inserimento -->
-            <div class="glass-card rounded-3xl p-6 fade-in">
-                <h2 class="text-xl font-black text-slate-800 mb-5 flex items-center gap-2">
-                    <i class="fa-solid fa-pen-to-square text-medical-600"></i> Registra Misurazione
-                </h2>
-                
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Momento della giornata</label>
-                        <div class="relative">
-                            <select id="glicemia-tipo" class="w-full bg-slate-50 border border-slate-200 text-slate-800 font-semibold rounded-xl px-4 py-3 focus:ring-2 focus:ring-medical-500 outline-none appearance-none">
-                                <option value="digiuno">A Digiuno (Limite < 150)</option>
-                                <option value="post">Post-Prandiale (Limite < 180)</option>
+            <!-- ========================================== -->
+            <!-- VISTA 1: MENU DIETA (Il gestore originale) -->
+            <!-- ========================================== -->
+            <div id="view-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6 fade-in">
+                <!-- Colonna Form Dieta -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-card rounded-3xl p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
+                                <i class="fa-regular fa-calendar-check text-chef-600"></i> Pianifica Giornata
+                            </h2>
+                            <select id="day-select" class="bg-slate-100 border-none rounded-xl py-2 pl-4 pr-10 font-bold text-slate-700 outline-none">
+                                <option value="Lunedì">Lunedì</option> <option value="Martedì">Martedì</option> <option value="Mercoledì">Mercoledì</option>
+                                <option value="Giovedì">Giovedì</option> <option value="Venerdì">Venerdì</option> <option value="Sabato">Sabato</option> <option value="Domenica">Domenica</option>
                             </select>
-                            <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                        </div>
+
+                        <div class="space-y-4">
+                            <!-- Ingressi Dieta -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"><i class="fa-solid fa-mug-saucer mr-1"></i>Colazione</label>
+                                <select id="colazione" class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-xl px-4 py-3 outline-none focus:border-chef-500">
+                                    <option value="">Seleziona colazione...</option>
+                                    <option value="yogurt" data-dairy="1">Yogurt Greco (150g) + 40g Fette biscottate</option>
+                                    <option value="latte">Latte (200ml) + 40g Cereali integrali</option>
+                                    <option value="ricotta" data-dairy="1">Ricotta vaccina (120g) + 40g Pane tostato</option>
+                                    <option value="burro_arachidi">Pane (40g) + Burro Arachidi (15g) + Latte (200ml)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"><i class="fa-solid fa-utensils mr-1"></i>Pranzo</label>
+                                <select id="pranzo" class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-xl px-4 py-3 outline-none focus:border-chef-500">
+                                    <option value="">Seleziona pranzo...</option>
+                                    <option value="tacchino">Crema di zucchine + Fesa di Tacchino (150g)</option>
+                                    <option value="seppie">Risotto ai carciofi + Seppie/Calamari (180g)</option>
+                                    <option value="gorgonzola" data-dairy="1">Risotto al Gorgonzola (80g) e Radicchio</option>
+                                    <option value="legumi">Crema di zucca + Ceci/Lenticchie (150g)</option>
+                                    <option value="pesce">Pasta pomodorini e melanzane + Pesce azzurro (180g)</option>
+                                    <option value="pollo">Risotto ai funghi + Petto di Pollo (150g)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"><i class="fa-regular fa-clock mr-1"></i>Spuntino Pomeriggio</label>
+                                <select id="spuntino2" class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-xl px-4 py-3 outline-none focus:border-chef-500">
+                                    <option value="">Seleziona spuntino...</option>
+                                    <option value="noci">Frutta Secca (15g)</option>
+                                    <option value="yogurt" data-dairy="1">Yogurt Greco (150g)</option>
+                                    <option value="crackers">Crackers (30g)</option>
+                                    <option value="frutta_solo">Solo Frutta (Se mangiato burro arachidi mattino)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2"><i class="fa-solid fa-moon mr-1"></i>Cena</label>
+                                <select id="cena" class="w-full bg-slate-50 border border-slate-200 text-slate-700 font-medium rounded-xl px-4 py-3 outline-none focus:border-chef-500">
+                                    <option value="">Seleziona cena...</option>
+                                    <option value="uova" data-egg="1">2 Uova (Sode o frittata al forno)</option>
+                                    <option value="bresaola">Bresaola o Crudo sgrassato (120g)</option>
+                                    <option value="coniglio">Spezzatino di Coniglio (150g)</option>
+                                    <option value="tagliata" data-redmeat="1">Tagliata di Bovino (150g)</option>
+                                    <option value="pizza" data-dairy="1">Pizza Integrale Verdure e Mozzarella</option>
+                                    <option value="tacchino_cena">Straccetti di Tacchino (150g)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button onclick="salvaGiornataDieta()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 rounded-xl transition-all shadow-md text-lg mt-6 flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-lock"></i> Salva Giornata (1800 Kcal)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Colonna Statistiche Dieta -->
+                <div class="space-y-6">
+                    <div class="glass-card rounded-3xl p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-black text-slate-800 flex items-center gap-2">
+                                <i class="fa-solid fa-scale-balanced text-chef-600"></i> Budget
+                            </h3>
+                            <button onclick="svuotaDieta()" class="text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 px-2 py-1 rounded-md"><i class="fa-solid fa-rotate-left mr-1"></i>Reset</button>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1"><span class="text-slate-600">Uova (Max 2)</span><span id="egg-count">0 / 2</span></div>
+                                <div class="w-full bg-slate-100 rounded-full h-2"><div id="egg-bar" class="bg-amber-400 h-2 rounded-full transition-all" style="width: 0%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1"><span class="text-slate-600">Formaggi (Max 3)</span><span id="dairy-count">0 / 3</span></div>
+                                <div class="w-full bg-slate-100 rounded-full h-2"><div id="dairy-bar" class="bg-yellow-400 h-2 rounded-full transition-all" style="width: 0%"></div></div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1"><span class="text-slate-600">Carne Rossa (Max 1)</span><span id="meat-count">0 / 1</span></div>
+                                <div class="w-full bg-slate-100 rounded-full h-2"><div id="meat-bar" class="bg-red-400 h-2 rounded-full transition-all" style="width: 0%"></div></div>
+                            </div>
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Valore Rilevato (mg/dL)</label>
-                        <input type="number" id="glicemia-valore" placeholder="Es. 105" inputmode="numeric" class="w-full bg-slate-50 border border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 focus:ring-2 focus:ring-medical-500 outline-none text-2xl text-center">
+                    <div class="glass-card rounded-3xl p-6 flex flex-col h-[350px]">
+                        <h3 class="text-lg font-black text-slate-800 mb-4 border-b pb-2"><i class="fa-solid fa-book-open text-chef-600"></i> Settimana</h3>
+                        <div id="lista-dieta" class="flex-grow overflow-y-auto custom-scrollbar space-y-2 pr-2">
+                            <!-- JS Diet List -->
+                        </div>
                     </div>
-
-                    <button onclick="salvaGlicemia()" class="w-full bg-medical-600 hover:bg-medical-700 text-white font-bold py-4 rounded-xl transition-colors shadow-md text-lg mt-2 flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Salva nel Diario
-                    </button>
                 </div>
             </div>
 
-            <!-- Diario Glicemico -->
-            <div class="glass-card rounded-3xl p-6 flex flex-col flex-grow fade-in" style="animation-delay: 0.1s;">
-                <div class="flex justify-between items-center mb-5">
-                    <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-book-medical text-medical-600"></i> Storico
+            <!-- ========================================== -->
+            <!-- VISTA 2: DIARIO GLICEMICO                  -->
+            <!-- ========================================== -->
+            <div id="view-glicemia" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 fade-in">
+                
+                <div class="glass-card rounded-3xl p-6 h-fit">
+                    <h2 class="text-xl font-black text-slate-800 mb-5 flex items-center gap-2">
+                        <i class="fa-solid fa-pen-to-square text-medical-600"></i> Nuova Misurazione
                     </h2>
-                    <button onclick="svuotaDiario()" class="text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 px-3 py-1.5 rounded-lg transition-colors">
-                        <i class="fa-solid fa-trash mr-1"></i> Svuota
-                    </button>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Momento</label>
+                            <div class="relative">
+                                <select id="glicemia-tipo" class="w-full bg-slate-50 border border-slate-200 text-slate-800 font-semibold rounded-xl px-4 py-3 outline-none focus:border-medical-500 appearance-none">
+                                    <option value="digiuno">A Digiuno (Target < 150)</option>
+                                    <option value="post">Post-Prandiale (Target < 180)</option>
+                                </select>
+                                <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Valore (mg/dL)</label>
+                            <input type="number" id="glicemia-valore" placeholder="Es. 105" inputmode="numeric" class="w-full bg-slate-50 border border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none focus:border-medical-500 text-2xl text-center">
+                        </div>
+
+                        <button onclick="salvaGlicemia()" class="w-full bg-medical-600 hover:bg-medical-700 text-white font-bold py-4 rounded-xl transition-colors shadow-md text-lg mt-2 flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-plus"></i> Registra Valore
+                        </button>
+                    </div>
                 </div>
 
-                <div id="lista-glicemia" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2 min-h-[300px]">
-                    <!-- I dati verranno inseriti qui dal Javascript -->
+                <div class="glass-card rounded-3xl p-6 flex flex-col min-h-[400px]">
+                    <div class="flex justify-between items-center mb-5">
+                        <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
+                            <i class="fa-solid fa-book-medical text-medical-600"></i> Storico Valori
+                        </h2>
+                        <button onclick="svuotaGlicemia()" class="text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 px-3 py-1.5 rounded-lg transition-colors">
+                            <i class="fa-solid fa-trash mr-1"></i> Svuota
+                        </button>
+                    </div>
+                    <div id="lista-glicemia" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
+                        <!-- JS Glycemia List -->
+                    </div>
                 </div>
             </div>
 
@@ -126,242 +246,300 @@
 
     <div id="custom-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity opacity-0">
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center transform transition-all scale-95" id="modal-content">
-            <div id="modal-icon" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-medical-50 mb-4 text-3xl">
-                <!-- Icona dinamica -->
-            </div>
+            <div id="modal-icon" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-slate-100 mb-4 text-3xl"></div>
             <h3 id="modal-title" class="text-xl font-black text-slate-900 mb-2"></h3>
             <p id="modal-message" class="text-slate-600 font-medium text-sm mb-6 leading-relaxed"></p>
-            <div id="modal-actions" class="flex gap-3">
-                <button id="modal-btn-primary" class="flex-1 medical-gradient text-white font-bold py-3 rounded-xl shadow-md">Ok</button>
-            </div>
+            <div id="modal-actions" class="flex gap-3"></div>
         </div>
     </div>
 
     <script>
         const SECRET_CODE = "713";
-        let misurazioni = [];
+        let state = {
+            dieta: [],
+            glicemia: [],
+            budget: { uova: 0, latticini: 0, carneRossa: 0 }
+        };
 
-        // --- SISTEMA DI LOGIN ---
+        // Inizializzazione
+        window.onload = function() {
+            loadData();
+        }
+
+        // Login System
         function checkPin() {
             const input = document.getElementById('pin-input').value;
-            const errorMsg = document.getElementById('pin-error');
-            
             if (input === SECRET_CODE) {
-                errorMsg.classList.add('hidden');
+                document.getElementById('pin-error').classList.add('hidden');
                 document.getElementById('login-screen').classList.add('opacity-0', 'pointer-events-none');
                 setTimeout(() => {
                     document.getElementById('login-screen').classList.add('hidden');
                     document.getElementById('app-content').classList.remove('hidden');
                     document.getElementById('app-content').classList.add('flex');
-                    loadData();
                 }, 500);
             } else {
-                errorMsg.classList.remove('hidden');
+                document.getElementById('pin-error').classList.remove('hidden');
                 document.getElementById('pin-input').value = '';
-                // Scuote l'input
-                const inputEl = document.getElementById('pin-input');
-                inputEl.classList.add('translate-x-2');
-                setTimeout(() => inputEl.classList.remove('translate-x-2'), 100);
+                const el = document.getElementById('pin-input');
+                el.classList.add('translate-x-2');
+                setTimeout(() => el.classList.remove('translate-x-2'), 100);
             }
         }
 
         function logout() {
-            document.getElementById('app-content').classList.add('hidden');
-            document.getElementById('app-content').classList.remove('flex');
-            
-            const loginScreen = document.getElementById('login-screen');
-            loginScreen.classList.remove('hidden');
+            document.getElementById('app-content').classList.add('hidden', 'flex');
+            const login = document.getElementById('login-screen');
+            login.classList.remove('hidden');
             document.getElementById('pin-input').value = '';
-            
-            setTimeout(() => {
-                loginScreen.classList.remove('opacity-0', 'pointer-events-none');
-            }, 50);
+            setTimeout(() => login.classList.remove('opacity-0', 'pointer-events-none'), 50);
         }
 
-        // --- GESTIONE DATI LOCALI ---
-        function loadData() {
-            const saved = localStorage.getItem('smartfdiet_glicemia_v2');
-            if (saved) {
-                misurazioni = JSON.parse(saved);
-                // Ordina dalla più recente alla più vecchia
-                misurazioni.sort((a, b) => b.timestamp - a.timestamp);
+        // Gestione Tabs
+        function switchTab(tabName) {
+            const btnDieta = document.getElementById('tab-dieta');
+            const btnGlic = document.getElementById('tab-glicemia');
+            const viewDieta = document.getElementById('view-dieta');
+            const viewGlic = document.getElementById('view-glicemia');
+
+            if(tabName === 'dieta') {
+                btnDieta.className = "tab-btn active flex-1 whitespace-nowrap py-2.5 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2";
+                btnGlic.className = "tab-btn inactive flex-1 whitespace-nowrap py-2.5 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2";
+                viewDieta.classList.remove('hidden'); viewDieta.classList.add('grid');
+                viewGlic.classList.add('hidden'); viewGlic.classList.remove('grid');
             } else {
-                misurazioni = [];
+                btnGlic.className = "tab-btn active flex-1 whitespace-nowrap py-2.5 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2";
+                btnDieta.className = "tab-btn inactive flex-1 whitespace-nowrap py-2.5 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2";
+                viewGlic.classList.remove('hidden'); viewGlic.classList.add('grid');
+                viewDieta.classList.add('hidden'); viewDieta.classList.remove('grid');
             }
-            renderLista();
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('smartfdiet_data_v3');
+            if (saved) {
+                state = JSON.parse(saved);
+                // retrocompatibilità
+                if(!state.dieta) state.dieta = [];
+                if(!state.glicemia) state.glicemia = [];
+                if(!state.budget) state.budget = { uova: 0, latticini: 0, carneRossa: 0 };
+            }
+            renderDieta();
+            renderGlicemia();
         }
 
         function saveData() {
-            localStorage.setItem('smartfdiet_glicemia_v2', JSON.stringify(misurazioni));
-            loadData();
+            localStorage.setItem('smartfdiet_data_v3', JSON.stringify(state));
         }
 
-        // --- SALVATAGGIO NUOVA MISURAZIONE ---
-        window.salvaGlicemia = function() {
-            const tipoSelezionato = document.getElementById('glicemia-tipo').value;
-            const valoreInput = document.getElementById('glicemia-valore').value;
-            const valore = parseInt(valoreInput);
+        // ==========================================
+        // LOGICA MENU DIETA
+        // ==========================================
+        function salvaGiornataDieta() {
+            const day = document.getElementById('day-select').value;
+            const col = document.getElementById('colazione');
+            const pra = document.getElementById('pranzo');
+            const spu = document.getElementById('spuntino2');
+            const cen = document.getElementById('cena');
 
-            if (!valoreInput || isNaN(valore)) {
-                showModal("Errore", "Inserisci un valore numerico valido.", "error");
+            if (!col.value || !pra.value || !spu.value || !cen.value) {
+                showModal("Campi Incompleti", "Seleziona tutti i pasti per salvare.", "error"); return;
+            }
+
+            let uova = 0, latticini = 0, carne = 0;
+            [col, pra, cen, spu].forEach(s => {
+                const opt = s.options[s.selectedIndex];
+                if (opt.dataset.egg) uova += 1;
+                if (opt.dataset.dairy) latticini += 1;
+                if (opt.dataset.redmeat) carne += 1;
+            });
+
+            // Regole Cliniche
+            if (state.budget.uova + uova > 2) { showModal("Limite Uova", "Hai superato le 2 uova settimanali consentite.", "error"); return; }
+            if (state.budget.latticini + latticini > 3) { showModal("Limite Formaggi", "Hai superato i formaggi consentiti.", "error"); return; }
+            if (state.budget.carneRossa + carne > 1) { showModal("Limite Carne", "Hai superato la porzione di carne rossa.", "error"); return; }
+            if (col.value === 'burro_arachidi' && spu.value !== 'frutta_solo') {
+                showModal("Regola Burro Arachidi", "Se a colazione usi burro di arachidi, lo spuntino deve essere Solo Frutta.", "warning"); return;
+            }
+
+            // Esiste già il giorno?
+            const existIndex = state.dieta.findIndex(d => d.giorno === day);
+            if(existIndex > -1) {
+                showModal("Giorno Esistente", "Hai già compilato " + day + ". Vuoi sovrascriverlo?", "warning", () => {
+                    // Sottrai vecchio budget
+                    const old = state.dieta[existIndex];
+                    state.budget.uova -= old.uova; state.budget.latticini -= old.latticini; state.budget.carneRossa -= old.carne;
+                    
+                    state.budget.uova += uova; state.budget.latticini += latticini; state.budget.carneRossa += carne;
+                    state.dieta[existIndex] = { giorno: day, colTx: col.options[col.selectedIndex].text, praTx: pra.options[pra.selectedIndex].text, cenTx: cen.options[cen.selectedIndex].text, uova: uova, latticini: latticini, carne: carne };
+                    finishSaveDieta();
+                });
                 return;
             }
 
-            const isDigiuno = tipoSelezionato === 'digiuno';
+            state.budget.uova += uova; state.budget.latticini += latticini; state.budget.carneRossa += carne;
+            state.dieta.push({ giorno: day, colTx: col.options[col.selectedIndex].text, praTx: pra.options[pra.selectedIndex].text, cenTx: cen.options[cen.selectedIndex].text, uova: uova, latticini: latticini, carne: carne });
+            finishSaveDieta();
+        }
+
+        function finishSaveDieta() {
+            saveData();
+            renderDieta();
+            document.getElementById('colazione').value = ''; document.getElementById('pranzo').value = '';
+            document.getElementById('spuntino2').value = ''; document.getElementById('cena').value = '';
+            closeModal();
+        }
+
+        function renderDieta() {
+            // Aggiorna Budget
+            document.getElementById('egg-count').innerText = `${state.budget.uova} / 2`;
+            document.getElementById('egg-bar').style.width = `${(state.budget.uova / 2)*100}%`;
+            document.getElementById('dairy-count').innerText = `${state.budget.latticini} / 3`;
+            document.getElementById('dairy-bar').style.width = `${(state.budget.latticini / 3)*100}%`;
+            document.getElementById('meat-count').innerText = `${state.budget.carneRossa} / 1`;
+            document.getElementById('meat-bar').style.width = `${(state.budget.carneRossa / 1)*100}%`;
+
+            // Lista
+            const list = document.getElementById('lista-dieta');
+            list.innerHTML = '';
+            if(state.dieta.length === 0) { list.innerHTML = `<div class="text-center text-slate-400 mt-6 text-sm"><i class="fa-solid fa-plate-wheat text-3xl mb-2 opacity-50 block"></i>Nessun pasto registrato.</div>`; return; }
+            
+            state.dieta.forEach(d => {
+                list.insertAdjacentHTML('beforeend', `
+                    <div class="bg-slate-50 border border-slate-100 rounded-xl p-3 text-sm">
+                        <div class="font-bold text-slate-800 border-b border-slate-200 pb-1 mb-1">${d.giorno}</div>
+                        <div class="text-slate-600 truncate"><i class="fa-solid fa-mug-saucer w-4 text-slate-400"></i> ${d.colTx}</div>
+                        <div class="text-slate-600 truncate"><i class="fa-solid fa-utensils w-4 text-slate-400"></i> ${d.praTx}</div>
+                        <div class="text-slate-600 truncate"><i class="fa-solid fa-moon w-4 text-slate-400"></i> ${d.cenTx}</div>
+                    </div>
+                `);
+            });
+        }
+
+        function svuotaDieta() {
+            if(state.dieta.length === 0) return;
+            showModal("Reset Settimana", "Vuoi azzerare il piano alimentare e i budget?", "danger", () => {
+                state.dieta = []; state.budget = { uova: 0, latticini: 0, carneRossa: 0 };
+                saveData(); renderDieta(); closeModal();
+            });
+        }
+
+        // ==========================================
+        // LOGICA DIARIO GLICEMICO
+        // ==========================================
+        function salvaGlicemia() {
+            const tipo = document.getElementById('glicemia-tipo').value;
+            const valStr = document.getElementById('glicemia-valore').value;
+            const valore = parseInt(valStr);
+
+            if (!valStr || isNaN(valore)) { showModal("Errore", "Inserisci un valore numerico valido.", "error"); return; }
+
+            const isDigiuno = tipo === 'digiuno';
             const limite = isDigiuno ? 150 : 180;
             const isBuono = valore < limite;
 
-            const nuovaMisurazione = {
+            state.glicemia.push({
                 id: Date.now().toString(),
                 tipo: isDigiuno ? "A Digiuno" : "Post-Prandiale",
                 valore: valore,
-                isBuono: isBuono,
                 limite: limite,
+                isBuono: isBuono,
                 timestamp: Date.now()
-            };
+            });
 
-            misurazioni.push(nuovaMisurazione);
             saveData();
-            
-            document.getElementById('glicemia-valore').value = ''; // Reset input
-            document.getElementById('glicemia-valore').blur(); // Nasconde tastiera mobile
-        };
+            renderGlicemia();
+            document.getElementById('glicemia-valore').value = '';
+            document.getElementById('glicemia-valore').blur();
+        }
 
-        // --- RENDERIZZAZIONE LISTA ---
-        function renderLista() {
-            const listContainer = document.getElementById('lista-glicemia');
+        function renderGlicemia() {
+            const list = document.getElementById('lista-glicemia');
+            list.innerHTML = '';
             
-            if (misurazioni.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="h-full flex flex-col items-center justify-center text-slate-400 mt-10 opacity-60">
-                        <i class="fa-solid fa-clipboard-list text-5xl mb-4"></i>
-                        <p class="font-medium">Nessuna misurazione salvata.</p>
-                        <p class="text-sm mt-1">Inizia registrando il tuo primo valore.</p>
-                    </div>`;
-                return;
-            }
+            // Ordina per data (più recenti prima)
+            const ordinati = [...state.glicemia].sort((a,b) => b.timestamp - a.timestamp);
 
-            listContainer.innerHTML = '';
-            
-            misurazioni.forEach(m => {
-                const dataObj = new Date(m.timestamp);
-                // Formatta in "Giorno/Mese Ore:Minuti"
-                const dataStr = `${dataObj.getDate().toString().padStart(2,'0')}/${(dataObj.getMonth()+1).toString().padStart(2,'0')} - ${dataObj.getHours().toString().padStart(2,'0')}:${dataObj.getMinutes().toString().padStart(2,'0')}`;
+            if(ordinati.length === 0) { list.innerHTML = `<div class="text-center text-slate-400 mt-6 text-sm"><i class="fa-solid fa-droplet text-3xl mb-2 opacity-50 block"></i>Nessuna misurazione.</div>`; return; }
+
+            ordinati.forEach(g => {
+                const d = new Date(g.timestamp);
+                const dataStr = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} - ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
                 
-                const bgClass = m.isBuono ? "bg-emerald-50 border-emerald-100" : "bg-red-50 border-red-200";
-                const textClass = m.isBuono ? "text-emerald-700" : "text-red-700";
-                const iconClass = m.isBuono ? "fa-circle-check text-emerald-500" : "fa-triangle-exclamation text-red-500";
-                const badgeBg = m.isBuono ? "bg-emerald-100 text-emerald-800" : "bg-red-200 text-red-900";
+                const bg = g.isBuono ? "bg-emerald-50 border-emerald-100" : "bg-red-50 border-red-200";
+                const txt = g.isBuono ? "text-emerald-700" : "text-red-700";
+                const icon = g.isBuono ? "fa-circle-check text-emerald-500" : "fa-triangle-exclamation text-red-500";
 
-                const html = `
-                    <div class="flex items-center justify-between p-4 rounded-2xl border ${bgClass} transition-all relative overflow-hidden group">
-                        
-                        <div class="flex flex-col z-10">
-                            <span class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1">${dataStr}</span>
-                            <div class="font-bold text-slate-800 flex items-center gap-2">
-                                ${m.tipo}
-                            </div>
-                            <span class="text-[11px] font-semibold mt-1 px-2 py-0.5 rounded-md w-max ${badgeBg}">Limite: ${m.limite}</span>
+                list.insertAdjacentHTML('beforeend', `
+                    <div class="flex items-center justify-between p-4 rounded-xl border ${bg}">
+                        <div>
+                            <span class="text-[10px] font-black uppercase text-slate-400 block">${dataStr}</span>
+                            <div class="font-bold text-slate-800">${g.tipo} <span class="text-[10px] bg-white px-1.5 py-0.5 rounded ml-1 border border-slate-200 shadow-sm">Target < ${g.limite}</span></div>
                         </div>
-
-                        <div class="flex items-center gap-4 z-10">
+                        <div class="flex items-center gap-4">
                             <div class="text-right">
-                                <div class="text-3xl font-black tracking-tight ${textClass}">${m.valore}</div>
-                                <div class="text-xs font-bold opacity-80 ${textClass}"><i class="fa-solid ${iconClass}"></i> mg/dL</div>
+                                <div class="text-2xl font-black ${txt}">${g.valore}</div>
+                                <div class="text-[10px] font-bold ${txt}"><i class="fa-solid ${icon}"></i> mg/dL</div>
                             </div>
-                            <button onclick="eliminaMisurazione('${m.id}')" class="w-10 h-10 rounded-full bg-white/60 text-slate-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors shadow-sm">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
+                            <button onclick="eliminaGlicemia('${g.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-2"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
-                `;
-                listContainer.insertAdjacentHTML('beforeend', html);
+                `);
             });
         }
 
-        // --- ELIMINAZIONE SINGOLA ---
-        window.eliminaMisurazione = function(id) {
-            showModal("Elimina", "Sei sicuro di voler eliminare questa misurazione?", "warning", () => {
-                misurazioni = misurazioni.filter(m => m.id !== id);
-                saveData();
-                closeModal();
+        function eliminaGlicemia(id) {
+            showModal("Elimina", "Cancellare questo valore?", "warning", () => {
+                state.glicemia = state.glicemia.filter(g => g.id !== id);
+                saveData(); renderGlicemia(); closeModal();
             });
-        };
+        }
 
-        // --- SVUOTA TUTTO ---
-        window.svuotaDiario = function() {
-            if(misurazioni.length === 0) return;
-            showModal("Svuota Diario", "Attenzione: stai per eliminare TUTTE le misurazioni salvate. L'azione è irreversibile. Procedere?", "danger", () => {
-                misurazioni = [];
-                saveData();
-                closeModal();
+        function svuotaGlicemia() {
+            if(state.glicemia.length === 0) return;
+            showModal("Svuota Diario", "Vuoi cancellare TUTTE le misurazioni salvate?", "danger", () => {
+                state.glicemia = []; saveData(); renderGlicemia(); closeModal();
             });
-        };
+        }
 
-        // --- SISTEMA MODALI (Finestre di avviso) ---
-        window.showModal = function(title, message, type = "info", confirmCallback = null) {
+        // ==========================================
+        // SISTEMA MODALI (Alert personalizzati)
+        // ==========================================
+        function showModal(title, message, type = "info", confirmCallback = null) {
             const modal = document.getElementById('custom-modal');
             const icon = document.getElementById('modal-icon');
-            const btnPrimary = document.getElementById('modal-btn-primary');
-            const actionsContainer = document.getElementById('modal-actions');
+            const actions = document.getElementById('modal-actions');
 
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-message').innerText = message;
-
-            // Reset bottoni
-            actionsContainer.innerHTML = '';
+            actions.innerHTML = '';
 
             if (type === "error") {
-                icon.className = "mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 text-red-500 mb-4 text-3xl";
-                icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-                actionsContainer.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl">Ho capito</button>`;
-            } 
-            else if (type === "warning" || type === "danger") {
-                icon.className = "mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 text-amber-500 mb-4 text-3xl";
-                icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-                
-                const cancelBtn = document.createElement('button');
-                cancelBtn.className = "flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl hover:bg-slate-200 transition-colors";
-                cancelBtn.innerText = "Annulla";
-                cancelBtn.onclick = closeModal;
-
-                const confirmBtn = document.createElement('button');
-                confirmBtn.className = "flex-1 bg-red-500 text-white font-bold py-3 rounded-xl hover:bg-red-600 transition-colors";
-                confirmBtn.innerText = "Sì, procedi";
-                confirmBtn.onclick = confirmCallback;
-
-                actionsContainer.appendChild(cancelBtn);
-                actionsContainer.appendChild(confirmBtn);
-            } 
-            else {
-                icon.className = "mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-medical-50 text-medical-500 mb-4 text-3xl";
-                icon.innerHTML = '<i class="fa-solid fa-info"></i>';
-                actionsContainer.innerHTML = `<button onclick="closeModal()" class="flex-1 medical-gradient text-white font-bold py-3 rounded-xl">Ok</button>`;
+                icon.className = "mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 text-red-500 mb-4 text-3xl"; icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-slate-800 text-white font-bold py-3 rounded-xl">Ho capito</button>`;
+            } else if (type === "warning" || type === "danger") {
+                icon.className = "mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-100 text-amber-500 mb-4 text-3xl"; icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                actions.innerHTML = `
+                    <button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-700 font-bold py-3 rounded-xl">Annulla</button>
+                    <button onclick="document.getElementById('hidden-confirm').click()" class="flex-1 bg-red-500 text-white font-bold py-3 rounded-xl">Procedi</button>
+                    <button id="hidden-confirm" class="hidden"></button>
+                `;
+                document.getElementById('hidden-confirm').onclick = confirmCallback;
+            } else {
+                icon.className = "mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-medical-50 text-medical-500 mb-4 text-3xl"; icon.innerHTML = '<i class="fa-solid fa-info"></i>';
+                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-medical-600 text-white font-bold py-3 rounded-xl">Ok</button>`;
             }
 
             modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                document.getElementById('modal-content').classList.remove('scale-95');
-            }, 10);
-        };
+            setTimeout(() => { modal.classList.remove('opacity-0'); document.getElementById('modal-content').classList.remove('scale-95'); }, 10);
+        }
 
-        window.closeModal = function() {
+        function closeModal() {
             const modal = document.getElementById('custom-modal');
-            modal.classList.add('opacity-0');
-            document.getElementById('modal-content').classList.add('scale-95');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-            }, 300);
-        };
+            modal.classList.add('opacity-0'); document.getElementById('modal-content').classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
 
-        // Permette di premere "Invio" nel campo PIN
-        document.getElementById('pin-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                checkPin();
-            }
-        });
-
+        document.getElementById('pin-input').addEventListener('keypress', function (e) { if (e.key === 'Enter') checkPin(); });
     </script>
 </body>
 </html>
