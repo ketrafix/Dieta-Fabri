@@ -5,38 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartFDiet - Dieta & Glicemia</title>
     
-    <!-- Metadati per App Smartphone -->
+    <!-- IL SEGRETO PER INSTALLARLA COME APP E NON COME WIDGET -->
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SmartFDiet">
+    <meta name="theme-color" content="#16a34a">
     
-    <!-- Nuova Favicon "Soft Green Leaf" Vettoriale -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3e%3crect width='512' height='512' rx='120' fill='%23f0fdf4'/%3e%3cpath fill='%2316a34a' d='M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z'/%3e%3c/svg%3e">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3e%3crect width='512' height='512' rx='120' fill='%23f0fdf4'/%3e%3cpath fill='%2316a34a' d='M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z'/%3e%3c/svg%3e">
+    <!-- Manifest Vettoriale per forzare l'installazione App su Android -->
+    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22display%22%3A%22standalone%22%2C%22start_url%22%3A%22.%2F%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%2316a34a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bcharset%3DUTF-8%2C%253csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20512%20512%27%253e%253crect%20width%3D%27512%27%20height%3D%27512%27%20rx%3D%27120%27%20fill%3D%27%2523f0fdf4%27%2F%253e%253cpath%20fill%3D%27%252316a34a%27%20d%3D%27M384%2048c8.8%200%2016%207.2%2016%2016V240c0%20106-86%20192-192%20192H160c-17.7%200-32-14.3-32-32s14.3-32%2032-32h48c70.7%200%20128-57.3%20128-128V64c0-8.8%207.2-16%2016-16h16zM320%200H384c44.2%200%2080%2035.8%2080%2080V240c0%20141.4-114.6%20256-256%20256H160c-53%200-96-43-96-96V352c0-23.7%2012.9-44.3%2032-55.4V160C96%2071.6%20167.6%200%20256%200h64z%27%2F%253e%253c%2Fsvg%253e%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D'>
+    
+    <!-- Icona Foglia (Senza bisogno di immagini esterne) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3e%3crect width='512' height='512' rx='120' fill='%23f0fdf4'/%3e%3cpath fill='%2316a34a' d='M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z'/%3e%3c/svg%3e">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script>
-        // Auto-generazione dell'Icona PNG per la Home di iPhone/Android
-        function createFavicon() {
+        // Generatore Icona PNG per i sistemi iOS che non leggono gli SVG nativi
+        function generateAppleIcon() {
             const canvas = document.createElement('canvas');
             canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d');
-            const img = new Image();
-            // Il nuovo logo in formato raw per il Canvas
-            const svgData = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%23f0fdf4'/><path fill='%2316a34a' d='M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z'/></svg>`;
-            img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
-            img.onload = () => {
-                ctx.drawImage(img, 0, 0);
-                const link = document.createElement('link');
-                link.rel = 'apple-touch-icon';
-                link.href = canvas.toDataURL('image/png');
-                document.head.appendChild(link);
-            };
+            ctx.fillStyle = '#f0fdf4';
+            ctx.beginPath(); ctx.roundRect(0, 0, 512, 512, 120); ctx.fill();
+            const p = new Path2D('M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z');
+            ctx.fillStyle = '#16a34a'; ctx.fill(p);
+            const link = document.createElement('link');
+            link.rel = 'apple-touch-icon';
+            link.href = canvas.toDataURL('image/png');
+            document.head.appendChild(link);
         }
-        window.addEventListener('DOMContentLoaded', createFavicon);
+        window.addEventListener('DOMContentLoaded', generateAppleIcon);
 
         tailwind.config = {
             theme: {
@@ -54,7 +55,6 @@
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
         
-        /* Contorni Evidenti e Ombreggiature Cliniche */
         .glass-card { 
             background: #ffffff; 
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
@@ -70,51 +70,47 @@
         .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Pulsanti Tabs per passare da Dieta a Glicemia */
         .tab-btn.active { background-color: #16a34a; color: #ffffff; font-weight: 800; box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.4); border: 2px solid #15803d; }
         .tab-btn.inactive { background-color: #334155; color: #94a3b8; font-weight: 600; border: 2px solid transparent; }
         
-        /* Icona Custom Select per i Menu a tendina */
         .select-icon { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em; }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col">
+<body class="min-h-screen text-slate-800 flex flex-col bg-slate-900"> <!-- Background base scuro per la login screen -->
 
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-500">
-        <div class="w-full max-w-sm bg-white rounded-[2rem] p-10 text-center shadow-2xl fade-in border-4 border-slate-800">
+        <!-- Box fedele alla foto: bordi molto morbidi, bianco puro, padding calibrato -->
+        <div class="w-full max-w-[320px] bg-white rounded-[2rem] p-8 text-center shadow-2xl fade-in">
             
-            <!-- NUOVO LOGO SOFT GREEN (Ridisegnato al pixel) -->
-            <div class="mx-auto w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center mb-6 shadow-sm border border-green-100">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-14 h-14 text-green-600">
-                    <path fill="currentColor" d="M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z"/>
-                </svg>
+            <!-- Logo Soft Green: foglia verde, sfondo verde pastello, angoli morbidi -->
+            <div class="mx-auto w-[4.5rem] h-[4.5rem] bg-[#f0fdf4] rounded-[1.2rem] flex items-center justify-center mb-5">
+                <i class="fa-solid fa-leaf text-4xl text-green-600"></i>
             </div>
             
-            <h1 class="text-3xl font-black text-slate-800 mb-1 tracking-tight">SmartFDiet</h1>
-            <p class="text-xs text-slate-500 font-bold mb-8 uppercase tracking-wide">Protocollo 1800 Kcal & Glicemia</p>
+            <!-- Testi -->
+            <h1 class="text-[1.6rem] font-bold text-slate-800 mb-1 tracking-tight">SmartFDiet</h1>
+            <p class="text-[0.7rem] text-slate-400 font-medium mb-6">Protocollo 1800 Kcal & Glicemia</p>
 
             <div class="space-y-4">
-                <!-- Input stile morbido e pulito -->
-                <input type="password" id="pin-input" placeholder="C o d i c e   P I N" inputmode="numeric" pattern="[0-9]*" class="w-full bg-slate-50 border-2 border-slate-100 text-slate-800 rounded-2xl px-5 py-4 text-center text-xl font-black tracking-[0.3em] focus:outline-none focus:border-green-500 transition-colors shadow-inner">
-                <!-- Bottone verde arrotondato -->
-                <button onclick="checkPin()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl transition-all shadow-md text-lg flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-unlock-keyhole"></i> Accedi
+                <!-- Input PIN largo, grigio chiaro -->
+                <input type="password" id="pin-input" placeholder="C o d i c e   P I N" inputmode="numeric" pattern="[0-9]*" class="w-full bg-[#f8fafc] border border-slate-100 text-slate-800 rounded-xl px-5 py-3 text-center text-lg font-bold tracking-[0.3em] focus:outline-none focus:border-green-500 transition-colors">
+                
+                <!-- Bottone Accedi Verde vivo -->
+                <button onclick="checkPin()" class="w-full bg-[#16a34a] hover:bg-green-700 text-white font-semibold py-3 rounded-xl transition-all shadow-sm text-base flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-lock text-sm"></i> Accedi
                 </button>
             </div>
-            <p id="pin-error" class="text-red-500 text-sm font-bold mt-4 hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> PIN Errato</p>
+            <p id="pin-error" class="text-red-500 text-sm font-bold mt-4 hidden">PIN Errato</p>
         </div>
     </div>
 
-    <div id="app-content" class="hidden flex-col min-h-screen">
+    <div id="app-content" class="hidden flex-col min-h-screen bg-slate-100">
         <header class="medical-gradient shadow-xl sticky top-0 z-40 border-b-4 border-slate-800">
             <div class="max-w-7xl mx-auto px-4 pt-4 pb-4">
                 <div class="flex items-center justify-between mb-4 text-white">
                     <div class="flex items-center gap-3">
-                        <!-- LOGO PICCOLO HEADER (Riprende il nuovo stile) -->
-                        <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center shadow-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-6 h-6 text-green-600">
-                                <path fill="currentColor" d="M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z"/>
-                            </svg>
+                        <div class="w-10 h-10 bg-[#f0fdf4] rounded-xl flex items-center justify-center shadow-sm">
+                            <i class="fa-solid fa-leaf text-xl text-green-600"></i>
                         </div>
                         <h1 class="text-2xl font-black tracking-tight">SmartFDiet</h1>
                     </div>
@@ -123,7 +119,6 @@
                     </button>
                 </div>
                 
-                <!-- MENU TABS PER CAMBIARE SEZIONE -->
                 <div class="flex gap-2 p-1.5 bg-slate-900 rounded-xl border border-slate-700 shadow-inner">
                     <button onclick="switchTab('dieta')" id="tab-dieta" class="tab-btn active flex-1 py-3 px-4 rounded-lg text-sm transition-all flex items-center justify-center gap-2">
                         <i class="fa-solid fa-utensils"></i> Menù Dieta
@@ -140,22 +135,22 @@
             <div id="view-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-8 fade-in">
                 
                 <div class="lg:col-span-2 space-y-6">
-                    <div class="glass-card p-6 sm:p-8 flex flex-col relative">
+                    <div class="glass-card p-6 sm:p-8 flex flex-col relative border-2 border-slate-300">
                         
-                        <!-- BARRA GIORNI (Sempre cliccabile in alto) -->
+                        <!-- Barra dei giorni sempre cliccabile -->
                         <div class="flex justify-between items-center mb-6 border-b-2 border-slate-200 pb-4 relative z-30 bg-white">
                             <h2 class="text-2xl font-black text-slate-800 flex items-center gap-3">
                                 <i class="fa-regular fa-calendar-plus text-green-600"></i> Pianifica
                             </h2>
-                            <select id="day-select" class="bg-slate-100 border-2 border-slate-200 rounded-xl py-2 pl-4 pr-10 font-black text-slate-800 outline-none select-icon shadow-sm focus:border-green-500 transition-colors">
+                            <select id="day-select" class="bg-slate-100 border-2 border-slate-200 rounded-xl py-2 pl-4 pr-10 font-black text-slate-800 outline-none select-icon shadow-sm focus:border-green-500 transition-colors cursor-pointer">
                                 <option value="Lunedì">Lunedì</option> <option value="Martedì">Martedì</option> <option value="Mercoledì">Mercoledì</option>
                                 <option value="Giovedì">Giovedì</option> <option value="Venerdì">Venerdì</option> <option value="Sabato">Sabato</option> <option value="Domenica">Domenica</option>
                             </select>
                         </div>
 
-                        <!-- CONTENITORE PASTI -->
+                        <!-- L'area interna bloccabile -->
                         <div class="relative flex-grow">
-                            <!-- OVERLAY DI BLOCCO (LUCCHETTO) - Ora blocca SOLO quest'area interna -->
+                            <!-- Overlay Lucchetto -->
                             <div id="lock-overlay" class="hidden absolute inset-0 z-20 bg-white/85 backdrop-blur-sm rounded-2xl flex-col items-center justify-center border-4 border-slate-100 shadow-inner">
                                 <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 shadow-sm border-2 border-slate-200">
                                     <i class="fa-solid fa-lock text-4xl text-slate-500"></i>
@@ -165,7 +160,6 @@
                             </div>
 
                             <div class="space-y-6 pb-4">
-                                <!-- Colazione -->
                                 <div class="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm">
                                     <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-mug-saucer mr-2 text-slate-400"></i>Colazione</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -186,7 +180,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Spuntini Fissi -->
                                 <div class="bg-green-50 p-5 rounded-2xl border-2 border-green-200 shadow-sm flex flex-col md:flex-row gap-4">
                                     <div class="flex-1 text-green-900">
                                         <strong class="block mb-1 text-sm font-black uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1 text-green-600"></i> Mattina</strong>
@@ -199,7 +192,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Pranzo -->
                                 <div class="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm">
                                     <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-3 flex justify-between items-center">
                                         <span><i class="fa-solid fa-sun mr-2 text-slate-400"></i>Pranzo</span>
@@ -228,7 +220,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Cena -->
                                 <div class="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm relative">
                                     <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-3 flex justify-between items-center">
                                         <span><i class="fa-solid fa-moon mr-2 text-slate-400"></i>Cena</span>
@@ -238,7 +229,7 @@
                                     <div class="mb-4">
                                         <label class="flex items-center gap-3 text-sm text-slate-800 font-black cursor-pointer bg-orange-50 border-2 border-orange-200 p-4 rounded-xl hover:bg-orange-100 transition-colors shadow-sm">
                                             <input type="checkbox" id="cena-pizza" onchange="togglePizza()" class="w-6 h-6 text-orange-500 rounded focus:ring-orange-500 border-slate-300">
-                                            <i class="fa-solid fa-pizza-slice text-orange-500 text-xl"></i> Applica Bonus Pizza (Margherita/Verdure)
+                                            <i class="fa-solid fa-pizza-slice text-orange-500 text-xl"></i> Applica Bonus Pizza
                                         </label>
                                     </div>
 
@@ -250,14 +241,13 @@
                                             <option value="Patate (250g)">Patate (250g)</option>
                                         </select>
                                         <select id="cen-pro" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-green-500 transition-colors">
-                                            <!-- Iniettato via JS per copiare le opzioni del pranzo -->
+                                            <!-- Riempito da JS -->
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Bottone Salva -->
                         <button id="btn-salva-dieta" onclick="salvaDieta()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-black py-5 rounded-xl transition-all shadow-xl text-xl mt-4 flex justify-center items-center gap-3 border-2 border-slate-700 relative z-30">
                             <i class="fa-solid fa-cloud-arrow-up"></i> Salva Menù nel Diario
                         </button>
@@ -265,39 +255,33 @@
                 </div>
 
                 <div class="space-y-6">
-                    <!-- Widget Limiti -->
-                    <div class="glass-card p-6 border-2 border-slate-200">
+                    <div class="glass-card p-6 border-2 border-slate-300">
                         <div class="flex justify-between items-center mb-4 border-b-2 border-slate-200 pb-3">
                             <h3 class="text-xl font-black text-slate-800 flex items-center gap-2">
                                 <i class="fa-solid fa-scale-balanced text-green-600"></i> Frequenze
                             </h3>
-                            <button onclick="svuotaDieta()" class="text-xs font-black text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-lg border border-slate-200"><i class="fa-solid fa-rotate-left mr-1"></i>Azzera</button>
+                            <button onclick="svuotaDieta()" class="text-xs font-black text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">Azzera</button>
                         </div>
-                        <div class="space-y-4" id="budget-container">
-                            <!-- JS Bar -->
-                        </div>
+                        <div class="space-y-4" id="budget-container"></div>
                     </div>
 
-                    <!-- Diario Settimanale -->
-                    <div class="glass-card p-6 flex flex-col h-[450px] border-2 border-slate-200">
+                    <div class="glass-card p-6 flex flex-col h-[450px] border-2 border-slate-300">
                         <h3 class="text-xl font-black text-slate-800 mb-4 border-b-2 border-slate-200 pb-3"><i class="fa-solid fa-book-open text-green-600"></i> Diario Settimana</h3>
-                        <div id="lista-dieta" class="flex-grow overflow-y-auto custom-scrollbar space-y-4 pr-2">
-                            <!-- JS Diet List -->
-                        </div>
+                        <div id="lista-dieta" class="flex-grow overflow-y-auto custom-scrollbar space-y-4 pr-2"></div>
                     </div>
                 </div>
             </div>
 
             <div id="view-glicemia" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 fade-in">
                 
-                <div class="glass-card p-6 sm:p-8 h-fit border-2 border-slate-200">
+                <div class="glass-card p-6 sm:p-8 h-fit border-2 border-slate-300">
                     <h2 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3 border-b-2 border-slate-200 pb-4">
                         <i class="fa-solid fa-pen-to-square text-green-600"></i> Nuova Misurazione
                     </h2>
                     
                     <div class="space-y-6">
                         <div class="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm">
-                            <label class="block text-sm font-black text-slate-500 uppercase tracking-widest mb-3">Momento della giornata</label>
+                            <label class="block text-sm font-black text-slate-500 uppercase tracking-widest mb-3">Momento</label>
                             <select id="glic-tipo" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-4 outline-none focus:border-green-500 select-icon shadow-inner transition-colors text-lg">
                                 <option value="digiuno">A Digiuno (Target < 150)</option>
                                 <option value="post">Post-Prandiale (Target < 180)</option>
@@ -315,18 +299,16 @@
                     </div>
                 </div>
 
-                <div class="glass-card p-6 flex flex-col min-h-[500px] border-2 border-slate-200">
+                <div class="glass-card p-6 flex flex-col min-h-[500px] border-2 border-slate-300">
                     <div class="flex justify-between items-center mb-6 border-b-2 border-slate-200 pb-4">
                         <h2 class="text-2xl font-black text-slate-800 flex items-center gap-3">
                             <i class="fa-solid fa-book-medical text-green-600"></i> Storico Clinico
                         </h2>
                         <button onclick="svuotaGlicemia()" class="text-xs font-black text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
-                            <i class="fa-solid fa-trash mr-1"></i> Svuota
+                            Svuota
                         </button>
                     </div>
-                    <div id="lista-glicemia" class="flex-grow overflow-y-auto custom-scrollbar space-y-4 pr-2">
-                        <!-- JS Glycemia List -->
-                    </div>
+                    <div id="lista-glicemia" class="flex-grow overflow-y-auto custom-scrollbar space-y-4 pr-2"></div>
                 </div>
             </div>
 
@@ -345,7 +327,6 @@
     <script>
         const SECRET_CODE = "713";
         
-        // Limiti clinici per la Dieta 1800 Kcal
         const LIMITS = {
             bianca: { name: "Carne Bianca", max: 3, icon: "fa-drumstick-bite", color: "bg-orange-400" },
             rossa: { name: "Carne Rossa", max: 1, icon: "fa-steak", color: "bg-red-500" },
@@ -358,15 +339,11 @@
             speciale: { name: "Ravioli/Gnocchi", max: 1, icon: "fa-bowl-food", color: "bg-stone-500" }
         };
 
-        // Stato principale
         let state = { dieta: [], glicemia: [] };
 
         window.onload = function() {
-            // Copia le proteine del pranzo nella cena per il form
             document.getElementById('cen-pro').innerHTML = document.getElementById('pra-pro').innerHTML;
             loadData();
-            
-            // Ascoltatore per il cambio giorno per controllare il lucchetto
             document.getElementById('day-select').addEventListener('change', checkDayLock);
         }
 
@@ -377,15 +354,11 @@
             const saveBtn = document.getElementById('btn-salva-dieta');
 
             if (isLocked) {
-                overlay.classList.remove('hidden');
-                overlay.classList.add('flex');
-                saveBtn.disabled = true;
-                saveBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                overlay.classList.remove('hidden'); overlay.classList.add('flex');
+                saveBtn.disabled = true; saveBtn.classList.add('opacity-50', 'cursor-not-allowed');
             } else {
-                overlay.classList.add('hidden');
-                overlay.classList.remove('flex');
-                saveBtn.disabled = false;
-                saveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                overlay.classList.add('hidden'); overlay.classList.remove('flex');
+                saveBtn.disabled = false; saveBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         }
 
@@ -394,6 +367,8 @@
             if (input === SECRET_CODE) {
                 document.getElementById('pin-error').classList.add('hidden');
                 document.getElementById('login-screen').classList.add('opacity-0', 'pointer-events-none');
+                document.body.classList.remove('bg-slate-900'); 
+                document.body.classList.add('bg-slate-100');
                 setTimeout(() => {
                     document.getElementById('login-screen').classList.add('hidden');
                     document.getElementById('app-content').classList.remove('hidden');
@@ -402,16 +377,16 @@
             } else {
                 document.getElementById('pin-error').classList.remove('hidden');
                 document.getElementById('pin-input').value = '';
-                const el = document.getElementById('pin-input');
-                el.classList.add('translate-x-2');
-                setTimeout(() => el.classList.remove('translate-x-2'), 100);
             }
         }
 
         function logout() {
-            document.getElementById('app-content').classList.add('hidden', 'flex');
+            document.getElementById('app-content').classList.add('hidden');
+            document.getElementById('app-content').classList.remove('flex');
             const login = document.getElementById('login-screen');
             login.classList.remove('hidden');
+            document.body.classList.add('bg-slate-900');
+            document.body.classList.remove('bg-slate-100');
             document.getElementById('pin-input').value = '';
             setTimeout(() => login.classList.remove('opacity-0', 'pointer-events-none'), 50);
         }
@@ -448,82 +423,58 @@
         }
 
         function loadData() {
-            const saved = localStorage.getItem('smartfdiet_v5');
-            if (saved) {
-                state = JSON.parse(saved);
-                if(!state.dieta) state.dieta = [];
-                if(!state.glicemia) state.glicemia = [];
-            }
-            renderDieta();
-            renderGlicemia();
-            checkDayLock(); 
+            const saved = localStorage.getItem('smartfdiet_v6');
+            if (saved) { state = JSON.parse(saved); }
+            renderDieta(); renderGlicemia(); checkDayLock(); 
         }
 
-        function saveData() { localStorage.setItem('smartfdiet_v5', JSON.stringify(state)); }
+        function saveData() { localStorage.setItem('smartfdiet_v6', JSON.stringify(state)); }
 
         function calcCurrentCosts() {
             let costs = {};
-            state.dieta.forEach(d => {
-                for(let key in d.costs) costs[key] = (costs[key] || 0) + d.costs[key];
-            });
+            state.dieta.forEach(d => { for(let key in d.costs) costs[key] = (costs[key] || 0) + d.costs[key]; });
             return costs;
         }
 
         function salvaDieta() {
             const day = document.getElementById('day-select').value;
-            const cL = document.getElementById('col-liq').value;
-            const cS = document.getElementById('col-sol').value;
-            const pC = document.getElementById('pra-carb');
-            const pP = document.getElementById('pra-pro');
+            const cL = document.getElementById('col-liq').value; const cS = document.getElementById('col-sol').value;
+            const pC = document.getElementById('pra-carb'); const pP = document.getElementById('pra-pro');
             const cPizza = document.getElementById('cena-pizza').checked;
-            const cC = document.getElementById('cen-carb');
-            const cP = document.getElementById('cen-pro');
+            const cC = document.getElementById('cen-carb'); const cP = document.getElementById('cen-pro');
 
             if (!cL || !cS || !pC.value || !pP.value || (!cPizza && (!cC.value || !cP.value))) {
-                showModal("Campi Incompleti", "Compila tutti i menu a tendina o usa il bonus pizza.", "error"); return;
+                showModal("Campi Incompleti", "Compila tutti i menu a tendina.", "error"); return;
             }
 
             let newCosts = {};
             const checkOption = (opt) => { if(opt && opt.dataset.cost) newCosts[opt.dataset.cost] = (newCosts[opt.dataset.cost] || 0) + 1; };
 
-            checkOption(pC.options[pC.selectedIndex]);
-            checkOption(pP.options[pP.selectedIndex]);
-            if(cPizza) { newCosts.pizza = 1; } else {
-                checkOption(cC.options[cC.selectedIndex]); checkOption(cP.options[cP.selectedIndex]);
-            }
+            checkOption(pC.options[pC.selectedIndex]); checkOption(pP.options[pP.selectedIndex]);
+            if(cPizza) { newCosts.pizza = 1; } else { checkOption(cC.options[cC.selectedIndex]); checkOption(cP.options[cP.selectedIndex]); }
 
             const current = calcCurrentCosts();
             for(let key in newCosts) {
                 if((current[key] || 0) + newCosts[key] > LIMITS[key].max) {
-                    showModal("Limite Superato!", `Non puoi aggiungere ${LIMITS[key].name}. Hai raggiunto il tetto settimanale prescritto.`, "error"); return;
+                    showModal("Limite Superato!", `Non puoi aggiungere ${LIMITS[key].name}. Hai raggiunto il tetto settimanale.`, "error"); return;
                 }
             }
 
-            const docData = {
-                giorno: day,
-                col: `${cL} + ${cS}`,
-                pra: `${pC.value} + ${pP.value}`,
+            state.dieta.push({
+                giorno: day, col: `${cL} + ${cS}`, pra: `${pC.value} + ${pP.value}`,
                 cen: cPizza ? "🍕 Pizza Margherita/Verdure" : `${cC.value} + ${cP.value}`,
-                costs: newCosts,
-                timestamp: Date.now()
-            };
+                costs: newCosts, timestamp: Date.now()
+            });
 
-            state.dieta.push(docData);
-            saveData(); 
-            renderDieta();
+            saveData(); renderDieta();
             
-            // Pulisci il form
             document.getElementById('col-liq').value = ''; document.getElementById('col-sol').value = '';
             document.getElementById('pra-carb').value = ''; document.getElementById('pra-pro').value = '';
             document.getElementById('cena-pizza').checked = false; togglePizza();
             document.getElementById('cen-carb').value = ''; document.getElementById('cen-pro').value = '';
             
-            // Passa automaticamente al giorno successivo se possibile!
             const daySelect = document.getElementById('day-select');
-            if(daySelect.selectedIndex < daySelect.options.length - 1) {
-                daySelect.selectedIndex++;
-            }
-            
+            if(daySelect.selectedIndex < daySelect.options.length - 1) daySelect.selectedIndex++;
             checkDayLock(); 
         }
 
@@ -533,8 +484,7 @@
             container.innerHTML = '';
 
             for(let key in LIMITS) {
-                const lim = LIMITS[key];
-                const cons = costs[key] || 0;
+                const lim = LIMITS[key]; const cons = costs[key] || 0;
                 const perc = Math.min((cons / lim.max)*100, 100);
                 container.innerHTML += `
                     <div class="bg-slate-50 p-3 rounded-xl border-2 border-slate-200">
@@ -547,74 +497,48 @@
                 `;
             }
 
-            const list = document.getElementById('lista-dieta');
-            list.innerHTML = '';
-            if(state.dieta.length === 0) { list.innerHTML = `<div class="text-center text-slate-400 mt-10 font-bold"><i class="fa-solid fa-plate-wheat text-4xl mb-3 opacity-30 block"></i>Nessun pasto inserito.</div>`; return; }
+            const list = document.getElementById('lista-dieta'); list.innerHTML = '';
+            if(state.dieta.length === 0) return list.innerHTML = `<div class="text-center text-slate-400 mt-10 font-bold"><i class="fa-solid fa-plate-wheat text-4xl mb-3 opacity-30 block"></i>Nessun pasto.</div>`;
             
             [...state.dieta].sort((a,b)=>b.timestamp-a.timestamp).forEach((d, index) => {
                 const originalIndex = state.dieta.findIndex(x => x.timestamp === d.timestamp);
                 list.innerHTML += `
                     <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm relative group">
                         <button onclick="eliminaDieta(${originalIndex})" class="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors bg-slate-50 p-2 rounded-lg border border-slate-200"><i class="fa-solid fa-unlock-keyhole mr-1"></i> Sblocca</button>
-                        <div class="font-black text-slate-800 text-lg mb-3 border-b-2 border-slate-100 pb-2 flex items-center gap-2"><i class="fa-solid fa-calendar-check text-green-500"></i> ${d.giorno}</div>
-                        <div class="text-sm font-medium text-slate-600 mb-2 line-clamp-1"><i class="fa-solid fa-mug-saucer text-slate-400 w-5"></i> ${d.col}</div>
-                        <div class="text-sm font-medium text-slate-600 mb-2 line-clamp-1"><i class="fa-solid fa-sun text-slate-400 w-5"></i> ${d.pra}</div>
-                        <div class="text-sm font-medium text-slate-600 line-clamp-1"><i class="fa-solid fa-moon text-slate-400 w-5"></i> ${d.cen}</div>
+                        <div class="font-black text-slate-800 text-lg mb-3 border-b-2 border-slate-100 pb-2"><i class="fa-solid fa-calendar-check text-green-500"></i> ${d.giorno}</div>
+                        <div class="text-sm font-medium text-slate-600 mb-2"><i class="fa-solid fa-mug-saucer text-slate-400 w-5"></i> ${d.col}</div>
+                        <div class="text-sm font-medium text-slate-600 mb-2"><i class="fa-solid fa-sun text-slate-400 w-5"></i> ${d.pra}</div>
+                        <div class="text-sm font-medium text-slate-600"><i class="fa-solid fa-moon text-slate-400 w-5"></i> ${d.cen}</div>
                     </div>
                 `;
             });
         }
 
-        function eliminaDieta(index) {
-            state.dieta.splice(index, 1); 
-            saveData(); 
-            renderDieta(); 
-            checkDayLock(); 
-        }
-
-        function svuotaDieta() {
-            if(state.dieta.length === 0) return;
-            showModal("Azzera Settimana", "Vuoi cancellare tutte le giornate bloccate?", "danger", () => {
-                state.dieta = []; saveData(); renderDieta(); checkDayLock(); closeModal();
-            });
-        }
+        function eliminaDieta(index) { state.dieta.splice(index, 1); saveData(); renderDieta(); checkDayLock(); }
+        function svuotaDieta() { showModal("Azzera Settimana", "Vuoi cancellare tutte le giornate?", "danger", () => { state.dieta = []; saveData(); renderDieta(); checkDayLock(); closeModal(); }); }
 
         function salvaGlicemia() {
             const tipo = document.getElementById('glic-tipo').value;
             const valStr = document.getElementById('glic-valore').value;
             const valore = parseInt(valStr);
 
-            if (!valStr || isNaN(valore)) { showModal("Errore", "Inserisci un valore numerico valido.", "error"); return; }
+            if (!valStr || isNaN(valore)) { showModal("Errore", "Inserisci un valore valido.", "error"); return; }
 
-            const isDigiuno = tipo === 'digiuno';
-            const limite = isDigiuno ? 150 : 180; // Target Clinico
-            const isBuono = valore < limite; // Se sotto il limite = Verde
-
-            state.glicemia.push({
-                id: Date.now().toString(),
-                tipo: isDigiuno ? "A Digiuno" : "Post-Prandiale",
-                valore: valore,
-                limite: limite,
-                isBuono: isBuono,
-                timestamp: Date.now()
-            });
+            const limite = tipo === 'digiuno' ? 150 : 180;
+            state.glicemia.push({ id: Date.now().toString(), tipo: tipo === 'digiuno' ? "A Digiuno" : "Post-Prandiale", valore: valore, limite: limite, isBuono: valore < limite, timestamp: Date.now() });
 
             saveData(); renderGlicemia();
-            document.getElementById('glic-valore').value = ''; document.getElementById('glic-valore').blur();
+            document.getElementById('glic-valore').value = '';
         }
 
         function renderGlicemia() {
-            const list = document.getElementById('lista-glicemia');
-            list.innerHTML = '';
-            
-            const ordinati = [...state.glicemia].sort((a,b) => b.timestamp - a.timestamp);
-            if(ordinati.length === 0) { list.innerHTML = `<div class="text-center text-slate-400 mt-10 font-bold"><i class="fa-solid fa-droplet text-4xl mb-3 opacity-30 block"></i>Nessun valore clinico.</div>`; return; }
+            const list = document.getElementById('lista-glicemia'); list.innerHTML = '';
+            const ord = [...state.glicemia].sort((a,b) => b.timestamp - a.timestamp);
+            if(ord.length === 0) return list.innerHTML = `<div class="text-center text-slate-400 mt-10 font-bold"><i class="fa-solid fa-droplet text-4xl mb-3 opacity-30 block"></i>Nessun valore clinico.</div>`;
 
-            ordinati.forEach(g => {
+            ord.forEach(g => {
                 const d = new Date(g.timestamp);
                 const dataStr = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} - ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
-                
-                // Colori dinamici in base al target clinico
                 const bg = g.isBuono ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200";
                 const txt = g.isBuono ? "text-green-700" : "text-red-700";
                 const icon = g.isBuono ? "fa-circle-check text-green-500" : "fa-triangle-exclamation text-red-500";
@@ -622,15 +546,15 @@
                 list.innerHTML += `
                     <div class="flex items-center justify-between p-5 rounded-2xl border-2 shadow-sm ${bg}">
                         <div>
-                            <span class="text-[11px] font-black uppercase text-slate-400 block mb-1 tracking-wider">${dataStr}</span>
-                            <div class="font-black text-slate-800 text-lg">${g.tipo} <span class="text-[10px] bg-white px-2 py-1 rounded-md ml-2 border border-slate-200 shadow-sm text-slate-500 align-middle uppercase font-bold">Target < ${g.limite}</span></div>
+                            <span class="text-[11px] font-black uppercase text-slate-400 block mb-1">${dataStr}</span>
+                            <div class="font-black text-slate-800 text-lg">${g.tipo} <span class="text-[10px] bg-white px-2 py-1 rounded-md ml-2 border shadow-sm text-slate-500 uppercase font-bold">Target < ${g.limite}</span></div>
                         </div>
                         <div class="flex items-center gap-5">
                             <div class="text-right">
-                                <div class="text-4xl font-black ${txt} leading-none tracking-tighter">${g.valore}</div>
-                                <div class="text-[11px] font-black uppercase tracking-wider ${txt} mt-1"><i class="fa-solid ${icon}"></i> mg/dL</div>
+                                <div class="text-4xl font-black ${txt}">${g.valore}</div>
+                                <div class="text-[11px] font-black uppercase ${txt} mt-1"><i class="fa-solid ${icon}"></i> mg/dL</div>
                             </div>
-                            <button onclick="eliminaGlicemia('${g.id}')" class="text-slate-300 hover:text-red-500 transition-colors py-2 pl-3 border-l-2 border-slate-200/50 ml-2"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="eliminaGlicemia('${g.id}')" class="text-slate-300 hover:text-red-500 pl-3 border-l-2 border-slate-200/50 ml-2"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 `;
@@ -638,45 +562,27 @@
         }
 
         function eliminaGlicemia(id) { state.glicemia = state.glicemia.filter(g => g.id !== id); saveData(); renderGlicemia(); }
-        function svuotaGlicemia() {
-            if(state.glicemia.length === 0) return;
-            showModal("Svuota Diario", "Cancellare TUTTE le misurazioni mediche?", "danger", () => {
-                state.glicemia = []; saveData(); renderGlicemia(); closeModal();
-            });
-        }
+        function svuotaGlicemia() { showModal("Svuota Diario", "Cancellare tutte le misurazioni?", "danger", () => { state.glicemia = []; saveData(); renderGlicemia(); closeModal(); }); }
 
         function showModal(title, message, type = "info", confirmCallback = null) {
-            const modal = document.getElementById('custom-modal');
-            const icon = document.getElementById('modal-icon');
-            const actions = document.getElementById('modal-actions');
-
-            document.getElementById('modal-title').innerText = title;
-            document.getElementById('modal-message').innerText = message;
-            actions.innerHTML = '';
+            const modal = document.getElementById('custom-modal'); const icon = document.getElementById('modal-icon'); const actions = document.getElementById('modal-actions');
+            document.getElementById('modal-title').innerText = title; document.getElementById('modal-message').innerText = message; actions.innerHTML = '';
 
             if (type === "error") {
-                icon.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-red-100 text-red-500 mb-6 text-4xl shadow-inner border-2 border-red-200"; icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-slate-800 text-white font-black py-4 rounded-xl border-2 border-slate-700">Ho capito</button>`;
-            } else if (type === "warning" || type === "danger") {
-                icon.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-orange-100 text-orange-500 mb-6 text-4xl shadow-inner border-2 border-orange-200"; icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
-                actions.innerHTML = `
-                    <button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-700 font-black py-4 rounded-xl border-2 border-slate-300">Annulla</button>
-                    <button onclick="document.getElementById('hidden-confirm').click()" class="flex-1 bg-red-600 text-white font-black py-4 rounded-xl border-2 border-red-500 shadow-md">Procedi</button>
-                    <button id="hidden-confirm" class="hidden"></button>
-                `;
+                icon.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-red-100 text-red-500 mb-6 text-4xl border-2 border-red-200"; icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-slate-800 text-white font-black py-4 rounded-xl">Ho capito</button>`;
+            } else if (type === "danger") {
+                icon.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-orange-100 text-orange-500 mb-6 text-4xl border-2 border-orange-200"; icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-slate-100 text-slate-700 font-black py-4 rounded-xl">Annulla</button><button onclick="document.getElementById('hidden-confirm').click()" class="flex-1 bg-red-600 text-white font-black py-4 rounded-xl">Procedi</button><button id="hidden-confirm" class="hidden"></button>`;
                 document.getElementById('hidden-confirm').onclick = confirmCallback;
             } else {
-                icon.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 text-green-600 mb-6 text-4xl shadow-inner border-2 border-green-200"; icon.innerHTML = '<i class="fa-solid fa-check"></i>';
-                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-green-600 text-white font-black py-4 rounded-xl border-2 border-green-500 shadow-md">Ok</button>`;
+                icon.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 text-green-600 mb-6 text-4xl border-2 border-green-200"; icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-green-600 text-white font-black py-4 rounded-xl">Ok</button>`;
             }
-
-            modal.classList.remove('hidden');
-            setTimeout(() => { modal.classList.remove('opacity-0'); document.getElementById('modal-content').classList.remove('scale-95'); }, 10);
+            modal.classList.remove('hidden'); setTimeout(() => { modal.classList.remove('opacity-0'); document.getElementById('modal-content').classList.remove('scale-95'); }, 10);
         }
-
         function closeModal() {
-            const modal = document.getElementById('custom-modal');
-            modal.classList.add('opacity-0'); document.getElementById('modal-content').classList.add('scale-95');
+            const modal = document.getElementById('custom-modal'); modal.classList.add('opacity-0'); document.getElementById('modal-content').classList.add('scale-95');
             setTimeout(() => { modal.classList.add('hidden'); }, 300);
         }
         document.getElementById('pin-input').addEventListener('keypress', e => { if (e.key === 'Enter') checkPin(); });
