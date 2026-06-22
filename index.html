@@ -5,64 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartFDiet - Dieta & Glicemia</title>
     
-    <!-- Parametri App PWA per Mobile -->
+    <!-- Parametri Base App -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SmartFDiet">
     <meta name="theme-color" content="#16a34a">
     
-    <!-- Manifesto Vettoriale Perfetto (Per farla installare come App su Android e iOS) -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22:%22SmartFDiet%22,%22short_name%22:%22SmartFDiet%22,%22display%22:%22standalone%22,%22start_url%22:%22./%22,%22background_color%22:%22%23f0fdf4%22,%22theme_color%22:%22%2316a34a%22,%22icons%22:[%7B%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23f0fdf4'/%3E%3Csvg x='128' y='128' width='256' height='256' viewBox='0 0 384 512' preserveAspectRatio='xMidYMid meet'%3E%3Cpath fill='%2316a34a' d='M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z'/%3E%3C/svg%3E%3C/svg%3E%22,%22sizes%22:%22512x512%22,%22type%22:%22image/svg+xml%22,%22purpose%22:%22any maskable%22%7D]%7D">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script>
-        // Generatore Icona PNG per iOS (Safari è testardo e vuole il PNG per l'icona)
-        // Matematica PERFETTA: Quadrato 512x512, foglia rimpicciolita al 50% ed esattamente al centro.
-        function generateAppleIcon() {
+        // MOTORE DI GENERAZIONE APP (Forza Android e iOS a installarla come App nativa)
+        function installAppEngine() {
+            // 1. Crea l'icona perfetta in formato PNG
             const canvas = document.createElement('canvas');
             canvas.width = 512; canvas.height = 512;
             const ctx = canvas.getContext('2d');
             
-            ctx.fillStyle = '#f0fdf4'; // Verde pastello sfondo
+            // Sfondo verde pastello
+            ctx.fillStyle = '#f0fdf4';
             ctx.fillRect(0, 0, 512, 512);
             
-            ctx.translate(160, 128); // Calcolo esatto per centrare la foglia FA
-            ctx.scale(0.5, 0.5); // Scala esatta
-            
+            // Foglia centrata chirurgicamente
+            ctx.translate(160, 128);
+            ctx.scale(0.5, 0.5);
             const p = new Path2D('M384 48c8.8 0 16 7.2 16 16V240c0 106-86 192-192 192H160c-17.7 0-32-14.3-32-32s14.3-32 32-32h48c70.7 0 128-57.3 128-128V64c0-8.8 7.2-16 16-16h16zM320 0H384c44.2 0 80 35.8 80 80V240c0 141.4-114.6 256-256 256H160c-53 0-96-43-96-96V352c0-23.7 12.9-44.3 32-55.4V160C96 71.6 167.6 0 256 0h64z');
-            ctx.fillStyle = '#16a34a'; // Verde foglia
+            ctx.fillStyle = '#16a34a';
             ctx.fill(p);
             
-            const link = document.createElement('link');
-            link.rel = 'apple-touch-icon';
-            link.href = canvas.toDataURL('image/png');
-            document.head.appendChild(link);
+            const iconPngUrl = canvas.toDataURL('image/png');
+            
+            // 2. Immette l'icona per iPhone
+            const appleLink = document.createElement('link');
+            appleLink.rel = 'apple-touch-icon';
+            appleLink.href = iconPngUrl;
+            document.head.appendChild(appleLink);
+            
+            // 3. Crea il Manifesto Ufficiale per Android usando l'icona PNG
+            const manifest = {
+                name: "SmartFDiet",
+                short_name: "SmartFDiet",
+                display: "standalone",
+                start_url: window.location.href.split('?')[0],
+                background_color: "#f0fdf4",
+                theme_color: "#16a34a",
+                icons: [{ src: iconPngUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }]
+            };
+            
+            // Trasforma il manifesto in un file "finto" per ingannare Android
+            const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+            const manifestLink = document.createElement('link');
+            manifestLink.rel = 'manifest';
+            manifestLink.href = URL.createObjectURL(manifestBlob);
+            document.head.appendChild(manifestLink);
+            
+            // 4. Avvia un Service Worker invisibile (Requisito Android per installare App)
+            if ('serviceWorker' in navigator) {
+                const sw = `self.addEventListener('fetch', e => {});`;
+                const swBlob = new Blob([sw], {type: 'application/javascript'});
+                navigator.serviceWorker.register(URL.createObjectURL(swBlob)).catch(()=>{});
+            }
         }
-        generateAppleIcon(); // Eseguito subito!
+        installAppEngine();
 
-        // SERVICE WORKER INVISIBILE (Forza il telefono a proporre l'installazione come App Nativa)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    self.addEventListener('install', (e) => self.skipWaiting());
-                    self.addEventListener('activate', (e) => e.waitUntil(clients.claim()));
-                    self.addEventListener('fetch', (e) => {}); 
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(err => console.log('SW error', err));
-            });
-        }
-
+        // Configurazione Colori Tailwind
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        medical: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 500: '#22c55e', 600: '#16a34a', 800: '#166534', 900: '#14532d' },
-                        slate: { 50: '#f8fafc', 200: '#e2e8f0', 300: '#cbd5e1', 800: '#1e293b', 900: '#0f172a' }
+                        slate: { 50: '#f8fafc', 200: '#e2e8f0', 300: '#cbd5e1', 600: '#475569', 800: '#1e293b', 900: '#0f172a' }
                     },
                     fontFamily: { sans: ['Inter', 'sans-serif'] }
                 }
@@ -94,24 +107,24 @@
         .select-icon { background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); background-repeat: no-repeat; background-position: right 1rem center; background-size: 1.2em; }
     </style>
 </head>
-<body class="min-h-screen text-slate-800 flex flex-col bg-slate-900"> <!-- Background scuro per login -->
+<body class="min-h-screen text-slate-800 flex flex-col bg-slate-900">
 
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-500">
-        <div class="w-full max-w-[320px] bg-white rounded-[2rem] p-8 text-center shadow-2xl fade-in">
+        <div class="w-full max-w-[320px] bg-white rounded-[2rem] p-8 text-center shadow-2xl fade-in border-4 border-slate-100">
             
-            <div class="mx-auto w-[4.5rem] h-[4.5rem] bg-[#f0fdf4] rounded-[1.2rem] flex items-center justify-center mb-5">
+            <div class="mx-auto w-[4.5rem] h-[4.5rem] bg-[#f0fdf4] rounded-[1.2rem] flex items-center justify-center mb-5 border-2 border-[#dcfce7]">
                 <i class="fa-solid fa-leaf text-4xl text-[#16a34a]"></i>
             </div>
             
             <h1 class="text-[1.6rem] font-bold text-slate-800 mb-1 tracking-tight">SmartFDiet</h1>
-            <p class="text-[0.7rem] text-slate-400 font-medium mb-6">Protocollo 1800 Kcal & Glicemia</p>
+            <p class="text-[0.7rem] text-slate-500 font-bold mb-6">Protocollo 1800 Kcal & Glicemia</p>
 
             <div class="space-y-4">
-                <!-- Input PIN con Placeholder Leggibile e Scuro -->
+                <!-- Input PIN super leggibile -->
                 <input type="password" id="pin-input" placeholder="CODICE PIN" inputmode="numeric" pattern="[0-9]*" class="w-full bg-[#f8fafc] border-2 border-slate-200 text-slate-800 placeholder-slate-500 rounded-xl px-5 py-4 text-center text-lg font-black tracking-[0.2em] focus:outline-none focus:border-green-500 transition-colors shadow-inner">
                 
                 <button onclick="checkPin()" class="w-full bg-[#16a34a] hover:bg-green-700 text-white font-semibold py-3.5 rounded-xl transition-all shadow-sm text-base flex justify-center items-center gap-2">
-                    <i class="fa-solid fa-lock text-sm"></i> Accedi
+                    <i class="fa-solid fa-unlock-keyhole text-sm"></i> Accedi
                 </button>
             </div>
             <p id="pin-error" class="text-red-500 text-sm font-bold mt-4 hidden">PIN Errato</p>
@@ -128,9 +141,9 @@
                         </div>
                         <h1 class="text-2xl font-black tracking-tight">SmartFDiet</h1>
                     </div>
-                    <!-- Tasto Log Out -->
+                    <!-- Tasto Log Out corretto -->
                     <button onclick="logout()" class="text-slate-300 hover:text-white transition-colors bg-white/10 px-4 py-2 rounded-lg text-sm font-bold border border-white/20 flex items-center gap-2">
-                        <i class="fa-solid fa-door-open"></i> Log out
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Log out
                     </button>
                 </div>
                 
@@ -152,14 +165,14 @@
             <div id="view-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-8 fade-in">
                 
                 <div class="lg:col-span-2 space-y-6">
-                    <div class="glass-card p-6 sm:p-8 flex flex-col relative border-2 border-slate-300">
+                    <div class="glass-card p-6 sm:p-8 flex flex-col border-2 border-slate-300">
                         
                         <!-- Barra Mesi (SEMPRE CLICCABILE) -->
-                        <div class="flex justify-between items-center mb-6 border-b-2 border-slate-200 pb-4 relative z-30 bg-white">
+                        <div class="flex justify-between items-center mb-6 border-b-2 border-slate-200 pb-4 relative z-40 bg-white">
                             <h2 class="text-2xl font-black text-slate-800 flex items-center gap-3">
                                 <i class="fa-regular fa-calendar-plus text-green-600"></i> Pianifica
                             </h2>
-                            <select id="day-select" class="bg-slate-100 border-2 border-slate-200 rounded-xl py-2 pl-4 pr-10 font-black text-slate-800 outline-none select-icon shadow-sm focus:border-green-500 transition-colors cursor-pointer relative z-40">
+                            <select id="day-select" class="bg-slate-100 border-2 border-slate-200 rounded-xl py-2 pl-4 pr-10 font-black text-slate-800 outline-none select-icon shadow-sm focus:border-green-500 transition-colors cursor-pointer">
                                 <option value="Lunedì">Lunedì</option> <option value="Martedì">Martedì</option> <option value="Mercoledì">Mercoledì</option>
                                 <option value="Giovedì">Giovedì</option> <option value="Venerdì">Venerdì</option> <option value="Sabato">Sabato</option> <option value="Domenica">Domenica</option>
                             </select>
@@ -168,7 +181,7 @@
                         <!-- Area Pasti -->
                         <div class="relative flex-grow">
                             <!-- Overlay Lucchetto (Blocca SOLO i pasti) -->
-                            <div id="lock-overlay" class="hidden absolute inset-0 z-20 bg-white/90 backdrop-blur-sm rounded-2xl flex-col items-center justify-center border-4 border-slate-100 shadow-inner">
+                            <div id="lock-overlay" class="hidden absolute inset-0 z-30 bg-white/90 backdrop-blur-sm rounded-2xl flex-col items-center justify-center border-4 border-slate-100 shadow-inner">
                                 <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 shadow-sm border-2 border-slate-200">
                                     <i class="fa-solid fa-lock text-4xl text-slate-500"></i>
                                 </div>
@@ -346,7 +359,7 @@
     <script>
         // CONFIGURAZIONE
         const SECRET_CODE = "713";
-        const STORAGE_KEY = "smartfdiet_v6"; // Chiave fissa, non si perdono mai i dati!
+        const STORAGE_KEY = "smartfdiet_v6"; // Chiave di sicurezza dei dati
         
         const LIMITS = {
             bianca: { name: "Carne Bianca", max: 3, icon: "fa-drumstick-bite", color: "bg-orange-400" },
