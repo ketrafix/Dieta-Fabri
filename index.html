@@ -2,131 +2,251 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartFDiet</title>
-    <!-- Icona "Foglia" integrata -->
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNDEuMTYsMTA0LjUzYTgwLjE0LDgwLjE0LDAsMCwwLTEwOS40MywxOC44bC0xLjA3LDEuNTJBODAuMTIsODAuMTIsMCwwLDAsMTExLjksMjM1LjZsNS43Nyw4LjJBMDExMS40NSwxMTEuNDUsMCwwLDAsNDgsMjcyYTgsOCwwLDAsMCwxNiwwLDk1LjUzLDk1LjUzLDAsMCwxLDY0LTkwLjIyLDgwLjE0LDgwLjE0LDAsMCwwLDgwLjY4LDU0Ljg5LDgsOCwwLDAsMCwxLjI1LTE1LjksNjQuMTMsNjQuMTMsMCwwLDEtNTguNDUtMzguMzEsOCw4LDAsMCwwLTEzLjg4LTEuNTVsLTUuNzctOC4yQTY0LjExLDY0LjExLDAsMCwxLDE1LTg4LjU5bDEuMDctMS41MmE2NC4xMiw2NC4xMiwwLDAsMSw4Ny41NS0xNS4wNUE2NC4xMyw2NC4xMywwLDAsMSwyMDgsMjQwYTgsOCwwLDAsMCwxNiwwQTgwLjEzLDgwLjEzLDAsMCwwLDI0MS4xNiwxMDQuNTNaIiBmaWxsPSIjMTZhMzRhIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2NCwgNjQpIHNjYWxlKDEuNSkiLz48L3N2Zz4=">
     
-    <!-- Manifesto per installazione App -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f0fdf4%22%2C%22theme_color%22%3A%22%2316a34a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNDEuMTYsMTA0LjUzYTgwLjE0LDgwLjE0LDAsMCwwLTEwOS40MywxOC44bC0xLjA3LDEuNTJBODAuMTIsODAuMTIsMCwwLDAsMTExLjksMjM1LjZsNS43Nyw4LjJBMDExMS40NSwxMTEuNDUsMCwwLDAsNDgsMjcyYTgsOCwwLDAsMCwxNiwwLDk1LjUzLDk1LjUzLDAsMCwxLDY0LTkwLjIyLDgwLjE0LDgwLjE0LDAsMCwwLDgwLjY4LDU0Ljg5LDgsOCwwLDAsMCwxLjI1LTE1LjksNjQuMTMsNjQuMTMsMCwwLDEtNTguNDUtMzguMzEsOCw4LDAsMCwwLTEzLjg4LTEuNTVsLTUuNzctOC4yQTY0LjExLDY0LjExLDAsMCwxLDE1LTg4LjU5bDEuMDctMS41MmE2NC4xMiw2NC4xMiwwLDAsMSw4Ny41NS0xNS4wNUE2NC4xMyw2NC4xMywwLDAsMSwyMDgsMjQwYTgsOCwwLDAsMCwxNiwwQTgwLjEzLDgwLjEzLDAsMCwwLDI0MS4xNiwxMDQuNTNaIiBmaWxsPSIjMTZhMzRhIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2NCwgNjQpIHNjYWxlKDEuNSkiLz48L3N2Zz4%3D%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+    <!-- Icona "Foglia" integrata ed elegante -->
+    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8+PC9zdmc+">
+    
+    <!-- Manifesto per forzare installazione App Nativa -->
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%231e293b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8%2BPC9zdmc%2B%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
-        .glass-card { background: #ffffff; border: 2px solid #e2e8f0; border-radius: 1.5rem; }
-        .tab-btn.active { background-color: #16a34a; color: white; }
+        body { font-family: 'Inter', sans-serif; }
+        .tab-btn { transition: all 0.2s ease-in-out; }
+        .tab-btn.active { background-color: #16a34a; color: white; box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.4); }
         .tab-btn.inactive { background-color: #334155; color: #94a3b8; }
+        .custom-input { background-color: #ffffff; border: 2px solid #e2e8f0; border-radius: 1rem; padding: 1rem; width: 100%; outline: none; transition: border-color 0.2s; }
+        .custom-input:focus { border-color: #16a34a; }
+        .custom-input:disabled { background-color: #f8fafc; color: #94a3b8; cursor: not-allowed; border-color: #cbd5e1; }
     </style>
 </head>
-<body class="min-h-screen bg-slate-900">
 
-    <!-- Login -->
-    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900">
-        <div class="w-full max-w-sm bg-white rounded-[2rem] p-8 shadow-2xl">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNDEuMTYsMTA0LjUzYTgwLjE0LDgwLjE0LDAsMCwwLTEwOS40MywxOC44bC0xLjA3LDEuNTJBODAuMTIsODAuMTIsMCwwLDAsMTExLjksMjM1LjZsNS43Nyw4LjJBMDExMS40NSwxMTEuNDUsMCwwLDAsNDgsMjcyYTgsOCwwLDAsMCwxNiwwLDk1LjUzLDk1LjUzLDAsMCwxLDY0LTkwLjIyLDgwLjE0LDgwLjE0LDAsMCwwLDgwLjY4LDU0Ljg5LDgsOCwwLDAsMCwxLjI1LTE1LjksNjQuMTMsNjQuMTMsMCwwLDEtNTguNDUtMzguMzEsOCw4LDAsMCwwLTEzLjg4LTEuNTVsLTUuNzctOC4yQTY0LjExLDY0LjExLDAsMCwxLDE1LTg4LjU5bDEuMDctMS41MmE2NC4xMiw2NC4xMiwwLDAsMSw4Ny41NS0xNS4wNUE2NC4xMyw2NC4xMywwLDAsMSwyMDgsMjQwYTgsOCwwLDAsMCwxNiwwQTgwLjEzLDgwLjEzLDAsMCwwLDI0MS4xNiwxMDQuNTNaIiBmaWxsPSIjMTZhMzRhIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2NCwgNjQpIHNjYWxlKDEuNSkiLz48L3N2Zz4=" class="w-20 h-20 mx-auto mb-4">
-            <h1 class="text-2xl font-black text-center text-slate-800 mb-6">SmartFDiet</h1>
-            <input type="password" id="pin-input" placeholder="C O D I C E   P I N" class="w-full bg-slate-100 border-2 border-slate-200 rounded-xl px-5 py-4 text-center text-lg font-black tracking-[0.2em] mb-4 focus:border-green-500 outline-none">
-            <button onclick="checkPin()" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl">Accedi</button>
+<body class="bg-slate-900 min-h-screen text-slate-800 antialiased overflow-x-hidden">
+
+    <!-- IL CONTENITORE MAGICO: Limita la larghezza su schermi grandi, rendendola sempre perfetta -->
+    <div class="max-w-md mx-auto w-full min-h-screen bg-slate-50 shadow-2xl relative flex flex-col">
+
+        <!-- Login Screen -->
+        <div id="login-screen" class="absolute inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/95 backdrop-blur-sm transition-opacity duration-300">
+            <div class="w-full bg-white rounded-3xl p-8 shadow-2xl border border-slate-100 text-center transform transition-all">
+                <div class="w-24 h-24 mx-auto mb-6 bg-green-50 rounded-[2rem] p-4 shadow-inner flex items-center justify-center">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8+PC9zdmc+" class="w-full h-full drop-shadow-sm">
+                </div>
+                <h1 class="text-3xl font-black text-slate-800 mb-2 tracking-tight">SmartFDiet</h1>
+                <p class="text-slate-500 text-sm mb-8 font-medium">Protocollo & Glicemia</p>
+                <input type="password" id="pin-input" placeholder="C O D I C E   P I N" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-5 py-4 text-center text-lg font-black tracking-[0.3em] mb-6 focus:border-green-500 focus:bg-white outline-none transition-colors text-slate-700">
+                <button onclick="checkPin()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-green-600/30 transition-all flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-lock-open text-sm"></i> Accedi
+                </button>
+            </div>
+        </div>
+
+        <div id="app-content" class="hidden flex-1 flex flex-col">
+            
+            <!-- Header Fisso -->
+            <header class="bg-slate-800 p-5 shadow-lg relative z-20">
+                <div class="flex justify-between items-center mb-5">
+                    <div class="flex items-center gap-3">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8+PC9zdmc+" class="w-8 h-8 rounded-lg shadow-sm">
+                        <h1 class="text-white font-black text-xl tracking-tight">SmartFDiet</h1>
+                    </div>
+                    <button onclick="logout()" class="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold text-sm shadow-md transition-colors flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Log out
+                    </button>
+                </div>
+                
+                <!-- Tabs -->
+                <div class="flex gap-3">
+                    <button onclick="switchTab('dieta')" id="tab-dieta" class="tab-btn active flex-1 py-3.5 rounded-xl font-bold text-sm">Dieta</button>
+                    <button onclick="switchTab('glicemia')" id="tab-glicemia" class="tab-btn inactive flex-1 py-3.5 rounded-xl font-bold text-sm">Glicemia</button>
+                </div>
+            </header>
+
+            <!-- Area Contenuti Scorrevole -->
+            <main class="flex-1 overflow-y-auto p-5 space-y-6 pb-12">
+                
+                <div id="view-dieta" class="space-y-5">
+                    <!-- Selettore Giorni libero dal blocco -->
+                    <div class="relative">
+                        <select id="giorno-select" onchange="loadDay()" class="custom-input font-bold text-slate-800 shadow-sm text-lg cursor-pointer appearance-none">
+                            <option value="Lunedì">Lunedì</option>
+                            <option value="Martedì">Martedì</option>
+                            <option value="Mercoledì">Mercoledì</option>
+                            <option value="Giovedì">Giovedì</option>
+                            <option value="Venerdì">Venerdì</option>
+                            <option value="Sabato">Sabato</option>
+                            <option value="Domenica">Domenica</option>
+                        </select>
+                        <i class="fa-solid fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 pointer-events-none"></i>
+                    </div>
+
+                    <!-- Area Input Dieta -->
+                    <div id="form-dieta" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 space-y-4 relative">
+                        <!-- Icona Lucchetto Visiva -->
+                        <div id="lock-icon" class="hidden absolute -top-3 -right-3 bg-slate-800 text-white w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white z-10">
+                            <i class="fa-solid fa-lock text-xs"></i>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1"><i class="fa-solid fa-mug-saucer mr-1"></i>Colazione</label>
+                            <input type="text" id="colazione" placeholder="Inserisci Colazione..." class="custom-input font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1"><i class="fa-solid fa-utensils mr-1"></i>Pranzo</label>
+                            <input type="text" id="pranzo" placeholder="Inserisci Pranzo..." class="custom-input font-medium">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1"><i class="fa-solid fa-moon mr-1"></i>Cena</label>
+                            <input type="text" id="cena" placeholder="Inserisci Cena..." class="custom-input font-medium">
+                        </div>
+                        
+                        <div class="pt-2">
+                            <button onclick="saveDieta()" id="btn-save-dieta" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-md transition-colors flex justify-center items-center gap-2">
+                                <i class="fa-solid fa-floppy-disk"></i> Salva Giorno
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-glicemia" class="hidden space-y-5">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100">
+                        <div class="mb-4">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Valore Misurato</label>
+                            <input type="number" id="valore-glicemia" placeholder="mg/dL" class="custom-input font-bold text-xl text-center">
+                        </div>
+                        
+                        <div class="mb-5 relative">
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1 ml-1">Fase</label>
+                            <select id="tipo-glicemia" class="custom-input font-bold text-slate-700 cursor-pointer appearance-none">
+                                <option value="digiuno">A Digiuno (Limite 150)</option>
+                                <option value="post">Post-prandiale (Limite 180)</option>
+                            </select>
+                            <i class="fa-solid fa-chevron-down absolute right-4 top-[2.2rem] text-slate-400 pointer-events-none"></i>
+                        </div>
+                        
+                        <button onclick="saveGlicemia()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-4 rounded-xl shadow-md transition-colors flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-droplet text-blue-400"></i> Registra Valore
+                        </button>
+                    </div>
+
+                    <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider ml-1 mt-6 border-b pb-2">Cronologia Valori</h3>
+                    <div id="lista-glicemia" class="space-y-3">
+                        <!-- Lista popolata via JS -->
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
-    <!-- App -->
-    <div id="app-content" class="hidden min-h-screen">
-        <header class="bg-slate-800 p-4 border-b-4 border-slate-700 sticky top-0 z-40">
-            <div class="flex justify-between items-center mb-4">
-                <h1 class="text-white font-black text-xl">SmartFDiet</h1>
-                <button onclick="logout()" class="text-white bg-red-600 px-4 py-2 rounded-lg font-bold text-sm"><i class="fa-solid fa-right-from-bracket mr-2"></i>Log out</button>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="switchTab('dieta')" id="tab-dieta" class="tab-btn active flex-1 py-3 rounded-lg font-bold">Dieta</button>
-                <button onclick="switchTab('glicemia')" id="tab-glicemia" class="tab-btn inactive flex-1 py-3 rounded-lg font-bold">Glicemia</button>
-            </div>
-        </header>
-
-        <main class="p-4 space-y-6">
-            <!-- Dieta -->
-            <div id="view-dieta">
-                <select id="giorno-select" onchange="loadDay()" class="w-full p-4 rounded-xl border-2 border-slate-300 font-bold mb-4">
-                    <option value="Lunedì">Lunedì</option>
-                    <option value="Martedì">Martedì</option>
-                    <!-- ...altri giorni -->
-                </select>
-                <div id="form-dieta" class="space-y-4">
-                    <input type="text" id="colazione" placeholder="Colazione" class="w-full p-4 border-2 rounded-xl">
-                    <input type="text" id="pranzo" placeholder="Pranzo" class="w-full p-4 border-2 rounded-xl">
-                    <input type="text" id="cena" placeholder="Cena" class="w-full p-4 border-2 rounded-xl">
-                    <button onclick="saveDieta()" id="btn-save-dieta" class="w-full bg-green-600 text-white font-bold py-4 rounded-xl">Salva Giorno</button>
-                </div>
-            </div>
-
-            <!-- Glicemia -->
-            <div id="view-glicemia" class="hidden">
-                <div class="bg-white p-4 rounded-xl border-2 border-slate-200">
-                    <input type="number" id="valore-glicemia" placeholder="Valore" class="w-full p-4 border-2 rounded-xl mb-4">
-                    <select id="tipo-glicemia" class="w-full p-4 border-2 rounded-xl mb-4">
-                        <option value="digiuno">Digiuno (<150)</option>
-                        <option value="post">Post-prandiale (<180)</option>
-                    </select>
-                    <button onclick="saveGlicemia()" class="w-full bg-blue-600 text-white font-bold py-4 rounded-xl">Salva Glicemia</button>
-                </div>
-                <div id="lista-glicemia" class="mt-6 space-y-2"></div>
-            </div>
-        </main>
-    </div>
-
     <script>
-        function checkPin() { if(document.getElementById('pin-input').value === '713') { document.getElementById('login-screen').classList.add('hidden'); document.getElementById('app-content').classList.remove('hidden'); } else { alert('PIN Errato'); } }
+        // Logica di Login
+        function checkPin() { 
+            if(document.getElementById('pin-input').value === '713') { 
+                document.getElementById('login-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('login-screen').classList.add('hidden'); 
+                    document.getElementById('app-content').classList.remove('hidden'); 
+                }, 300);
+            } else { 
+                alert('Codice PIN Errato.'); 
+                document.getElementById('pin-input').value = '';
+            } 
+        }
+
         function logout() { location.reload(); }
+        
+        // Navigazione Menu
         function switchTab(t) { 
             document.getElementById('view-dieta').classList.toggle('hidden', t !== 'dieta');
             document.getElementById('view-glicemia').classList.toggle('hidden', t !== 'glicemia');
-            document.getElementById('tab-dieta').className = `tab-btn ${t==='dieta'?'active':'inactive'} flex-1 py-3 rounded-lg font-bold`;
-            document.getElementById('tab-glicemia').className = `tab-btn ${t==='glicemia'?'active':'inactive'} flex-1 py-3 rounded-lg font-bold`;
+            
+            document.getElementById('tab-dieta').className = `tab-btn flex-1 py-3.5 rounded-xl font-bold text-sm ${t==='dieta'?'active':'inactive'}`;
+            document.getElementById('tab-glicemia').className = `tab-btn flex-1 py-3.5 rounded-xl font-bold text-sm ${t==='glicemia'?'active':'inactive'}`;
         }
         
+        // Logica Salvataggio e Blocco Dieta
         function saveDieta() {
             const day = document.getElementById('giorno-select').value;
-            localStorage.setItem('dieta_'+day, JSON.stringify({c: document.getElementById('colazione').value, p: document.getElementById('pranzo').value, c2: document.getElementById('cena').value}));
-            document.querySelectorAll('#form-dieta input').forEach(i => i.disabled = true);
-            document.getElementById('btn-save-dieta').disabled = true;
-            alert('Giornata bloccata e salvata!');
+            const c = document.getElementById('colazione').value;
+            const p = document.getElementById('pranzo').value;
+            const c2 = document.getElementById('cena').value;
+
+            if(!c || !p || !c2) {
+                alert('Compila colazione, pranzo e cena prima di salvare.');
+                return;
+            }
+
+            localStorage.setItem('dieta_'+day, JSON.stringify({c: c, p: p, c2: c2}));
+            loadDay(); // Ricarica la vista per applicare il blocco
         }
 
         function loadDay() {
             const day = document.getElementById('giorno-select').value;
             const data = JSON.parse(localStorage.getItem('dieta_'+day));
+            
+            const inputs = document.querySelectorAll('#form-dieta input');
+            const btn = document.getElementById('btn-save-dieta');
+            const lock = document.getElementById('lock-icon');
+
             if(data) {
                 document.getElementById('colazione').value = data.c;
                 document.getElementById('pranzo').value = data.p;
                 document.getElementById('cena').value = data.c2;
-                document.querySelectorAll('#form-dieta input').forEach(i => i.disabled = true);
-                document.getElementById('btn-save-dieta').disabled = true;
+                
+                // Blocca i campi
+                inputs.forEach(i => i.disabled = true);
+                btn.classList.add('hidden');
+                lock.classList.remove('hidden');
             } else {
                 document.getElementById('colazione').value = '';
                 document.getElementById('pranzo').value = '';
                 document.getElementById('cena').value = '';
-                document.querySelectorAll('#form-dieta input').forEach(i => i.disabled = false);
-                document.getElementById('btn-save-dieta').disabled = false;
+                
+                // Sblocca i campi
+                inputs.forEach(i => i.disabled = false);
+                btn.classList.remove('hidden');
+                lock.classList.add('hidden');
             }
         }
 
+        // Logica Glicemia
         function saveGlicemia() {
             const val = document.getElementById('valore-glicemia').value;
             const tipo = document.getElementById('tipo-glicemia').value;
+            
+            if(!val) return;
+
             const limit = tipo === 'digiuno' ? 150 : 180;
-            const color = val < limit ? 'bg-green-500' : 'bg-red-500';
+            const isGood = val <= limit;
+            
+            const bgColor = isGood ? 'bg-green-100 border-green-200 text-green-800' : 'bg-red-100 border-red-200 text-red-800';
+            const iconColor = isGood ? 'text-green-600' : 'text-red-600';
+            const icon = isGood ? 'fa-check-circle' : 'fa-triangle-exclamation';
+            const label = tipo === 'digiuno' ? 'A Digiuno' : 'Post-prandiale';
             
             const list = document.getElementById('lista-glicemia');
             const item = document.createElement('div');
-            item.className = `p-4 text-white rounded-lg font-bold ${color} mb-2`;
-            item.innerHTML = `${tipo.toUpperCase()}: ${val} mg/dL`;
+            
+            // Crea una card per il valore misurato
+            item.className = `p-4 border-2 rounded-2xl flex justify-between items-center shadow-sm ${bgColor}`;
+            item.innerHTML = `
+                <div>
+                    <div class="text-xs font-bold uppercase tracking-wider opacity-70 mb-1">${label}</div>
+                    <div class="font-black text-2xl">${val} <span class="text-sm font-medium opacity-70">mg/dL</span></div>
+                </div>
+                <i class="fa-solid ${icon} text-3xl ${iconColor} opacity-80"></i>
+            `;
+            
             list.prepend(item);
+            document.getElementById('valore-glicemia').value = ''; // Reset input
         }
         
-        // Carica primo giorno
+        // Avvio iniziale
         loadDay();
     </script>
 </body>
