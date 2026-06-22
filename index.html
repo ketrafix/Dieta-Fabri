@@ -5,20 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartFDiet - Dieta & Glicemia</title>
     
-    <!-- Metadati per rendere il sito una vera e propria App per Smartphone -->
+    <!-- Metadati per App Smartphone -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SmartFDiet">
     
-    <!-- Icona Fogliolina Originale Vettoriale -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3e%3crect width='256' height='256' rx='60' fill='%2316a34a'/%3e%3cpath fill='%23ffffff' d='M167.6 71.4c-18.3-5.4-40.9 2-57.2 20.1l-2 2.4-3.4-.6c-9-1.5-19-3.5-29.8.4-10.2 3.6-16.8 9.4-19.3 12.2-.3.4-.5 1-.4 1.4.1.5.4.9.9 1l30.7 11.8c-2.9 7.2-4.3 15.5-4 24v38.5c0 1.5 1.1 2.8 2.6 3 .2 0 .3 0 .5 0 1.3 0 2.5-.9 2.9-2.2l10.6-37.2c.9-3.2 2.8-6.2 5.3-8.4l24.9-21.6c17-14.7 29.8-32.6 35-53 .3-1.1 0-2.2-1-2.9zm-31.1 65.2l-25 21.7-9.1 32.3-4-13.5v-14.8c-.2-6.9 1-13.5 3.3-19.2l-20.1-7.8c4.9-3.6 13.2-6.6 21.9-5.1l6.3 1.1 3.7-3.9c13.5-14.2 31.6-22.9 48.4-24.2-4.7 12-14 23-25.4 33.4z'/%3e%3c/svg%3e">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3e%3crect width='256' height='256' rx='60' fill='%2316a34a'/%3e%3cpath fill='%23ffffff' d='M167.6 71.4c-18.3-5.4-40.9 2-57.2 20.1l-2 2.4-3.4-.6c-9-1.5-19-3.5-29.8.4-10.2 3.6-16.8 9.4-19.3 12.2-.3.4-.5 1-.4 1.4.1.5.4.9.9 1l30.7 11.8c-2.9 7.2-4.3 15.5-4 24v38.5c0 1.5 1.1 2.8 2.6 3 .2 0 .3 0 .5 0 1.3 0 2.5-.9 2.9-2.2l10.6-37.2c.9-3.2 2.8-6.2 5.3-8.4l24.9-21.6c17-14.7 29.8-32.6 35-53 .3-1.1 0-2.2-1-2.9zm-31.1 65.2l-25 21.7-9.1 32.3-4-13.5v-14.8c-.2-6.9 1-13.5 3.3-19.2l-20.1-7.8c4.9-3.6 13.2-6.6 21.9-5.1l6.3 1.1 3.7-3.9c13.5-14.2 31.6-22.9 48.4-24.2-4.7 12-14 23-25.4 33.4z'/%3e%3c/svg%3e">
+    <!-- Nuova Favicon "Soft Green Leaf" Vettoriale -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3e%3crect width='512' height='512' rx='120' fill='%23f0fdf4'/%3e%3cpath fill='%2316a34a' d='M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z'/%3e%3c/svg%3e">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3e%3crect width='512' height='512' rx='120' fill='%23f0fdf4'/%3e%3cpath fill='%2316a34a' d='M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z'/%3e%3c/svg%3e">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <script>
+        // Auto-generazione dell'Icona PNG per la Home di iPhone/Android
+        function createFavicon() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            // Il nuovo logo in formato raw per il Canvas
+            const svgData = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%23f0fdf4'/><path fill='%2316a34a' d='M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z'/></svg>`;
+            img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
+            img.onload = () => {
+                ctx.drawImage(img, 0, 0);
+                const link = document.createElement('link');
+                link.rel = 'apple-touch-icon';
+                link.href = canvas.toDataURL('image/png');
+                document.head.appendChild(link);
+            };
+        }
+        window.addEventListener('DOMContentLoaded', createFavicon);
+
         tailwind.config = {
             theme: {
                 extend: {
@@ -39,7 +58,7 @@
         .glass-card { 
             background: #ffffff; 
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
-            border: 2px solid #cbd5e1; /* Contorno spesso e netto */
+            border: 2px solid #e2e8f0; 
             border-radius: 1.5rem; 
         }
         
@@ -48,11 +67,11 @@
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #94a3b8; border-radius: 10px; }
         select, input { appearance: none; }
         
-        .fade-in { animation: fadeIn 0.3s ease-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         
         /* Pulsanti Tabs per passare da Dieta a Glicemia */
-        .tab-btn.active { background-color: #22c55e; color: #ffffff; font-weight: 800; box-shadow: 0 4px 6px -1px rgba(34, 197, 94, 0.4); border: 2px solid #16a34a; }
+        .tab-btn.active { background-color: #16a34a; color: #ffffff; font-weight: 800; box-shadow: 0 4px 6px -1px rgba(22, 163, 74, 0.4); border: 2px solid #15803d; }
         .tab-btn.inactive { background-color: #334155; color: #94a3b8; font-weight: 600; border: 2px solid transparent; }
         
         /* Icona Custom Select per i Menu a tendina */
@@ -62,19 +81,24 @@
 <body class="min-h-screen text-slate-800 flex flex-col">
 
     <div id="login-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center p-4 transition-opacity duration-500">
-        <div class="w-full max-w-sm glass-card p-8 text-center shadow-2xl fade-in border-slate-700">
-            <!-- LOGO INIZIALE VETTORIALE (Foglia Originale) -->
-            <div class="mx-auto w-24 h-24 bg-medical-600 rounded-3xl flex items-center justify-center mb-6 shadow-lg border-4 border-medical-500">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class="w-16 h-16 text-white"><path fill="currentColor" d="M167.6 71.4c-18.3-5.4-40.9 2-57.2 20.1l-2 2.4-3.4-.6c-9-1.5-19-3.5-29.8.4-10.2 3.6-16.8 9.4-19.3 12.2-.3.4-.5 1-.4 1.4.1.5.4.9.9 1l30.7 11.8c-2.9 7.2-4.3 15.5-4 24v38.5c0 1.5 1.1 2.8 2.6 3 .2 0 .3 0 .5 0 1.3 0 2.5-.9 2.9-2.2l10.6-37.2c.9-3.2 2.8-6.2 5.3-8.4l24.9-21.6c17-14.7 29.8-32.6 35-53 .3-1.1 0-2.2-1-2.9zm-31.1 65.2l-25 21.7-9.1 32.3-4-13.5v-14.8c-.2-6.9 1-13.5 3.3-19.2l-20.1-7.8c4.9-3.6 13.2-6.6 21.9-5.1l6.3 1.1 3.7-3.9c13.5-14.2 31.6-22.9 48.4-24.2-4.7 12-14 23-25.4 33.4z"/></svg>
+        <div class="w-full max-w-sm bg-white rounded-[2rem] p-10 text-center shadow-2xl fade-in border-4 border-slate-800">
+            
+            <!-- NUOVO LOGO SOFT GREEN (Ridisegnato al pixel) -->
+            <div class="mx-auto w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center mb-6 shadow-sm border border-green-100">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-14 h-14 text-green-600">
+                    <path fill="currentColor" d="M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z"/>
+                </svg>
             </div>
             
-            <h1 class="text-3xl font-black text-slate-800 mb-2">SmartFDiet</h1>
-            <p class="text-sm text-slate-500 font-bold mb-8 uppercase tracking-widest">Master Plan Clinico</p>
+            <h1 class="text-3xl font-black text-slate-800 mb-1 tracking-tight">SmartFDiet</h1>
+            <p class="text-xs text-slate-500 font-bold mb-8 uppercase tracking-wide">Protocollo 1800 Kcal & Glicemia</p>
 
             <div class="space-y-4">
-                <input type="password" id="pin-input" placeholder="PIN" inputmode="numeric" pattern="[0-9]*" class="w-full bg-slate-50 border-2 border-slate-300 text-slate-800 rounded-xl px-5 py-4 text-center text-3xl font-black tracking-[0.5em] focus:outline-none focus:border-medical-500 transition-colors shadow-inner">
-                <button onclick="checkPin()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-black py-4 rounded-xl transition-all shadow-lg text-lg flex justify-center items-center gap-2 border-2 border-slate-700">
-                    <i class="fa-solid fa-unlock-keyhole"></i> SBLOCCA APP
+                <!-- Input stile morbido e pulito -->
+                <input type="password" id="pin-input" placeholder="C o d i c e   P I N" inputmode="numeric" pattern="[0-9]*" class="w-full bg-slate-50 border-2 border-slate-100 text-slate-800 rounded-2xl px-5 py-4 text-center text-xl font-black tracking-[0.3em] focus:outline-none focus:border-green-500 transition-colors shadow-inner">
+                <!-- Bottone verde arrotondato -->
+                <button onclick="checkPin()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl transition-all shadow-md text-lg flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-unlock-keyhole"></i> Accedi
                 </button>
             </div>
             <p id="pin-error" class="text-red-500 text-sm font-bold mt-4 hidden"><i class="fa-solid fa-circle-exclamation mr-1"></i> PIN Errato</p>
@@ -86,9 +110,11 @@
             <div class="max-w-7xl mx-auto px-4 pt-4 pb-4">
                 <div class="flex items-center justify-between mb-4 text-white">
                     <div class="flex items-center gap-3">
-                        <!-- LOGO PICCOLO HEADER (Foglia Originale) -->
-                        <div class="w-10 h-10 bg-medical-500 rounded-lg flex items-center justify-center shadow-inner border-2 border-medical-400">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" class="w-6 h-6 text-white"><path fill="currentColor" d="M167.6 71.4c-18.3-5.4-40.9 2-57.2 20.1l-2 2.4-3.4-.6c-9-1.5-19-3.5-29.8.4-10.2 3.6-16.8 9.4-19.3 12.2-.3.4-.5 1-.4 1.4.1.5.4.9.9 1l30.7 11.8c-2.9 7.2-4.3 15.5-4 24v38.5c0 1.5 1.1 2.8 2.6 3 .2 0 .3 0 .5 0 1.3 0 2.5-.9 2.9-2.2l10.6-37.2c.9-3.2 2.8-6.2 5.3-8.4l24.9-21.6c17-14.7 29.8-32.6 35-53 .3-1.1 0-2.2-1-2.9zm-31.1 65.2l-25 21.7-9.1 32.3-4-13.5v-14.8c-.2-6.9 1-13.5 3.3-19.2l-20.1-7.8c4.9-3.6 13.2-6.6 21.9-5.1l6.3 1.1 3.7-3.9c13.5-14.2 31.6-22.9 48.4-24.2-4.7 12-14 23-25.4 33.4z"/></svg>
+                        <!-- LOGO PICCOLO HEADER (Riprende il nuovo stile) -->
+                        <div class="w-10 h-10 bg-green-50 rounded-xl flex items-center justify-center shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-6 h-6 text-green-600">
+                                <path fill="currentColor" d="M272 96c-78.6 0-145.1 81.5-167.7 134.2C96.5 248.8 80 266.3 80 288c0 35.3 28.7 64 64 64h22.4l-41.6 41.6c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L211.3 397.3c15.1 4.5 31.4 6.7 48.7 6.7c106 0 192-86 192-192V96H272z"/>
+                            </svg>
                         </div>
                         <h1 class="text-2xl font-black tracking-tight">SmartFDiet</h1>
                     </div>
@@ -111,27 +137,26 @@
 
         <main class="max-w-7xl mx-auto w-full px-4 mt-8 flex-grow flex flex-col pb-12">
             
-            <!-- VISTA: MENU DIETA -->
             <div id="view-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-8 fade-in">
                 
                 <div class="lg:col-span-2 space-y-6">
                     <div class="glass-card p-6 sm:p-8 flex flex-col relative">
                         
-                        <!-- BARRA GIORNI (Fuori dal blocco lucchetto, sempre cliccabile) -->
-                        <div class="flex justify-between items-center mb-6 border-b-2 border-slate-200 pb-4 relative z-30">
+                        <!-- BARRA GIORNI (Sempre cliccabile in alto) -->
+                        <div class="flex justify-between items-center mb-6 border-b-2 border-slate-200 pb-4 relative z-30 bg-white">
                             <h2 class="text-2xl font-black text-slate-800 flex items-center gap-3">
-                                <i class="fa-regular fa-calendar-plus text-medical-600"></i> Pianifica
+                                <i class="fa-regular fa-calendar-plus text-green-600"></i> Pianifica
                             </h2>
-                            <select id="day-select" class="bg-slate-100 border-2 border-slate-300 rounded-xl py-2 pl-4 pr-10 font-black text-slate-800 outline-none select-icon shadow-sm focus:border-medical-500 transition-colors">
+                            <select id="day-select" class="bg-slate-100 border-2 border-slate-200 rounded-xl py-2 pl-4 pr-10 font-black text-slate-800 outline-none select-icon shadow-sm focus:border-green-500 transition-colors">
                                 <option value="Lunedì">Lunedì</option> <option value="Martedì">Martedì</option> <option value="Mercoledì">Mercoledì</option>
                                 <option value="Giovedì">Giovedì</option> <option value="Venerdì">Venerdì</option> <option value="Sabato">Sabato</option> <option value="Domenica">Domenica</option>
                             </select>
                         </div>
 
-                        <!-- CONTENITORE PASTI (Questo riceve il lucchetto) -->
+                        <!-- CONTENITORE PASTI -->
                         <div class="relative flex-grow">
-                            <!-- OVERLAY DI BLOCCO (LUCCHETTO) -->
-                            <div id="lock-overlay" class="hidden absolute -inset-4 z-20 bg-white/85 backdrop-blur-sm rounded-2xl flex-col items-center justify-center border-4 border-slate-200 shadow-inner">
+                            <!-- OVERLAY DI BLOCCO (LUCCHETTO) - Ora blocca SOLO quest'area interna -->
+                            <div id="lock-overlay" class="hidden absolute inset-0 z-20 bg-white/85 backdrop-blur-sm rounded-2xl flex-col items-center justify-center border-4 border-slate-100 shadow-inner">
                                 <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-4 shadow-sm border-2 border-slate-200">
                                     <i class="fa-solid fa-lock text-4xl text-slate-500"></i>
                                 </div>
@@ -139,19 +164,19 @@
                                 <p class="text-center text-slate-600 font-medium px-6 max-w-sm mb-6">Hai già salvato il menù per questo giorno. Seleziona un altro giorno in alto, oppure sbloccalo dal Diario.</p>
                             </div>
 
-                            <div class="space-y-6">
+                            <div class="space-y-6 pb-4">
                                 <!-- Colazione -->
                                 <div class="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm">
                                     <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-3"><i class="fa-solid fa-mug-saucer mr-2 text-slate-400"></i>Colazione</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <select id="col-liq" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-medical-500 transition-colors">
+                                        <select id="col-liq" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-green-500 transition-colors">
                                             <option value="">Fonte Liquida/Latticino...</option>
                                             <option value="Yogurt greco magro (150g)">Yogurt greco bianco magro (150g)</option>
                                             <option value="Yogurt intero bianco (125g)">Yogurt intero bianco (125g)</option>
                                             <option value="Kefir (200ml)">Kefir (200ml)</option>
                                             <option value="Latte p.s. (200ml)">Latte parz. scremato (200ml)</option>
                                         </select>
-                                        <select id="col-sol" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-medical-500 transition-colors">
+                                        <select id="col-sol" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-green-500 transition-colors">
                                             <option value="">Carboidrati Solidi...</option>
                                             <option value="Cereali avena (40g)">Cereali / Fiocchi d'avena (40g)</option>
                                             <option value="Fette biscottate (40g)">Fette biscottate (40g)</option>
@@ -162,14 +187,14 @@
                                 </div>
 
                                 <!-- Spuntini Fissi -->
-                                <div class="bg-medical-50 p-5 rounded-2xl border-2 border-medical-200 shadow-sm flex flex-col md:flex-row gap-4">
-                                    <div class="flex-1 text-medical-900">
-                                        <strong class="block mb-1 text-sm font-black uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1 text-medical-600"></i> Mattina</strong>
+                                <div class="bg-green-50 p-5 rounded-2xl border-2 border-green-200 shadow-sm flex flex-col md:flex-row gap-4">
+                                    <div class="flex-1 text-green-900">
+                                        <strong class="block mb-1 text-sm font-black uppercase tracking-wider"><i class="fa-solid fa-apple-whole mr-1 text-green-600"></i> Mattina</strong>
                                         <span class="font-medium">Frutta fresca (150g) + Crackers (30g)</span>
                                     </div>
-                                    <div class="w-px bg-medical-200 hidden md:block"></div>
-                                    <div class="flex-1 text-medical-900">
-                                        <strong class="block mb-1 text-sm font-black uppercase tracking-wider"><i class="fa-regular fa-clock mr-1 text-medical-600"></i> Pomeriggio</strong>
+                                    <div class="w-px bg-green-200 hidden md:block"></div>
+                                    <div class="flex-1 text-green-900">
+                                        <strong class="block mb-1 text-sm font-black uppercase tracking-wider"><i class="fa-regular fa-clock mr-1 text-green-600"></i> Pomeriggio</strong>
                                         <span class="font-medium">Frutta fresca (150g) + Yogurt greco (150g)</span>
                                     </div>
                                 </div>
@@ -181,7 +206,7 @@
                                         <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-1 rounded border border-slate-200 font-bold">+ Verdure e 15g Olio</span>
                                     </h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <select id="pra-carb" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-medical-500 transition-colors">
+                                        <select id="pra-carb" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-green-500 transition-colors">
                                             <option value="">Fonte di Carboidrati...</option>
                                             <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
                                             <option value="Farro/Orzo/Cereali (80g)">Farro/Orzo/Cereali (80g)</option>
@@ -190,7 +215,7 @@
                                             <option value="Ravioli/Pasta uovo (120g)" data-cost="speciale">Ravioli/Pasta uovo (120g)</option>
                                             <option value="Gnocchi (250g)" data-cost="speciale">Gnocchi (250g)</option>
                                         </select>
-                                        <select id="pra-pro" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-medical-500 transition-colors">
+                                        <select id="pra-pro" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-green-500 transition-colors">
                                             <option value="">Secondo Piatto Proteico...</option>
                                             <option value="Carne Bianca (150g)" data-cost="bianca">Carne Bianca (150g)</option>
                                             <option value="Carne Rossa (120g)" data-cost="rossa">Carne Rossa (120g)</option>
@@ -218,13 +243,13 @@
                                     </div>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 transition-opacity" id="cena-inputs">
-                                        <select id="cen-carb" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-medical-500 transition-colors">
+                                        <select id="cen-carb" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-green-500 transition-colors">
                                             <option value="">Fonte di Carboidrati...</option>
                                             <option value="Pane comune (100g)">Pane comune (100g)</option>
                                             <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
                                             <option value="Patate (250g)">Patate (250g)</option>
                                         </select>
-                                        <select id="cen-pro" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-medical-500 transition-colors">
+                                        <select id="cen-pro" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-3 outline-none select-icon focus:border-green-500 transition-colors">
                                             <!-- Iniettato via JS per copiare le opzioni del pranzo -->
                                         </select>
                                     </div>
@@ -233,7 +258,7 @@
                         </div>
 
                         <!-- Bottone Salva -->
-                        <button id="btn-salva-dieta" onclick="salvaDieta()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-black py-5 rounded-xl transition-all shadow-xl text-xl mt-8 flex justify-center items-center gap-3 border-2 border-slate-700 relative z-30">
+                        <button id="btn-salva-dieta" onclick="salvaDieta()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-black py-5 rounded-xl transition-all shadow-xl text-xl mt-4 flex justify-center items-center gap-3 border-2 border-slate-700 relative z-30">
                             <i class="fa-solid fa-cloud-arrow-up"></i> Salva Menù nel Diario
                         </button>
                     </div>
@@ -244,7 +269,7 @@
                     <div class="glass-card p-6 border-2 border-slate-200">
                         <div class="flex justify-between items-center mb-4 border-b-2 border-slate-200 pb-3">
                             <h3 class="text-xl font-black text-slate-800 flex items-center gap-2">
-                                <i class="fa-solid fa-scale-balanced text-medical-600"></i> Frequenze
+                                <i class="fa-solid fa-scale-balanced text-green-600"></i> Frequenze
                             </h3>
                             <button onclick="svuotaDieta()" class="text-xs font-black text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-lg border border-slate-200"><i class="fa-solid fa-rotate-left mr-1"></i>Azzera</button>
                         </div>
@@ -255,7 +280,7 @@
 
                     <!-- Diario Settimanale -->
                     <div class="glass-card p-6 flex flex-col h-[450px] border-2 border-slate-200">
-                        <h3 class="text-xl font-black text-slate-800 mb-4 border-b-2 border-slate-200 pb-3"><i class="fa-solid fa-book-open text-medical-600"></i> Diario Settimana</h3>
+                        <h3 class="text-xl font-black text-slate-800 mb-4 border-b-2 border-slate-200 pb-3"><i class="fa-solid fa-book-open text-green-600"></i> Diario Settimana</h3>
                         <div id="lista-dieta" class="flex-grow overflow-y-auto custom-scrollbar space-y-4 pr-2">
                             <!-- JS Diet List -->
                         </div>
@@ -263,18 +288,17 @@
                 </div>
             </div>
 
-            <!-- VISTA: DIARIO GLICEMICO -->
             <div id="view-glicemia" class="hidden grid grid-cols-1 md:grid-cols-2 gap-8 fade-in">
                 
                 <div class="glass-card p-6 sm:p-8 h-fit border-2 border-slate-200">
                     <h2 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3 border-b-2 border-slate-200 pb-4">
-                        <i class="fa-solid fa-pen-to-square text-medical-600"></i> Nuova Misurazione
+                        <i class="fa-solid fa-pen-to-square text-green-600"></i> Nuova Misurazione
                     </h2>
                     
                     <div class="space-y-6">
                         <div class="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm">
                             <label class="block text-sm font-black text-slate-500 uppercase tracking-widest mb-3">Momento della giornata</label>
-                            <select id="glic-tipo" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-4 outline-none focus:border-medical-500 select-icon shadow-inner transition-colors text-lg">
+                            <select id="glic-tipo" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-bold rounded-xl px-4 py-4 outline-none focus:border-green-500 select-icon shadow-inner transition-colors text-lg">
                                 <option value="digiuno">A Digiuno (Target < 150)</option>
                                 <option value="post">Post-Prandiale (Target < 180)</option>
                             </select>
@@ -282,10 +306,10 @@
 
                         <div class="bg-white p-5 rounded-2xl border-2 border-slate-200 shadow-sm">
                             <label class="block text-sm font-black text-slate-500 uppercase tracking-widest mb-3">Valore rilevato (mg/dL)</label>
-                            <input type="number" id="glic-valore" placeholder="Es. 105" inputmode="numeric" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-black rounded-xl px-4 py-5 outline-none focus:border-medical-500 text-4xl text-center shadow-inner transition-colors">
+                            <input type="number" id="glic-valore" placeholder="Es. 105" inputmode="numeric" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-800 font-black rounded-xl px-4 py-5 outline-none focus:border-green-500 text-4xl text-center shadow-inner transition-colors">
                         </div>
 
-                        <button onclick="salvaGlicemia()" class="w-full bg-medical-600 hover:bg-medical-700 text-white font-black py-5 rounded-xl transition-colors shadow-xl text-xl mt-4 flex justify-center items-center gap-3 border-2 border-medical-500">
+                        <button onclick="salvaGlicemia()" class="w-full bg-green-600 hover:bg-green-700 text-white font-black py-5 rounded-xl transition-colors shadow-xl text-xl mt-4 flex justify-center items-center gap-3 border-2 border-green-500">
                             <i class="fa-solid fa-plus"></i> Salva nel Diario Medico
                         </button>
                     </div>
@@ -294,7 +318,7 @@
                 <div class="glass-card p-6 flex flex-col min-h-[500px] border-2 border-slate-200">
                     <div class="flex justify-between items-center mb-6 border-b-2 border-slate-200 pb-4">
                         <h2 class="text-2xl font-black text-slate-800 flex items-center gap-3">
-                            <i class="fa-solid fa-book-medical text-medical-600"></i> Storico Clinico
+                            <i class="fa-solid fa-book-medical text-green-600"></i> Storico Clinico
                         </h2>
                         <button onclick="svuotaGlicemia()" class="text-xs font-black text-slate-400 hover:text-red-500 transition-colors uppercase tracking-wider bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">
                             <i class="fa-solid fa-trash mr-1"></i> Svuota
@@ -342,7 +366,7 @@
             document.getElementById('cen-pro').innerHTML = document.getElementById('pra-pro').innerHTML;
             loadData();
             
-            // Ascoltatore per il cambio giorno per controllare il lucchetto sui pasti
+            // Ascoltatore per il cambio giorno per controllare il lucchetto
             document.getElementById('day-select').addEventListener('change', checkDayLock);
         }
 
@@ -500,7 +524,7 @@
                 daySelect.selectedIndex++;
             }
             
-            checkDayLock(); // Riapplica subito il blocco sul nuovo giorno (o sul corrente)
+            checkDayLock(); 
         }
 
         function renderDieta() {
@@ -532,7 +556,7 @@
                 list.innerHTML += `
                     <div class="bg-white border-2 border-slate-200 rounded-2xl p-5 shadow-sm relative group">
                         <button onclick="eliminaDieta(${originalIndex})" class="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors bg-slate-50 p-2 rounded-lg border border-slate-200"><i class="fa-solid fa-unlock-keyhole mr-1"></i> Sblocca</button>
-                        <div class="font-black text-slate-800 text-lg mb-3 border-b-2 border-slate-100 pb-2 flex items-center gap-2"><i class="fa-solid fa-calendar-check text-medical-500"></i> ${d.giorno}</div>
+                        <div class="font-black text-slate-800 text-lg mb-3 border-b-2 border-slate-100 pb-2 flex items-center gap-2"><i class="fa-solid fa-calendar-check text-green-500"></i> ${d.giorno}</div>
                         <div class="text-sm font-medium text-slate-600 mb-2 line-clamp-1"><i class="fa-solid fa-mug-saucer text-slate-400 w-5"></i> ${d.col}</div>
                         <div class="text-sm font-medium text-slate-600 mb-2 line-clamp-1"><i class="fa-solid fa-sun text-slate-400 w-5"></i> ${d.pra}</div>
                         <div class="text-sm font-medium text-slate-600 line-clamp-1"><i class="fa-solid fa-moon text-slate-400 w-5"></i> ${d.cen}</div>
@@ -545,7 +569,7 @@
             state.dieta.splice(index, 1); 
             saveData(); 
             renderDieta(); 
-            checkDayLock(); // Rimuove il lucchetto se eliminiamo il giorno corrente
+            checkDayLock(); 
         }
 
         function svuotaDieta() {
@@ -591,9 +615,9 @@
                 const dataStr = `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')} - ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
                 
                 // Colori dinamici in base al target clinico
-                const bg = g.isBuono ? "bg-medical-50 border-medical-200" : "bg-red-50 border-red-200";
-                const txt = g.isBuono ? "text-medical-700" : "text-red-700";
-                const icon = g.isBuono ? "fa-circle-check text-medical-500" : "fa-triangle-exclamation text-red-500";
+                const bg = g.isBuono ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200";
+                const txt = g.isBuono ? "text-green-700" : "text-red-700";
+                const icon = g.isBuono ? "fa-circle-check text-green-500" : "fa-triangle-exclamation text-red-500";
 
                 list.innerHTML += `
                     <div class="flex items-center justify-between p-5 rounded-2xl border-2 shadow-sm ${bg}">
@@ -642,8 +666,8 @@
                 `;
                 document.getElementById('hidden-confirm').onclick = confirmCallback;
             } else {
-                icon.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-medical-100 text-medical-600 mb-6 text-4xl shadow-inner border-2 border-medical-200"; icon.innerHTML = '<i class="fa-solid fa-check"></i>';
-                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-medical-600 text-white font-black py-4 rounded-xl border-2 border-medical-500 shadow-md">Ok</button>`;
+                icon.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-green-100 text-green-600 mb-6 text-4xl shadow-inner border-2 border-green-200"; icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                actions.innerHTML = `<button onclick="closeModal()" class="flex-1 bg-green-600 text-white font-black py-4 rounded-xl border-2 border-green-500 shadow-md">Ok</button>`;
             }
 
             modal.classList.remove('hidden');
