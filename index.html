@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartFDiet</title>
+    <meta name="theme-color" content="#1e293b">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <!-- Icona "Foglia" Ufficiale -->
-    <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8+PC9zdmc+">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8+PC9zdmc+">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNDEuMTYsMTA0LjUzYTgwLjE0LDgwLjE0LDAsMCwwLTEwOS40MywxOC44bC0xLjA3LDEuNTJBODAuMTIsODAuMTIsMCwwLDAsMTExLjksMjM1LjZsNS43Nyw4LjJBMTExLjQ1LDExMS40NSwwLDAsMCw0OCwyNzJhOCw4LDAsMCwwLDE2LDBhOTUuNTMsOTUuNTMsMCwwLDEsNjQtOTAuMjIsODAuMTQsODAuMTQsMCwwLDAsODAuNjgsNTQuODksOCw4LDAsMCwwLDEuMjUtMTUuOSw2NC4xMyw2NC4xMywwLDAsMS01OC40NS0zOC4zMSw4LDgsMCwwLDAtMTMuODgtMS41NWwtNS43Ny04LjJhNjQuMTEsNjQuMTEsMCwwLDEsMTUtODguNTlsMS4wNy0xLjUyYTY0LjEyLDY0LjEyLDAsMCwxLDg3LjU1LTE1LjA1QTY0LjEzLDY0LjEzLDAsMCwxLDIwOCwyNDBhOCw4LDAsMCwwLDE2LDBBODAuMTMsODAuMTMsMCwwLDAsMjQxLjE2LDEwNC41M1oiIGZpbGw9IiMxNmEzNGEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDY0LCA2NCkgc2NhbGUoMS41KSIvPjwvc3ZnPg==">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNDEuMTYsMTA0LjUzYTgwLjE0LDgwLjE0LDAsMCwwLTEwOS40MywxOC44bC0xLjA3LDEuNTJBODAuMTIsODAuMTIsMCwwLDAsMTExLjksMjM1LjZsNS43Nyw4LjJBMTExLjQ1LDExMS40NSwwLDAsMCw0OCwyNzJhOCw4LDAsMCwwLDE2LDBhOTUuNTMsOTUuNTMsMCwwLDEsNjQtOTAuMjIsODAuMTQsODAuMTQsMCwwLDAsODAuNjgsNTQuODksOCw4LDAsMCwwLDEuMjUtMTUuOSw2NC4xMyw2NC4xMywwLDAsMS01OC40NS0zOC4zMSw4LDgsMCwwLDAtMTMuODgtMS41NWwtNS43Ny04LjJhNjQuMTEsNjQuMTEsMCwwLDEsMTUtODguNTlsMS4wNy0xLjUyYTY0LjEyLDY0LjEyLDAsMCwxLDg3LjU1LTE1LjA1QTY0LjEzLDY0LjEzLDAsMCwxLDIwOCwyNDBhOCw4LDAsMCwwLDE2LDBBODAuMTMsODAuMTMsMCwwLDAsMjQxLjE2LDEwNC41M1oiIGZpbGw9IiMxNmEzNGEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDY0LCA2NCkgc2NhbGUoMS41KSIvPjwvc3ZnPg==">
     
-    <!-- Manifesto PWA Installazione Nativa -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%231e293b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8%2BPC9zdmc%2B%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f8fafc%22%2C%22theme_color%22%3A%22%231e293b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNDEuMTYsMTA0LjUzYTgwLjE0LDgwLjE0LDAsMCwwLTEwOS40MywxOC44bC0xLjA3LDEuNTJBODAuMTIsODAuMTIsMCwwLDAsMTExLjksMjM1LjZsNS43Nyw4LjJBMTExLjQ1LDExMS40NSwwLDAsMCw0OCwyNzJhOCw4LDAsMCwwLDE2LDBhOTUuNTMsOTUuNTMsMCwwLDEsNjQtOTAuMjIsODAuMTQsODAuMTQsMCwwLDAsODAuNjgsNTQuODksOCw4LDAsMCwwLDEuMjUtMTUuOSw2NC4xMyw2NC4xMywwLDAsMS01OC40NS0zOC4zMSw4LDgsMCwwLDAtMTMuODgtMS41NWwtNS43Ny04LjJhNjQuMTEsNjQuMTEsMCwwLDEsMTUtODguNTlsMS4wNy0xLjUyYTY0LjEyLDY0LjEyLDAsMCwxLDg3LjU1LTE1LjA1QTY0LjEzLDY0LjEzLDAsMCwxLDIwOCwyNDBhOCw4LDAsMCwwLDE2LDBBODAuMTMsODAuMTMsMCwwLDAsMjQxLjE2LDEwNC41M1oiIGZpbGw9IiMxNmEzNGEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDY0LCA2NCkgc2NhbGUoMS41KSIvPjwvc3ZnPg==%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
 
-    <!-- CSS / Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -34,8 +34,8 @@
     <!-- Login Screen -->
     <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-slate-900/95 backdrop-blur-md transition-opacity duration-300">
         <div class="w-full max-w-sm bg-white rounded-[2rem] p-8 shadow-2xl border border-slate-100 text-center transform transition-all">
-            <div class="w-24 h-24 mx-auto mb-6 bg-[#e8f5e9] rounded-[2rem] p-4 shadow-inner flex items-center justify-center">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8+PC9zdmc+" class="w-full h-full" alt="Logo">
+            <div class="w-24 h-24 mx-auto mb-6 bg-[#f0fdf4] rounded-[2rem] p-4 shadow-inner flex items-center justify-center">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBkPSJNMjQxLjE2LDEwNC41M2E4MC4xNCw4MC4xNCwwLDAsMC0xMDkuNDMsMTguOGwtMS4wNywxLjUyQTgwLjEyLDgwLjEyLDAsMCwwLDExMS45LDIzNS42bDUuNzcsOC4yQTExMS40NSwxMTEuNDUsMCwwLDAsNDgsMjcyYTgsOCwwLDAsMCwxNiwwYTk1LjUzLDk1LjUzLDAsMCwxLDY0LTkwLjIyLDgwLjE0LDgwLjE0LDAsMCwwLDgwLjY4LDU0Ljg5LDgsOCwwLDAsMCwxLjI1LTE1LjksNjQuMTMsNjQuMTMsMCwwLDEtNTguNDUtMzguMzEsOCw4LDAsMCwwLTEzLjg4LTEuNTVsLTUuNzctOC4yYTY0LjExLDY0LjExLDAsMCwxLDE1LTg4LjU5bDEuMDctMS41MmE2NC4xMiw2NC4xMiwwLDAsMSw4Ny41NS0xNS4wNUE2NC4xMyw2NC4xMywwLDAsMSwyMDgsMjQwYTgsOCwwLDAsMCwxNiwwQTgwLjEzLDgwLjEzLDAsMCwwLDI0MS4xNiwxMDQuNTNaIiBmaWxsPSIjMTZhMzRhIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg2NCwgNjQpIHNjYWxlKDEuNSkiLz48L3N2Zz4=" class="w-full h-full" alt="Logo">
             </div>
             <h1 class="text-3xl font-black text-slate-800 mb-2 tracking-tight">SmartFDiet</h1>
             <p class="text-slate-500 text-sm mb-8 font-medium">Protocollo 1800 Kcal & Glicemia</p>
@@ -49,11 +49,10 @@
     <!-- MAIN APP CONTENT -->
     <div id="app-content" class="hidden flex-1 flex flex-col w-full">
         
-        <!-- Header Fisso Top -->
         <header class="bg-slate-900 px-4 py-4 shadow-lg sticky top-0 z-40 w-full">
             <div class="max-w-7xl mx-auto flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyOCIgZmlsbD0iI2U4ZjVlOSIvPjxwYXRoIGQ9Ik0zNjYuNSAxNzQuNGMtNy4zLTEwLjEtMTkuOC0xNi43LTMzLjUtMTYuNy0zNSAwLTg5LjIgMjQtMTI1LjQgNjQtMzUuNCAzOS4yLTU1LjQgODcuMi01OSAxMzYuMy0xLjEgMTMuMiA4LjkgMjQuNiAyMi4yIDI0LjYgMTIgMCAyMS45LTkuNSAyMi41LTIxLjUgMi40LTM4LjUgMTcuOC03NS4yIDQ0LjctMTA0LjkgMTQuNy0xNi4yIDMyLjQtMjkuMiA1Mi0zOC41LTYuNyAzOS41LTIzLjQgNzQuMi00Ny45IDEwMS42LTguNiA5LjYtNy44IDI0LjMgMS43IDMyLjkgOS42IDguNiAyNC4zIDcuOCAzMi45LTEuNyAzMS43LTM1LjQgNTMuMS04MC44LTU5LjYtMTMwLjkgMTEuNy01LjUgMjMuMi05LjggMzQuMy0xMi45IDEyLjctMy42IDE5LjktMTYuOCAxNi40LTI5LjUtMi40LTguMS05LjEtMTMuOC0xNy0xNS4yLTExLjItMS45LTIzLjQtMi44LTM1LjgtMi43em0tMTY3LjQgMTguMWMtMzAuOSAzMi4zLTUyLjEgNzMuOC01OS43IDExOS4yLTEuNiA5LjctNi44IDE4LjEtMTQuNCAyMy42LTcuNiA1LjUtMTcuMSA3LjYtMjYuNyA2LTEyLjktMi4zLTIxLjYtMTQuNS0xOS40LTI3LjQgMTEuNS02NS42IDQyLjQtMTIzLjYgODguNC0xNjcgMjgtMjYuMyA2MS42LTQ2LjMgOTgtNTguMyAxMi41LTQuMSAyNi4yIDIuNyAzMC4yIDE1LjIgNC4xIDEyLjUtMi43IDI2LjItMTUuMiAzMC4yLTI5LjggOS45LTU3LjYgMjYuNC04MS4zIDQ3Ljh6IiBmaWxsPSIjMTZhMzRhIi8+PC9zdmc+" class="w-9 h-9 rounded-xl shadow-sm" alt="Logo">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExNSIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNDEuMTYsMTA0LjUzYTgwLjE0LDgwLjE0LDAsMCwwLTEwOS40MywxOC44bC0xLjA3LDEuNTJBODAuMTIsODAuMTIsMCwwLDAsMTExLjksMjM1LjZsNS43Nyw4LjJBMTExLjQ1LDExMS40NSwwLDAsMCw0OCwyNzJhOCw4LDAsMCwwLDE2LDBhOTUuNTMsOTUuNTMsMCwwLDEsNjQtOTAuMjIsODAuMTQsODAuMTQsMCwwLDAsODAuNjgsNTQuODksOCw4LDAsMCwwLDEuMjUtMTUuOSw2NC4xMyw2NC4xMywwLDAsMS01OC40NS0zOC4zMSw4LDgsMCwwLDAtMTMuODgtMS41NWwtNS43Ny04LjJhNjQuMTEsNjQuMTEsMCwwLDEsMTUtODguNTlsMS4wNy0xLjUyYTY0LjEyLDY0LjEyLDAsMCwxLDg3LjU1LTE1LjA1QTY0LjEzLDY0LjEzLDAsMCwxLDIwOCwyNDBhOCw4LDAsMCwwLDE2LDBBODAuMTMsODAuMTMsMCwwLDAsMjQxLjE2LDEwNC41M1oiIGZpbGw9IiMxNmEzNGEiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDY0LCA2NCkgc2NhbGUoMS41KSIvPjwvc3ZnPg==" class="w-9 h-9 rounded-xl shadow-sm" alt="Logo">
                     <h1 class="text-white font-black text-xl md:text-2xl tracking-tight">SmartFDiet</h1>
                 </div>
                 <button onclick="logout()" class="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-xl font-bold text-sm shadow-md transition-colors flex items-center gap-2">
@@ -61,26 +60,22 @@
                 </button>
             </div>
             
-            <!-- Tabs di Navigazione (Centrate) -->
             <div class="max-w-7xl mx-auto flex gap-3 mt-5">
-                <button onclick="switchTab('dieta')" id="tab-dieta" class="tab-btn active flex-1 py-3 rounded-xl font-bold text-sm">Menù Dieta</button>
+                <button onclick="switchTab('dieta')" id="tab-dieta" class="tab-btn active flex-1 py-3 rounded-xl font-bold text-sm">Dieta</button>
                 <button onclick="switchTab('glicemia')" id="tab-glicemia" class="tab-btn inactive flex-1 py-3 rounded-xl font-bold text-sm">Glicemia</button>
             </div>
         </header>
 
-        <!-- Contenitore Responsivo (Non è più bloccato a cellulare su PC) -->
+        <!-- Layout strutturale (max-w-7xl centra e mantiene proporzioni su PC) -->
         <main class="flex-1 w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
             
-            <!-- ===================== -->
-            <!-- VISTA: DIETA AUTOMATICA -->
-            <!-- ===================== -->
             <div id="view-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 
-                <!-- Colonna Form Dieta -->
+                <!-- Colonna Sinistra (Form Dieta) -->
                 <div class="lg:col-span-2 space-y-6">
                     
-                    <!-- Selettore Giorno Libero -->
-                    <div class="relative bg-white rounded-2xl shadow-sm border border-slate-200">
+                    <!-- Selettore Giorni (LIBERO DAL LUCCHETTO) -->
+                    <div class="relative bg-white rounded-2xl shadow-sm border-2 border-slate-200">
                         <select id="giorno-select" onchange="loadDay()" class="w-full bg-transparent border-none rounded-2xl py-4 pl-5 pr-10 font-black text-slate-800 text-xl cursor-pointer outline-none">
                             <option value="Lunedì">Lunedì</option>
                             <option value="Martedì">Martedì</option>
@@ -92,78 +87,78 @@
                         </select>
                     </div>
 
-                    <!-- Area Input Pasti (Con Lucchetto) -->
-                    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 space-y-5 relative">
+                    <!-- AREA PASTI (Relativa per permettere il lucchetto solo qui) -->
+                    <div class="relative bg-white p-6 sm:p-8 rounded-3xl shadow-sm border-2 border-slate-200 space-y-5">
                         
-                        <!-- OVERLAY DI BLOCCO (LUCCHETTO) - Blocca solo i pasti, non i giorni! -->
-                        <div id="lock-overlay" class="hidden absolute inset-0 bg-white/80 backdrop-blur-[3px] z-10 rounded-3xl flex flex-col items-center justify-center border-2 border-green-500 shadow-inner">
+                        <!-- LUCCHETTO BLOCCO PASTI -->
+                        <div id="lock-overlay" class="hidden absolute inset-0 bg-white/80 backdrop-blur-[4px] z-10 rounded-3xl flex flex-col items-center justify-center border-2 border-green-500 shadow-inner">
                             <div class="bg-green-50 p-5 rounded-full text-green-600 mb-3 shadow-md">
                                 <i class="fa-solid fa-lock text-4xl"></i>
                             </div>
-                            <span class="font-black text-slate-800 text-lg">Giornata Salvata</span>
-                            <span class="text-slate-500 text-sm mb-4">I limiti sono stati calcolati.</span>
-                            <button onclick="unlockDay()" class="text-sm bg-slate-800 hover:bg-slate-700 text-white px-5 py-2.5 rounded-full font-bold transition-colors shadow-lg">
-                                <i class="fa-solid fa-pen-to-square mr-1"></i> Modifica
+                            <span class="font-black text-slate-800 text-xl">Giornata Completata</span>
+                            <span class="text-slate-500 text-sm mb-6 text-center px-4">I macronutrienti di questa giornata sono stati registrati nei limiti settimanali.</span>
+                            <button onclick="unlockDay()" class="text-sm bg-slate-800 hover:bg-slate-700 text-white px-6 py-3 rounded-full font-bold transition-colors shadow-lg">
+                                <i class="fa-solid fa-pen-to-square mr-2"></i> Modifica Giornata
                             </button>
                         </div>
 
-                        <!-- Colazione -->
+                        <!-- COLAZIONE -->
                         <div>
                             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1"><i class="fa-solid fa-mug-saucer mr-1 text-slate-500"></i>Colazione</label>
                             <select id="colazione" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-green-500 transition-colors">
                                 <option value="">Seleziona colazione...</option>
-                                <option value="Yogurt Greco (150g) + 40g Fette biscottate" data-dairy="1">Yogurt Greco (150g) + 40g Fette biscottate</option>
-                                <option value="Latte (200ml) + 40g Cereali integrali">Latte (200ml) + 40g Cereali integrali</option>
-                                <option value="Ricotta vaccina (120g) + 40g Pane tostato" data-dairy="1">Ricotta vaccina (120g) + 40g Pane tostato</option>
-                                <option value="Pane (40g) + Burro Arachidi (15g) + Latte (200ml)">Pane (40g) + Burro Arachidi (15g) + Latte</option>
+                                <option value="Yogurt Greco (150g) + 40g Fette biscottate integrali">Yogurt Greco (150g) + 40g Fette biscottate integrali</option>
+                                <option value="200ml Latte parz. scremato + 40g Cereali integrali">200ml Latte parz. scremato + 40g Cereali integrali</option>
+                                <option value="120g Ricotta vaccina + 40g Pane/Wasa integrali" data-dairy="1">120g Ricotta vaccina + 40g Pane/Wasa integrali</option>
                             </select>
                         </div>
 
-                        <!-- Spuntino 1 -->
+                        <!-- SPUNTINO 1 -->
                         <div>
                             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1"><i class="fa-solid fa-apple-whole mr-1 text-slate-500"></i>Spuntino Mattina</label>
                             <select id="spuntino1" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-green-500 transition-colors">
-                                <option value="Frutta (150g) + Crackers/Grissini (30g)">Frutta (150g) + Crackers/Grissini (30g)</option>
+                                <option value="150g Frutta + 30g Crackers/Grissini">150g Frutta + 30g Crackers/Grissini</option>
                             </select>
                         </div>
 
-                        <!-- Pranzo -->
+                        <!-- PRANZO -->
                         <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1"><i class="fa-solid fa-sun mr-1 text-slate-500"></i>Pranzo (Include 80g Carboidrati)</label>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1"><i class="fa-solid fa-sun mr-1 text-slate-500"></i>Pranzo (+ 15g Olio EVO)</label>
                             <select id="pranzo" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-green-500 transition-colors">
                                 <option value="">Seleziona pranzo...</option>
-                                <option value="Crema di zucchine + Fesa di Tacchino (150g)">Crema di zucchine + Fesa di Tacchino (150g)</option>
-                                <option value="Risotto ai carciofi + Seppie/Calamari (180g)">Risotto ai carciofi + Seppie/Calamari (180g)</option>
-                                <option value="Risotto al Gorgonzola (80g) e Radicchio" data-dairy="1">Risotto al Gorgonzola (80g) e Radicchio</option>
-                                <option value="Crema di zucca + Ceci/Lenticchie (150g)">Crema di zucca + Ceci/Lenticchie (150g)</option>
-                                <option value="Pasta pomodorini e melanzane + Pesce azzurro (180g)">Pasta pomodorini e melanzane + Pesce azzurro (180g)</option>
-                                <option value="Risotto ai funghi + Petto di Pollo (150g)">Risotto ai funghi + Petto di Pollo (150g)</option>
+                                <option value="Pasta integrale crema zucchine e menta + 150g Fesa Tacchino">Pasta integrale crema zucchine e menta + 150g Fesa Tacchino</option>
+                                <option value="Risotto ai carciofi + 180-200g Seppie/Calamari">Risotto ai carciofi + 180-200g Seppie o Calamari</option>
+                                <option value="Risotto al Gorgonzola (80g) e Radicchio (NO OLIO)" data-dairy="1">Risotto al Gorgonzola (80g) e Radicchio (NO OLIO)</option>
+                                <option value="Pasta integrale crema di zucca + 150g Ceci/Lenticchie">Pasta integrale crema di zucca + 150g Ceci/Lenticchie</option>
+                                <option value="Pasta integrale pomodorini e melanzane + Sgombro/Alici">Pasta integrale pomodorini e melanzane + Sgombro/Alici</option>
+                                <option value="Risotto ai funghi + 150g Petto di Pollo">Risotto ai funghi + 150g Petto di Pollo</option>
+                                <option value="Pasta crema di peperoni + Orata/Branzino">Pasta crema di peperoni + Orata/Branzino</option>
                             </select>
                         </div>
 
-                        <!-- Spuntino 2 -->
+                        <!-- SPUNTINO 2 -->
                         <div>
                             <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1"><i class="fa-regular fa-clock mr-1 text-slate-500"></i>Spuntino Pomeriggio</label>
                             <select id="spuntino2" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-green-500 transition-colors">
                                 <option value="">Seleziona spuntino...</option>
-                                <option value="Frutta Secca (15g)">Frutta Secca (15g)</option>
-                                <option value="Yogurt Greco (150g)" data-dairy="1">Yogurt Greco (150g)</option>
-                                <option value="Crackers (30g)">Crackers (30g)</option>
-                                <option value="Solo Frutta (Per bilanciare grassi)">Solo Frutta (Se mangiato burro arachidi mattino)</option>
+                                <option value="150g Frutta + 15g Frutta Secca (Lun/Ven)">150g Frutta + 15g Frutta Secca (Lun/Ven)</option>
+                                <option value="150g Frutta + Yogurt Greco 150g (Mar/Gio/Sab)">150g Frutta + Yogurt Greco 150g (Mar/Gio/Sab)</option>
+                                <option value="150g Frutta + 30g Crackers (Mer/Dom)">150g Frutta + 30g Crackers (Mer/Dom)</option>
                             </select>
                         </div>
 
-                        <!-- Cena -->
+                        <!-- CENA -->
                         <div>
-                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1"><i class="fa-solid fa-moon mr-1 text-slate-500"></i>Cena (Include 100g Pane)</label>
+                            <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1"><i class="fa-solid fa-moon mr-1 text-slate-500"></i>Cena (+ 100g Pane + 15g Olio EVO)</label>
                             <select id="cena" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-700 font-semibold rounded-xl px-4 py-3.5 focus:outline-none focus:border-green-500 transition-colors">
                                 <option value="">Seleziona cena...</option>
-                                <option value="2 Uova (Sode o frittata al forno)" data-egg="1">2 Uova (Sode o frittata al forno)</option>
-                                <option value="Bresaola o Crudo sgrassato (120g)">Bresaola o Crudo sgrassato (120g)</option>
-                                <option value="Spezzatino di Coniglio (150g)">Spezzatino di Coniglio (150g)</option>
-                                <option value="Tagliata di Bovino (150g)" data-redmeat="1">Tagliata di Bovino (150g)</option>
-                                <option value="Pizza Integrale Verdure e Mozzarella" data-dairy="1">Pizza Integrale Verdure e Mozzarella</option>
-                                <option value="Straccetti di Tacchino (150g)">Straccetti di Tacchino (150g)</option>
+                                <option value="2 Uova (frittata o sode) + Verdura" data-egg="1">2 Uova (frittata o sode) + Verdura</option>
+                                <option value="120g Bresaola o Crudo sgrassato + Verdura">120g Bresaola o Crudo sgrassato + Verdura</option>
+                                <option value="150g Spezzatino di Coniglio agli aromi + Verdura">150g Spezzatino di Coniglio agli aromi + Verdura</option>
+                                <option value="150g Tagliata di Bovino + Verdura" data-redmeat="1">150g Tagliata di Bovino + Verdura</option>
+                                <option value="Pizza Integrale verdure grigliate e mozzarella" data-dairy="1">Pizza Integrale verdure grigliate e mozzarella</option>
+                                <option value="150g Straccetti di Tacchino con verdure saltate">150g Straccetti di Tacchino con verdure saltate</option>
+                                <option value="120g Fesa di Tacchino o Cotto sgrassato + Verdura">120g Fesa di Tacchino o Cotto sgrassato + Verdura</option>
                             </select>
                         </div>
                         
@@ -175,17 +170,17 @@
                     </div>
                 </div>
 
-                <!-- Colonna Destra: Budget e Diario Dieta -->
+                <!-- Colonna Destra: Budget e Diario -->
                 <div class="space-y-6">
                     
                     <!-- Budget Settimanale -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6">
-                        <h3 class="text-lg font-black text-slate-800 mb-5 border-b border-slate-100 pb-3 flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-green-600"></i> Limiti Settimanali</h3>
+                    <div class="bg-white rounded-3xl shadow-sm border-2 border-slate-200 p-6">
+                        <h3 class="text-lg font-black text-slate-800 mb-5 border-b border-slate-100 pb-3 flex items-center gap-2"><i class="fa-solid fa-scale-balanced text-green-600"></i> Frequenze Settimanali</h3>
                         <div class="space-y-5">
                             <div>
                                 <div class="flex justify-between text-sm mb-2">
-                                    <span class="font-bold text-slate-600"><i class="fa-solid fa-egg text-amber-500 mr-1"></i> Uova</span>
-                                    <span id="egg-count" class="font-black text-slate-800">0 / 1</span>
+                                    <span class="font-bold text-slate-600"><i class="fa-solid fa-egg text-amber-500 mr-1"></i> Uova (Max 2)</span>
+                                    <span id="egg-count" class="font-black text-slate-800">0 / 2</span>
                                 </div>
                                 <div class="w-full bg-slate-100 rounded-full h-3">
                                     <div id="egg-bar" class="bg-amber-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -211,12 +206,12 @@
                             </div>
                         </div>
                         <button onclick="resetSettimana()" class="w-full mt-6 text-sm text-red-500 font-bold hover:text-red-700 transition-colors border border-red-200 rounded-lg py-2">
-                            <i class="fa-solid fa-trash-can mr-1"></i> Svuota Settimana
+                            <i class="fa-solid fa-trash-can mr-1"></i> Azzera Settimana
                         </button>
                     </div>
 
                     <!-- Diario Settimana -->
-                    <div class="bg-white rounded-3xl shadow-sm border border-slate-200 p-6 flex flex-col h-[400px]">
+                    <div class="bg-white rounded-3xl shadow-sm border-2 border-slate-200 p-6 flex flex-col h-[400px]">
                         <h3 class="text-lg font-black text-slate-800 mb-4 border-b border-slate-100 pb-3 flex items-center gap-2"><i class="fa-solid fa-book-open text-blue-500"></i> Il tuo Menù</h3>
                         <div id="diario-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
                             <div class="text-center text-slate-400 mt-10 text-sm font-medium">Nessuna giornata salvata.</div>
@@ -225,14 +220,10 @@
                 </div>
             </div>
 
-            <!-- ===================== -->
-            <!-- VISTA: GLICEMIA -->
-            <!-- ===================== -->
+            <!-- VISTA GLICEMIA -->
             <div id="view-glicemia" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 max-w-4xl mx-auto">
-                
-                <!-- Form Glicemia -->
-                <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200">
-                    <h2 class="text-2xl font-black text-slate-800 mb-6 border-b border-slate-100 pb-3"><i class="fa-solid fa-droplet text-blue-500 mr-2"></i>Nuova Misurazione</h2>
+                <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border-2 border-slate-200">
+                    <h2 class="text-2xl font-black text-slate-800 mb-6 border-b border-slate-100 pb-3"><i class="fa-solid fa-droplet text-blue-500 mr-2"></i>Misurazione</h2>
                     
                     <div class="mb-5">
                         <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Valore (mg/dL)</label>
@@ -240,7 +231,7 @@
                     </div>
                     
                     <div class="mb-8 relative">
-                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Fase (Calcolo Limite)</label>
+                        <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 ml-1">Momento Misurazione</label>
                         <select id="tipo-glicemia" class="w-full bg-slate-50 border-2 border-slate-200 text-slate-700 font-bold rounded-xl px-4 py-4 cursor-pointer outline-none focus:border-blue-500 transition-colors">
                             <option value="digiuno">A Digiuno (Limite 150)</option>
                             <option value="post">Post-prandiale (Limite 180)</option>
@@ -252,14 +243,12 @@
                     </button>
                 </div>
 
-                <!-- Lista Glicemia -->
-                <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-slate-200 flex flex-col">
+                <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border-2 border-slate-200 flex flex-col">
                     <h3 class="text-lg font-black text-slate-800 mb-4 border-b border-slate-100 pb-3 flex justify-between items-center">
                         <span><i class="fa-solid fa-clock-rotate-left text-slate-400 mr-2"></i>Cronologia</span>
                         <button onclick="clearGlicemia()" class="text-xs text-red-500 font-bold hover:underline">Svuota</button>
                     </h3>
                     <div id="lista-glicemia" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2 h-[400px]">
-                        <!-- Popolato via JS -->
                     </div>
                 </div>
             </div>
@@ -269,7 +258,7 @@
 
     <!-- Modale Avvisi -->
     <div id="custom-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 transition-opacity">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 text-center border-2 border-slate-200">
             <div id="modal-icon" class="mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-amber-50 mb-5">
                 <i class="fa-solid fa-triangle-exclamation text-4xl text-amber-500"></i>
             </div>
@@ -288,7 +277,7 @@
                 document.getElementById('login-screen').classList.add('hidden'); 
                 document.getElementById('app-content').classList.remove('hidden'); 
             } else { 
-                alert('PIN Errato.'); 
+                showModal('PIN Errato', 'Il codice inserito non è valido.');
                 document.getElementById('pin-input').value = '';
             } 
         }
@@ -315,7 +304,7 @@
             } else {
                 iconContainer.className = "mx-auto flex items-center justify-center h-20 w-20 rounded-full bg-amber-50 mb-5";
                 iconContainer.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-4xl text-amber-500"></i>';
-                document.querySelector('#custom-modal button').textContent = "Ho capito";
+                document.querySelector('#custom-modal button').textContent = "Ho capito, correggo";
             }
             document.getElementById('custom-modal').classList.remove('hidden');
         }
@@ -324,23 +313,21 @@
 
         // --- STATO APPLICAZIONE (MEMORIA LOCALE) ---
         let appState = {
-            dieta: {}, // { "Lunedì": { colazione: "...", spuntino1: "...", ... }, "Martedì": ... }
+            dieta: {}, 
             budget: { uova: 0, latticini: 0, carneRossa: 0 },
-            glicemia: [] // [ { val: 110, tipo: "digiuno", date: "..." }, ... ]
+            glicemia: []
         };
 
-        // Carica al primo avvio
-        const stored = localStorage.getItem('smartfdiet_data_v2');
+        const stored = localStorage.getItem('smartfdiet_v_final');
         if(stored) {
             appState = JSON.parse(stored);
-            // Assicurati che le chiavi esistano se è un vecchio salvataggio
             if(!appState.dieta) appState.dieta = {};
             if(!appState.budget) appState.budget = { uova: 0, latticini: 0, carneRossa: 0 };
             if(!appState.glicemia) appState.glicemia = [];
         }
 
         function saveStateToStorage() {
-            localStorage.setItem('smartfdiet_data_v2', JSON.stringify(appState));
+            localStorage.setItem('smartfdiet_v_final', JSON.stringify(appState));
         }
 
         // --- LOGICA DIETA (IL MOTORE CHEF) ---
@@ -361,17 +348,17 @@
             let tempEggs = 0, tempDairy = 0, tempRedMeat = 0;
             [col, pra, cen, sp2].forEach(s => {
                 const opt = s.options[s.selectedIndex];
-                if (opt.dataset.egg) tempEggs += parseInt(opt.dataset.egg);
-                if (opt.dataset.dairy) tempDairy += parseInt(opt.dataset.dairy);
-                if (opt.dataset.redmeat) tempRedMeat += parseInt(opt.dataset.redmeat);
+                if (opt && opt.dataset.egg) tempEggs += parseInt(opt.dataset.egg);
+                if (opt && opt.dataset.dairy) tempDairy += parseInt(opt.dataset.dairy);
+                if (opt && opt.dataset.redmeat) tempRedMeat += parseInt(opt.dataset.redmeat);
             });
 
-            // Verifica sforamenti
-            if (appState.budget.uova + tempEggs > 1) { showModal("Limite Uova!", "Hai già esaurito le uova settimanali."); return; }
-            if (appState.budget.latticini + tempDairy > 3) { showModal("Troppi Formaggi!", "Superi il tetto dei formaggi/pizza."); return; }
+            // Verifica sforamenti (Limiti: Uova 2, Latticini 3, Rossa 1)
+            if (appState.budget.uova + tempEggs > 2) { showModal("Limite Uova!", "Hai superato il limite di 2 uova settimanali."); return; }
+            if (appState.budget.latticini + tempDairy > 3) { showModal("Troppi Formaggi!", "Superi il tetto massimo di formaggi e pizza."); return; }
             if (appState.budget.carneRossa + tempRedMeat > 1) { showModal("Attenzione!", "Carne rossa già inserita questa settimana."); return; }
 
-            // Salva nel database locale
+            // Salva nel database
             appState.dieta[day] = {
                 col: col.value, sp1: sp1.value, pra: pra.value, sp2: sp2.value, cen: cen.value,
                 costs: { uova: tempEggs, latticini: tempDairy, carneRossa: tempRedMeat }
@@ -380,11 +367,11 @@
             ricalcolaBudget();
             saveStateToStorage();
             
-            // Avanza giorno
+            // Avanza giorno automaticamente
             const sel = document.getElementById('giorno-select');
             if(sel.selectedIndex < sel.options.length - 1) sel.selectedIndex++;
             
-            loadDay(); // Aggiorna grafica
+            loadDay(); // Aggiorna grafica (mostra lucchetto se il nuovo giorno è compilato)
             aggiornaDiarioUI();
         }
 
@@ -400,19 +387,19 @@
             const cen = document.getElementById('cena');
 
             if(data) {
-                // Trovato: blocca input (il select giorno resta fuori dal div con class relative che contiene l'overlay)
+                // Trovato: riempi e mostra lucchetto
                 col.value = data.col; sp1.value = data.sp1; pra.value = data.pra; sp2.value = data.sp2; cen.value = data.cen;
                 overlay.classList.remove('hidden');
             } else {
-                // Vuoto
-                col.value = ''; sp1.value = 'Frutta (150g) + Crackers/Grissini (30g)'; pra.value = ''; sp2.value = ''; cen.value = '';
+                // Vuoto: resetta
+                col.value = ''; sp1.value = '150g Frutta + 30g Crackers/Grissini'; pra.value = ''; sp2.value = ''; cen.value = '';
                 overlay.classList.add('hidden');
             }
         }
 
         function unlockDay() {
             const day = document.getElementById('giorno-select').value;
-            if(confirm(`Vuoi cancellare il menu di ${day} e rifarlo?`)) {
+            if(confirm(`Vuoi sbloccare e azzerare il menù di ${day}?`)) {
                 delete appState.dieta[day];
                 ricalcolaBudget();
                 saveStateToStorage();
@@ -432,11 +419,11 @@
         }
 
         function aggiornaBudgetUI() {
-            document.getElementById('egg-count').innerText = `${appState.budget.uova} / 1`;
+            document.getElementById('egg-count').innerText = `${appState.budget.uova} / 2`;
             document.getElementById('dairy-count').innerText = `${appState.budget.latticini} / 3`;
             document.getElementById('meat-count').innerText = `${appState.budget.carneRossa} / 1`;
 
-            document.getElementById('egg-bar').style.width = `${(appState.budget.uova / 1) * 100}%`;
+            document.getElementById('egg-bar').style.width = `${(appState.budget.uova / 2) * 100}%`;
             document.getElementById('dairy-bar').style.width = `${(appState.budget.latticini / 3) * 100}%`;
             document.getElementById('meat-bar').style.width = `${(appState.budget.carneRossa / 1) * 100}%`;
         }
@@ -453,12 +440,12 @@
                     count++;
                     const d = appState.dieta[day];
                     const card = document.createElement('div');
-                    card.className = "bg-slate-50 border border-slate-200 rounded-2xl p-4";
+                    card.className = "bg-slate-50 border-2 border-slate-200 rounded-2xl p-4";
                     card.innerHTML = `
                         <div class="font-black text-slate-800 border-b border-slate-200 pb-2 mb-2 flex justify-between">
-                            ${day} <button onclick="document.getElementById('giorno-select').value='${day}'; loadDay();" class="text-blue-500 text-xs font-bold uppercase"><i class="fa-solid fa-eye"></i> Apri</button>
+                            ${day} <button onclick="document.getElementById('giorno-select').value='${day}'; loadDay();" class="text-blue-600 text-xs font-bold uppercase"><i class="fa-solid fa-eye"></i> Apri</button>
                         </div>
-                        <div class="text-sm font-medium text-slate-600 line-clamp-1 mb-1"><i class="fa-solid fa-utensils text-slate-400 w-4"></i> ${d.pra}</div>
+                        <div class="text-sm font-medium text-slate-600 line-clamp-1 mb-1"><i class="fa-solid fa-sun text-slate-400 w-4"></i> ${d.pra}</div>
                         <div class="text-sm font-medium text-slate-600 line-clamp-1"><i class="fa-solid fa-moon text-slate-400 w-4"></i> ${d.cen}</div>
                     `;
                     list.appendChild(card);
@@ -489,7 +476,7 @@
             const dateStr = now.toLocaleDateString('it-IT') + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
 
             appState.glicemia.unshift({ val: val, tipo: tipo, data: dateStr });
-            if(appState.glicemia.length > 50) appState.glicemia.pop(); // Tieni massimo le ultime 50
+            if(appState.glicemia.length > 50) appState.glicemia.pop(); 
 
             saveStateToStorage();
             document.getElementById('valore-glicemia').value = '';
