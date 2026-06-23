@@ -12,8 +12,8 @@
     <meta name="apple-mobile-web-app-title" content="SmartFDiet">
     <meta name="theme-color" content="#0f172a">
 
-    <!-- Manifesto Statico Hardcoded (FORZA L'APP NATIVA SENZA JS) -->
-    <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyMCIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNTYgMTQwIEMyMTAgMTgwIDE3MCAyNTAgMTcwIDMyMCBDMTcwIDM3MCAyMTAgNDAwIDI1NiA0MDAgQzMwMiA0MDAgMzQyIDM3MCAzNDIgMzIwIEMzNDIgMjUwIDMwMiAxODAgMjU2IDE0MCBaIiBmaWxsPSIjMTZhMzRhIi8%2BPHBhdGggZD0iTTI1NiAxNDAgQzI3MCAyNDAgMzAwIDMxMCAzNDAgMzIwIiBzdHJva2U9IiNmMGZkZjQiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg%3D%3D%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+    <!-- Manifesto Ufficiale (Forza l'installazione NATIVA a tutto schermo) -->
+    <link rel="manifest" href="manifest.json">
 
     <!-- Librerie Esterne -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -855,6 +855,16 @@
         // Boot
         document.getElementById('cena-pro').innerHTML = document.getElementById('pranzo-pro').innerHTML;
         initCloud();
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').then(reg => {
+                    console.log('Motore App registrato!');
+                }).catch(err => {
+                    console.error('Errore Motore App:', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
