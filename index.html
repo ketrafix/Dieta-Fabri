@@ -496,8 +496,7 @@
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                // Proviamo ad autenticarci. Se fallisce perché l'utente non ha attivato l'accesso anonimo, procediamo comunque!
-                // Firestore in modalità test permette letture/scritture non autenticate.
+                // Proviamo ad autenticarci. Se fallisce, procediamo comunque leggendo/scrivendo direttamente su Firestore
                 try {
                     if (initialAuthToken) {
                         await signInWithCustomToken(auth, initialAuthToken);
@@ -506,7 +505,7 @@
                     }
                     cloudUser = auth.currentUser;
                 } catch(authError) {
-                    console.warn("Autenticazione fallita (anonimo disattivato su Firebase Console). Procedo senza auth in modalità test:", authError);
+                    console.warn("Autenticazione Firebase non attiva. Procedo in connessione diretta:", authError);
                 }
 
                 // Connessione in tempo reale al database Firestore per la sincronizzazione istantanea
@@ -522,6 +521,7 @@
                         appState.glicemia = data.glicemia || [];
                         appState.visitors = data.visitors || [];
                     } else {
+                        // Crea il documento vuoto sul cloud se non esiste
                         setDoc(docRef, { dieta: {}, glicemia: [], visitors: [] });
                     }
 
@@ -531,9 +531,9 @@
                         renderGlicemia();
                     }
                 }, (error) => {
-                    console.error("Sincronizzazione Firestore fallita (probabilmente regole o rete):", error);
+                    console.error("Sincronizzazione Firestore fallita. Utilizzo memoria locale:", error);
                     document.getElementById('cloud-status-icon').className = "w-2.5 h-2.5 rounded-full bg-red-500";
-                    document.getElementById('cloud-status-text').innerText = "Connessione Cloud non riuscita";
+                    document.getElementById('cloud-status-text').innerText = "Errore Connessione Cloud";
                     loadLocalBackup();
                 });
 
@@ -545,10 +545,10 @@
             }
         }
 
+        // ================= STREAMING_CHUNK: Logiche di Sincronizzazione ed Overwrite Protetti... ================= //
         // ================= FUNZIONE DI SALVATAGGIO CLOUD / LOCALE ================= //
         async function syncToCloud() {
             // Salva subito localmente per azzerare la latenza visiva (Optimistic UI)
-            localStorage.setItem('smartfdiet_session', JSON.stringify({ currentUser: appState.currentUser }));
             localStorage.setItem('smartfdiet_backup', JSON.stringify({ dieta: appState.dieta, glicemia: appState.glicemia, visitors: appState.visitors }));
 
             if(db) {
@@ -560,7 +560,7 @@
                         visitors: appState.visitors
                     }, { merge: true });
                 } catch(e) {
-                    console.error("Salvataggio Cloud fallito temporaneamente. I dati sono salvati sul telefono:", e);
+                    console.error("Salvataggio Cloud fallito temporaneamente. I dati sono protetti sul telefono:", e);
                 }
             }
         }
@@ -605,18 +605,24 @@
             appState.visitors.push({ nickname: nick, pin: pin });
             appState.currentUser = { role: 'visitor', name: nick };
             
-            syncToCloud();
+            syncToCloud(); // Salva nel cloud il nuovo utente registrato
             procediAccessoApp();
         };
 
+        // NOTA: procediAccessoApp NON chiama più syncToCloud() all'avvio!
+        // Evita che un dispositivo appena aperto con variabili vuote cancelli i dati del Cloud.
         function procediAccessoApp() {
-            syncToCloud();
+            // Salva la sessione di login solo sul dispositivo locale
+            localStorage.setItem('smartfdiet_session', JSON.stringify({ currentUser: appState.currentUser }));
+            
             applicaPermessiUI();
             
             document.getElementById('login-screen').classList.add('opacity-0');
             setTimeout(() => {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
+                
+                // Disegna l'interfaccia con i dati già scaricati in tempo reale dal Cloud
                 updateDashboard();
                 loadDay();
                 renderGlicemia();
@@ -625,7 +631,7 @@
 
         window.eseguiLogout = function() {
             appState.currentUser = null;
-            syncToCloud();
+            localStorage.removeItem('smartfdiet_session'); // Rimuove solo la sessione locale
             
             document.getElementById('pin-input').value = '';
             document.getElementById('reg-nick').value = '';
@@ -713,19 +719,19 @@
             }
         };
 
+        // Sblocca la giornata eliminandola per ricalcolare i budget clinici
         window.unlockDay = function() {
             const day = document.getElementById('giorno-select').value;
             const data = appState.dieta[day];
 
-            // Rimuove temporaneamente il blocco per ricalcolare il budget
             delete appState.dieta[day];
             
-            syncToCloud();
+            syncToCloud(); // Invia la rimozione del giorno al database
             updateDashboard();
             
             document.getElementById('lock-overlay').classList.add('hidden');
             
-            // I dati rimangono comunque già pre-compilati nei form per non rischiare di perderli!
+            // Re-importa i dati nel form per non costringere l'utente a riscriverli
             if (data && data.raw) {
                 document.getElementById('col-liq').value = data.raw.col_liq || '';
                 document.getElementById('col-sol').value = data.raw.col_sol || '';
@@ -788,7 +794,7 @@
                 costs: newCosts
             };
 
-            syncToCloud();
+            syncToCloud(); // Invia la nuova configurazione della giornata al Cloud
             updateDashboard();
             
             const sel = document.getElementById('giorno-select');
@@ -872,7 +878,7 @@
 
             document.getElementById('glicemia-valore').value = '';
             
-            syncToCloud();
+            syncToCloud(); // Invia la nuova glicemia registrata al Cloud
             renderGlicemia();
         };
 
