@@ -43,7 +43,7 @@
 
     <!-- SCHERMATA DI LOGIN & REGISTRAZIONE -->
     <div id="login-screen" class="fixed inset-0 bg-[#0f172a] z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-[32px] shadow-2xl max-w-sm w-full p-8 text-center border border-slate-200 relative overflow-hidden">
+        <div class="bg-white rounded-[32px] shadow-2xl max-w-sm w-full p-8 text-center border border-slate-200 relative overflow-hidden animate-fadeIn">
             
             <div id="cloud-status" class="absolute top-4 right-4 flex items-center gap-2 text-xs font-bold text-slate-400">
                 <div class="loader w-3 h-3 border-2 border-slate-200 border-top-slate-500"></div> Sincronizzazione...
@@ -106,7 +106,7 @@
         <header class="bg-slate-900 px-4 py-4 shadow-md sticky top-0 z-40 w-full">
             <div class="flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white">
+                    <div class="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white animate-pulse">
                         <i class="fa-solid fa-leaf"></i>
                     </div>
                     <h1 class="text-white font-bold text-xl tracking-tight">SmartFDiet <span class="hidden sm:inline font-normal opacity-70 text-sm">| 1800 Kcal</span></h1>
@@ -173,7 +173,7 @@
                             
                             <!-- OVERLAY DI BLOCCO (LUCCHETTO) -->
                             <div id="lock-overlay" class="hidden absolute -inset-4 bg-white/80 backdrop-blur-[2px] z-10 rounded-xl flex flex-col items-center justify-center border-2 border-green-500">
-                                <div class="bg-green-100 p-4 rounded-full text-green-600 mb-3 shadow-inner">
+                                <div class="bg-green-100 p-4 rounded-full text-green-600 mb-3 shadow-inner animate-bounce">
                                     <i class="fa-solid fa-lock text-3xl"></i>
                                 </div>
                                 <span class="font-bold text-slate-800 text-lg">Giornata Inviata al Cloud</span>
@@ -298,7 +298,7 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Secondo Piatto</label>
+                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Segundo Piatto</label>
                                         <select id="cen-pro" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none">
                                         </select>
                                     </div>
@@ -462,26 +462,28 @@
             currentUser: null
         };
 
+        // Carica Backup Locale offline se Firebase non risponde o è in caricamento
+        function loadLocalBackup() {
+            const backup = localStorage.getItem('smartfdiet_backup');
+            if(backup) {
+                const parsed = JSON.parse(backup);
+                appState.dieta = parsed.dieta || {};
+                appState.glicemia = parsed.glicemia || [];
+                appState.visitors = parsed.visitors || [];
+            }
+            if (appState.currentUser) {
+                updateDashboard();
+                loadDay();
+                renderGlicemia();
+            }
+        }
+
         // ================= INIZIALIZZAZIONE CLOUD ================= //
         async function initCloud() {
+            loadLocalBackup(); // Carichiamo immediatamente i dati locali come backup istantaneo
+
             if(Object.keys(firebaseConfig).length === 0) {
-                console.warn("Database Cloud disattivato. L'app funziona in salvataggio locale offline.");
                 document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-circle-check text-blue-500"></i> Offline';
-                
-                // Carica dati da backup locale offline
-                const backup = localStorage.getItem('smartfdiet_backup');
-                if(backup) {
-                    const parsed = JSON.parse(backup);
-                    appState.dieta = parsed.dieta || {};
-                    appState.glicemia = parsed.glicemia || [];
-                    appState.visitors = parsed.visitors || [];
-                }
-                
-                if (appState.currentUser) {
-                    updateDashboard();
-                    loadDay();
-                    renderGlicemia();
-                }
                 return;
             }
 
@@ -519,18 +521,22 @@
                     }
                 }, (error) => {
                     console.error("Sync Cloud fallito:", error);
-                    document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Errore Sync';
+                    document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Offline (Salvataggio Locale)';
+                    loadLocalBackup();
                 });
 
             } catch(e) {
                 console.error("Inizializzazione Firebase Fallita:", e);
                 document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-circle-exclamation text-red-500"></i> Errore';
+                loadLocalBackup();
             }
         }
 
         // ================= FUNZIONE DI SALVATAGGIO CLOUD / LOCALE ================= //
         async function syncToCloud() {
+            // Salva sempre localmente per una fluidità istantanea (Optimistic UI)
             localStorage.setItem('smartfdiet_session', JSON.stringify({ currentUser: appState.currentUser }));
+            localStorage.setItem('smartfdiet_backup', JSON.stringify({ dieta: appState.dieta, glicemia: appState.glicemia, visitors: appState.visitors }));
 
             if(cloudUser && db) {
                 try {
@@ -541,10 +547,8 @@
                         visitors: appState.visitors
                     }, { merge: true });
                 } catch(e) {
-                    console.error("Salvataggio su cloud fallito:", e);
+                    console.error("Salvataggio su cloud fallito, mantenuto localmente:", e);
                 }
-            } else {
-                localStorage.setItem('smartfdiet_backup', JSON.stringify({ dieta: appState.dieta, glicemia: appState.glicemia, visitors: appState.visitors }));
             }
         }
 
@@ -698,11 +702,28 @@
 
         window.unlockDay = function() {
             const day = document.getElementById('giorno-select').value;
-            // Al momento dello sblocco rimuoviamo il record per liberare il budget, ma lasciamo intatti i form per la correzione!
+            const data = appState.dieta[day];
+
+            // Al sblocco rimuoviamo per liberare il budget, ma i campi nel form restano scritti!
             delete appState.dieta[day];
+            
+            // Aggiornamento ottimista immediato dello schermo
             syncToCloud();
             updateDashboard();
+            
             document.getElementById('lock-overlay').classList.add('hidden');
+            
+            // Ri-compiliamo preventivamente i campi così l'utente può correggere senza perdere i dati inseriti
+            if (data && data.raw) {
+                document.getElementById('col-liq').value = data.raw.col_liq || '';
+                document.getElementById('col-sol').value = data.raw.col_sol || '';
+                document.getElementById('pra-carb').value = data.raw.pra_carb || '';
+                document.getElementById('pra-pro').value = data.raw.pra_pro || '';
+                document.getElementById('cena-pizza').checked = data.raw.is_pizza || false;
+                window.togglePizza();
+                document.getElementById('cen-carb').value = data.raw.cen_carb || '';
+                document.getElementById('cen-pro').value = data.raw.cen_pro || '';
+            }
         };
 
         window.salvaDieta = function() {
@@ -716,23 +737,31 @@
             const cen_pro = document.getElementById('cen-pro');
 
             if (!col_liq || !col_sol || !pra_carb.value || !pra_pro.value || (!is_pizza && (!cen_carb.value || !cen_pro.value))) {
-                showModal("Campi Incompleti", "Chef, compila tutti i pasti principali prima di inviare i dati al Cloud.", "error"); return;
+                showModal("Campi Incompleti", "Chef, compila tutti i pasti principali prima di salvare.", "error"); return;
             }
 
             let newCosts = {};
             const addCost = (opt) => { if(opt && opt.dataset.cost) newCosts[opt.dataset.cost] = (newCosts[opt.dataset.cost] || 0) + 1; };
 
-            addCost(pra_carb.options[pra_carb.selectedIndex]);
-            addCost(pra_pro.options[pra_pro.selectedIndex]);
-            if(is_pizza) { newCosts['pizza'] = 1; } else {
-                addCost(cen_carb.options[cen_carb.selectedIndex]); 
-                addCost(cen_pro.options[cen_pro.selectedIndex]);
+            const selectedPraCarb = pra_carb.selectedIndex >= 0 ? pra_carb.options[pra_carb.selectedIndex] : null;
+            const selectedPraPro = pra_pro.selectedIndex >= 0 ? pra_pro.options[pra_pro.selectedIndex] : null;
+            
+            addCost(selectedPraCarb);
+            addCost(selectedPraPro);
+
+            if(is_pizza) { 
+                newCosts['pizza'] = 1; 
+            } else {
+                const selectedCenCarb = cen_carb.selectedIndex >= 0 ? cen_carb.options[cen_carb.selectedIndex] : null;
+                const selectedCenPro = cen_pro.selectedIndex >= 0 ? cen_pro.options[cen_pro.selectedIndex] : null;
+                addCost(selectedCenCarb); 
+                addCost(selectedCenPro);
             }
 
             // Calcolo e validazione dei limiti medici settimanali
             let currentTotals = calcTotals();
             for (let cat in newCosts) {
-                if ((currentTotals[cat] || 0) + newCosts[cat] > budgetLimits[cat].max) {
+                if (budgetLimits[cat] && ((currentTotals[cat] || 0) + newCosts[cat] > budgetLimits[cat].max)) {
                     showModal("Limite Clinico Raggiunto", `Non puoi inserire questo pasto. Supereresti il limite settimanale prescritto per: ${budgetLimits[cat].name}.`, "error"); return;
                 }
             }
@@ -747,7 +776,9 @@
                 costs: newCosts
             };
 
+            // Aggiornamento istantaneo locale ed in cloud
             syncToCloud();
+            updateDashboard();
             
             const sel = document.getElementById('giorno-select');
             if(sel.selectedIndex < sel.options.length - 1) sel.selectedIndex++;
@@ -756,20 +787,28 @@
 
         function calcTotals() {
             let totals = {};
+            if (!appState.dieta) return totals;
             for(let d in appState.dieta) {
-                let c = appState.dieta[d].costs;
-                for(let k in c) totals[k] = (totals[k] || 0) + c[k];
+                let dayData = appState.dieta[d];
+                if (dayData && dayData.costs) {
+                    let c = dayData.costs;
+                    for(let k in c) {
+                        totals[k] = (totals[k] || 0) + (c[k] || 0);
+                    }
+                }
             }
             return totals;
         }
 
         function updateDashboard() {
             const container = document.getElementById('budget-container');
+            if (!container) return;
             container.innerHTML = '';
             let totals = calcTotals();
 
             for (let key in budgetLimits) {
-                let limit = budgetLimits[key]; let consumed = totals[key] || 0;
+                let limit = budgetLimits[key]; 
+                let consumed = totals[key] || 0;
                 let pct = Math.min((consumed / limit.max) * 100, 100);
                 container.innerHTML += `
                 <div>
@@ -784,6 +823,7 @@
             }
 
             const list = document.getElementById('diario-lista');
+            if (!list) return;
             list.innerHTML = ''; let count = 0;
             const daysOrder = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
             const isAdmin = appState.currentUser && appState.currentUser.role === 'admin';
@@ -793,7 +833,7 @@
                     count++; const d = appState.dieta[day].testo;
                     let editBtn = isAdmin ? `<button onclick="document.getElementById('giorno-select').value='${day}'; window.loadDay(); window.switchTab('dieta');" class="absolute top-2 right-2 text-blue-500 text-xs font-bold bg-blue-50 px-2 py-1 rounded hover:bg-blue-100"><i class="fa-solid fa-pen"></i></button>` : '';
                     list.innerHTML += `
-                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm relative group">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm relative group animate-fadeIn">
                             ${editBtn}
                             <div class="font-black text-slate-800 text-sm border-b border-slate-200 pb-1 mb-2">${day}</div>
                             <div class="text-xs text-slate-600 mb-1 line-clamp-1"><i class="fa-solid fa-mug-saucer text-slate-400 w-3"></i> ${d.col}</div>
@@ -820,20 +860,27 @@
             if(appState.glicemia.length > 50) appState.glicemia.pop();
 
             document.getElementById('glicemia-valore').value = '';
+            
+            // Salvataggio ottimista immediato
             syncToCloud();
+            renderGlicemia();
         };
 
         window.deleteGlicemia = function(id) {
             appState.glicemia = appState.glicemia.filter(g => g.id !== id);
+            
+            // Aggiornamento locale immediato
             syncToCloud();
+            renderGlicemia();
         };
 
         function renderGlicemia() {
             const list = document.getElementById('glicemia-lista');
+            if (!list) return;
             list.innerHTML = '';
             const isAdmin = appState.currentUser && appState.currentUser.role === 'admin';
 
-            if (appState.glicemia.length === 0) {
+            if (!appState.glicemia || appState.glicemia.length === 0) {
                 list.innerHTML = '<div class="text-center text-slate-400 mt-10 text-sm italic">Nessuna misurazione registrata.</div>'; return;
             }
 
@@ -843,7 +890,7 @@
                 let trashBtn = isAdmin ? `<button onclick="window.deleteGlicemia(${g.id})" class="text-slate-300 hover:text-red-500 transition-colors ml-2"><i class="fa-solid fa-trash"></i></button>` : '';
 
                 list.innerHTML += `
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm flex items-center justify-between">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm flex items-center justify-between animate-fadeIn">
                         <div>
                             <div class="text-[10px] text-slate-400 font-bold mb-1"><i class="fa-regular fa-clock"></i> ${g.data}</div>
                             <div class="text-sm font-black text-slate-800">${g.momento}</div>
@@ -874,7 +921,7 @@
             if(isConfirm) {
                 btn.innerText = "Sì, Azzera";
                 btn.className = "w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded-xl";
-                btn.onclick = function() { appState.dieta = {}; syncToCloud(); window.closeModal(); };
+                btn.onclick = function() { appState.dieta = {}; syncToCloud(); updateDashboard(); window.closeModal(); };
             } else {
                 btn.innerText = "Ho capito";
                 btn.className = "w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl";
@@ -888,7 +935,11 @@
         // ================= AVVIO APP ================= //
         window.onload = function() {
             // Sincronizzazione dinamica dei secondi piatti pranzo <-> cena
-            document.getElementById('cen-pro').innerHTML = document.getElementById('pra-pro').innerHTML;
+            const praPro = document.getElementById('pra-pro');
+            const cenPro = document.getElementById('cen-pro');
+            if (praPro && cenPro) {
+                cenPro.innerHTML = praPro.innerHTML;
+            }
             
             const session = localStorage.getItem('smartfdiet_session');
             if(session) {
