@@ -5,17 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartFDiet - Chef Fabrizio</title>
     
-    <!-- FORZATURA APP NATIVA IOS E ANDROID (Elimina la barra del browser) -->
+    <!-- FORZATURA APP NATIVA IOS E ANDROID -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SmartFDiet">
     <meta name="theme-color" content="#0f172a">
 
-    <!-- PWA Manifest integrato direttamente nel codice per evitare file esterni e garantire il formato corretto -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20512%20512%27%253E%253Crect%20width%3D%27512%27%20height%3D%27512%27%20rx%3D%27120%27%20fill%3D%27%2523f0fdf4%27%2F%253E%253Cpath%20d%3D%27M256%20140%20C210%20180%20170%20250%20170%20320%20C170%20370%20210%20400%20256%20400%20C302%20400%20342%20370%20342%20320%20C342%20250%20302%20180%20256%20140%20Z%27%20fill%3D%27%252316a34a%27%2F%253E%253Cpath%20d%3D%27M256%20140%20C270%20240%20300%20310%20340%20320%27%20stroke%3D%27%2523f0fdf4%27%20stroke-width%3D%2710%27%20stroke-linecap%3D%27round%27%2F%253E%253C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+    <!-- Link Manifest Dinamico (Generato via JS per ingannare Chrome ed evitare il widget) -->
+    <link rel="manifest" id="dynamic-manifest">
 
-    <!-- Librerie CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -60,7 +59,7 @@
 
     <div id="login-screen" class="w-full max-w-md mt-10">
         <div class="glass-panel rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
-            <!-- Icona Foglia Vettoriale HD -->
+            <!-- Icona Foglia Vettoriale HD (Centrata Perfettamente) -->
             <div class="mx-auto w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-16 h-16">
                     <path d="M256 140 C210 180 170 250 170 320 C170 370 210 400 256 400 C302 400 342 370 342 320 C342 250 302 180 256 140 Z" fill="#16a34a"/>
@@ -68,8 +67,7 @@
                 </svg>
             </div>
             
-            <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">SmartFDiet</h1>
-            <p class="text-slate-400 text-sm mb-8">AOU Maggiore di Novara - 1800 Kcal</p>
+            <h1 class="text-3xl font-bold text-white mb-8 tracking-tight">SmartFDiet</h1>
 
             <div id="login-admin-form">
                 <input type="password" id="pin-input" placeholder="C O D I C E   P I N" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-emerald-500 focus:outline-none transition-colors" autocomplete="off">
@@ -97,7 +95,7 @@
                 </div>
             </div>
             
-            <!-- Indicatore Connessione Login -->
+            <!-- Indicatore Connessione Login (Migliorato e Pulito) -->
             <div id="login-cloud-status" class="mt-6 flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
                 <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
                 Connessione al Cloud in corso...
@@ -132,7 +130,6 @@
             </div>
         </header>
 
-        <!-- Tabs -->
         <div class="flex p-1 bg-slate-800 rounded-xl mb-6">
             <button onclick="switchTab('dieta')" id="tab-dieta" class="flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all"><i class="fa-solid fa-utensils mr-2"></i>Dieta Medica</button>
             <button onclick="switchTab('glicemia')" id="tab-glicemia" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all"><i class="fa-solid fa-droplet mr-2"></i>Glicemia</button>
@@ -331,13 +328,38 @@
         </div>
     </div>
 
+    <script>
+        // HACK PWA: Generazione dinamica del Manifest per ingannare Chrome e forzare l'installazione nativa
+        (function() {
+            const svgIcon = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='120' fill='%23f0fdf4'/><path d='M256 140 C210 180 170 250 170 320 C170 370 210 400 256 400 C302 400 342 370 342 320 C342 250 302 180 256 140 Z' fill='%2316a34a'/><path d='M256 140 C270 240 300 310 340 320' stroke='%23f0fdf4' stroke-width='10' stroke-linecap='round'/></svg>`;
+            
+            const manifestObj = {
+                "name": "SmartFDiet",
+                "short_name": "SmartFDiet",
+                "start_url": ".",
+                "display": "fullscreen",
+                "background_color": "#0f172a",
+                "theme_color": "#0f172a",
+                "icons": [{
+                    "src": "data:image/svg+xml;charset=utf-8," + svgIcon,
+                    "sizes": "192x192 512x512",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                }]
+            };
+
+            const manifestString = JSON.stringify(manifestObj);
+            const blob = new Blob([manifestString], { type: 'application/manifest+json' });
+            document.getElementById('dynamic-manifest').setAttribute('href', URL.createObjectURL(blob));
+        })();
+    </script>
+
     <script type="module">
-        // IMPORT FIREBASE 11 MODULARE
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ⚠️ LE TUE CHIAVI ESATTE (Lette dallo screenshot) - Non toccare!
+        // LE TUE CHIAVI ESATTE DAL PROGETTO FIREBASE
         const MY_PRIVATE_FIREBASE_CONFIG = {
             apiKey: "AIzaSyAzFfHPhgo_cbrRTLGl7Ey99GPbC49EoUM",
             authDomain: "dieta-smart-chef.firebaseapp.com",
@@ -363,7 +385,6 @@
             speciale: { name: "Ravioli/Gnocchi", max: 1, icon: "fa-bowl-food", color: "bg-purple-500" }
         };
 
-        // 1. INIZIALIZZAZIONE FIREBASE (Anti-Crash)
         async function initCloud() {
             const statusEl = document.getElementById('login-cloud-status');
             try {
@@ -371,22 +392,18 @@
                 appConfig.db = getFirestore(app);
                 const auth = getAuth(app);
                 
-                // Prova ad autenticarsi in anonimo
-                try {
-                    await signInAnonymously(auth);
-                } catch(authErr) {
-                    console.log("Auth anonima fallita, procedo comunque col DB in Test Mode.", authErr);
-                }
+                // Connessione in test mode anche se l'auth fallisce
+                try { await signInAnonymously(auth); } catch(e) { console.log("Bypass auth anonima, uso test mode DB"); }
 
                 statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-emerald-500"></div> Cloud Connesso e Pronto';
                 statusEl.classList.replace('text-slate-500', 'text-emerald-500');
             } catch (error) {
                 console.error("Errore Init:", error);
-                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-red-500"></div> Errore di Rete - Modalità Locale';
+                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-red-500"></div> Modalità Offline (Nessun Cloud)';
+                statusEl.classList.replace('text-slate-500', 'text-red-500');
             }
         }
 
-        // 2. LOGICA DI LOGIN
         window.toggleLoginMode = function() {
             const admin = document.getElementById('login-admin-form');
             const visitor = document.getElementById('login-visitor-form');
@@ -421,30 +438,28 @@
                 document.getElementById('glicemia-form-container').classList.add('read-only-overlay');
             }
 
-            // Cambia schermata e avvia la sincronizzazione dei dati (Lettura)
+            // Cambia schermata
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             
+            // Avvia la sincronizzazione SOLO per leggere, mai sovrascrivere.
             startSync();
         };
 
         window.eseguiLogout = function() {
-            window.location.reload(); // Ricarica grezza e sicura per svuotare memoria
+            window.location.reload(); 
         };
 
-        // 3. SINCRONIZZAZIONE DATI CLOUD -> UI
         function startSync() {
             if(!appConfig.db) return;
 
-            // Sincronizza Dieta
             onSnapshot(collection(appConfig.db, "users", appConfig.userId, "dieta"), (snapshot) => {
                 state.dieta = {};
                 snapshot.forEach(doc => { state.dieta[doc.id] = doc.data(); });
                 renderDietaDashboard();
-                checkIfDayLocked(); // Aggiorna form se sto guardando un giorno appena scaricato
+                checkIfDayLocked(); 
             });
 
-            // Sincronizza Glicemia
             onSnapshot(collection(appConfig.db, "users", appConfig.userId, "glicemia"), (snapshot) => {
                 state.glicemia = {};
                 snapshot.forEach(doc => { state.glicemia[doc.id] = doc.data(); });
@@ -452,7 +467,6 @@
             });
         }
 
-        // 4. UI INTERAZIONI DIETA
         window.switchTab = function(tab) {
             document.getElementById('section-dieta').classList.toggle('hidden', tab !== 'dieta');
             document.getElementById('section-glicemia').classList.toggle('hidden', tab !== 'glicemia');
@@ -477,11 +491,9 @@
             const lockedBox = document.getElementById('day-locked-box');
             
             if(state.dieta[day]) {
-                // Il giorno è salvato
                 formFields.classList.add('hidden');
                 lockedBox.classList.remove('hidden');
             } else {
-                // Il giorno è libero
                 formFields.classList.remove('hidden');
                 lockedBox.classList.add('hidden');
             }
@@ -493,7 +505,6 @@
             const savedData = state.dieta[day];
             
             if(savedData) {
-                // Ripristina i valori nei campi PRIMA di eliminare dal cloud
                 document.getElementById('col-liquido').value = savedData.raw.colLiquido || '';
                 document.getElementById('col-solido').value = savedData.raw.colSolido || '';
                 document.getElementById('pranzo-carb').value = savedData.raw.pranzoCarb || '';
@@ -507,11 +518,8 @@
                     document.getElementById('cena-pro').value = savedData.raw.cenaPro || '';
                 }
 
-                // Elimina dal Cloud (Libera il budget)
-                if(appConfig.db) {
-                    await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day));
-                }
-                delete state.dieta[day]; // Aggiornamento ottimistico
+                if(appConfig.db) { await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day)); }
+                delete state.dieta[day]; 
                 checkIfDayLocked();
                 renderDietaDashboard();
             }
@@ -533,7 +541,6 @@
                 alert("Completa tutti i campi prima di salvare!"); return;
             }
 
-            // Calcolo Costi Nuovi
             let newCosts = {};
             const addCost = (opt) => { if(opt && opt.dataset.cost) newCosts[opt.dataset.cost] = (newCosts[opt.dataset.cost] || 0) + 1; };
             
@@ -541,7 +548,6 @@
             if(isPizza) newCosts.pizza = 1;
             else { addCost(ceC.options[ceC.selectedIndex]); addCost(ceP.options[ceP.selectedIndex]); }
 
-            // Verifica Limiti Generali
             const currentTotals = calcTotals();
             for(let cat in newCosts) {
                 if((currentTotals[cat] || 0) + newCosts[cat] > BUDGET_LIMITS[cat].max) {
@@ -560,18 +566,15 @@
                 timestamp: Date.now()
             };
 
-            // Aggiornamento Ottimistico Locale Istantaneo
             state.dieta[day] = dayData;
             checkIfDayLocked();
             renderDietaDashboard();
 
-            // Invio al Cloud in Background
             if(appConfig.db) {
                 try { await setDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day), dayData); } 
                 catch (e) { console.error("Errore salvataggio:", e); }
             }
             
-            // Pulisco form e avanzo giorno
             document.getElementById('col-liquido').value = ''; document.getElementById('col-solido').value = '';
             document.getElementById('pranzo-carb').value = ''; document.getElementById('pranzo-pro').value = '';
             document.getElementById('cena-pizza').checked = false; togglePizza();
@@ -594,7 +597,6 @@
             renderDietaDashboard();
         };
 
-        // 5. MOTORE DI RENDER DIETA E BUDGET (Anti-Crash)
         function calcTotals() {
             let t = {};
             Object.values(state.dieta).forEach(day => {
@@ -606,7 +608,6 @@
         }
 
         function renderDietaDashboard() {
-            // Render Budget
             const t = calcTotals();
             const bCont = document.getElementById('budget-container');
             bCont.innerHTML = '';
@@ -628,7 +629,6 @@
                 </div>`;
             }
 
-            // Render Diario
             const dCont = document.getElementById('diario-dieta-lista');
             dCont.innerHTML = '';
             const days = Object.values(state.dieta).sort((a,b) => b.timestamp - a.timestamp);
@@ -645,7 +645,6 @@
             });
         }
 
-        // 6. LOGICA E RENDER GLICEMIA (Verde < target, Rosso >= target)
         window.salvaGlicemia = async function() {
             if(appConfig.role !== 'admin') return;
             const momento = document.getElementById('gli-momento').value;
@@ -657,7 +656,7 @@
             const id = Date.now().toString();
             const data = { momento, valore, note, timestamp: Date.now() };
 
-            state.glicemia[id] = data; // Ottimistico
+            state.glicemia[id] = data; 
             renderGlicemia();
 
             if(appConfig.db) {
@@ -684,7 +683,6 @@
                 const dateObj = new Date(r.timestamp);
                 const timeStr = `${dateObj.getDate()}/${dateObj.getMonth()+1} - ${dateObj.getHours()}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
                 
-                // Valutazione: Digiuno (<100 Verde), Post-pasto (<140 Verde)
                 let isDigiuno = r.momento.includes("Digiuno");
                 let targetMax = isDigiuno ? 100 : 140;
                 let colorClass = r.valore < targetMax ? "text-emerald-400" : "text-red-400";
@@ -701,7 +699,6 @@
             });
         }
 
-        // Boot
         document.getElementById('cena-pro').innerHTML = document.getElementById('pranzo-pro').innerHTML;
         initCloud();
     </script>
