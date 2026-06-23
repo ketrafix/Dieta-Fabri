@@ -316,9 +316,8 @@
                     <!-- Legenda Colori -->
                     <div class="bg-white rounded-2xl p-4 border border-slate-200 text-xs text-slate-600 space-y-2">
                         <div class="font-bold text-slate-800 mb-2">Target Clinici</div>
-                        <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-500"></div> <span>Ottimale: A digiuno < 100 | Post-p. < 140</span></div>
-                        <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-yellow-500"></div> <span>Attenzione: A digiuno 100-125 | Post-p. 140-180</span></div>
-                        <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-red-500"></div> <span>Fuori Target: A digiuno > 125 | Post-p. > 180</span></div>
+                        <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-green-500"></div> <span>Ottimale: A digiuno &lt; 100 | Post-p. &lt; 140</span></div>
+                        <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-red-500"></div> <span>Fuori Target: A digiuno &ge; 100 | Post-p. &ge; 140</span></div>
                     </div>
                 </div>
                 
@@ -486,10 +485,15 @@
 
         function unlockDay() {
             const day = document.getElementById('giorno-select').value;
+            
+            // Eliminiamo il giorno dallo stato (liberando così il budget)
             delete appState.dieta[day];
             saveData();
             updateDashboard();
-            loadDay();
+            
+            // Nascondiamo il lucchetto MA non puliamo i campi! 
+            // In questo modo rimangono compilati pronti per essere modificati.
+            document.getElementById('lock-overlay').classList.add('hidden');
         }
 
         function salvaDieta() {
@@ -649,17 +653,18 @@
         }
 
         function getColorForGlycemia(valore, momento) {
-            let limitYellow, limitRed;
+            let limitRed;
+            // Seleziona il limite superiore in base al momento
             if (momento.includes("Digiuno") || momento.includes("Pre-")) {
-                limitYellow = 100;
-                limitRed = 126;
+                limitRed = 100;
             } else { // Post-prandiale
-                limitYellow = 140;
-                limitRed = 181;
+                limitRed = 140;
             }
 
-            if (valore < limitYellow) return "bg-green-500 text-white shadow-green-500/30";
-            if (valore < limitRed) return "bg-yellow-400 text-slate-900 shadow-yellow-400/30";
+            // Meno di 100/140 è Verde, altrimenti Rosso. Niente zona gialla.
+            if (valore < limitRed) {
+                return "bg-green-500 text-white shadow-green-500/30";
+            }
             return "bg-red-500 text-white shadow-red-500/30";
         }
 
@@ -682,8 +687,8 @@
                             <div class="text-sm font-black text-slate-800">${g.momento}</div>
                         </div>
                         <div class="flex items-center gap-3">
-                            <div class="${colorClass} px-3 py-1 rounded-lg font-black text-lg shadow-sm">
-                                ${g.valore}
+                            <div class="${colorClass} px-3 py-1 rounded-lg font-black text-lg shadow-sm flex items-baseline gap-1">
+                                ${g.valore} <span class="text-[11px] font-bold opacity-90">mg/dL</span>
                             </div>
                             <button onclick="deleteGlicemia(${g.id})" class="text-slate-300 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
                         </div>
