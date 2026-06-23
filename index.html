@@ -9,7 +9,7 @@
     <!-- PWA Manifest per installazione nativa sul telefono con l'icona ufficiale -->
     <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20512%20512%27%253E%253Crect%20width%3D%27512%27%20height%3D%27512%27%20rx%3D%27115%27%20fill%3D%27%2523f0fdf4%27%2F%253E%253Cpath%20d%3D%27M241.16%2C104.53a80.14%2C80.14%2C0%2C0%2C0-109.43%2C18.8l-1.07%2C1.52A80.12%2C80.12%2C0%2C0%2C0%2C111.9%2C235.6l5.77%2C8.2A111.45%2C111.45%2C0%2C0%2C0%2C48%2C272a8%2C8%2C0%2C0%2C0%2C16%2C0%252095.53%252095.53%25200%25200%25201%252064-90.22%2C80.14%2C80.14%2C0%2C0%2C0%2C80.68%2C54.89%2C8%2C8%2C0%2C0%2C0%2C1.25-15.9%2C64.13%2C64.13%2C0%2C0%2C1-58.45-38.31%2C8%2C8%2C0%2C0%2C0-13.88-1.55l-5.77-8.2a64.11%2C64.11%2C0%2C0%2C1%2C15-88.59l1.07-1.52a64.12%2C64.12%2C0%2C0%2C1%2C87.55-15.05A64.13%2C64.13%2C0%2C0%2C1%2C208%2C240a8%2C8%2C0%2C0%2C0%2C16%2C0A80.13%2C80.13%2C0%2C0%2C0%2C241.16%2C104.53Z%27%20fill%3D%27%252316a34a%27%20transform%3D%27translate(64%2C%2064)%20scale(1.5)%27%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
-    <!-- Icona per iPhone -->
+    <!-- Icone di fallback -->
     <link id="apple-icon" rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%23f0fdf4'/%3E%3Cpath d='M241.16,104.53a80.14,80.14,0,0,0-109.43,18.8l-1.07,1.52A80.12,80.12,0,0,0,111.9,235.6l5.77,8.2A111.45,111.45,0,0,0,48,272a8,8,0,0,0,16,0,95.53,95.53,0,0,1,64-90.22,80.14,80.14,0,0,0,80.68,54.89,8,8,0,0,0,1.25-15.9,64.13,64.13,0,0,1-58.45-38.31,8,8,0,0,0-13.88-1.55l-5.77-8.2a64.11,64.11,0,0,1,15-88.59l1.07-1.52a64.12,64.12,0,0,1,87.55-15.05A64.13,64.13,0,0,1,208,240a8,8,0,0,0,16,0A80.13,80.13,0,0,0,241.16,104.53Z' fill='%2316a34a' transform='translate(64, 64) scale(1.5)'/%3E%3C/svg%3E">
     <link id="favicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%23f0fdf4'/%3E%3Cpath d='M241.16,104.53a80.14,80.14,0,0,0-109.43,18.8l-1.07,1.52A80.12,80.12,0,0,0,111.9,235.6l5.77,8.2A111.45,111.45,0,0,0,48,272a8,8,0,0,0,16,0,95.53,95.53,0,0,1,64-90.22,80.14,80.14,0,0,0,80.68,54.89,8,8,0,0,0,1.25-15.9,64.13,64.13,0,0,1-58.45-38.31,8,8,0,0,0-13.88-1.55l-5.77-8.2a64.11,64.11,0,0,1,15-88.59l1.07-1.52a64.12,64.12,0,0,1,87.55-15.05A64.13,64.13,0,0,1,208,240a8,8,0,0,0,16,0A80.13,80.13,0,0,0,241.16,104.53Z' fill='%2316a34a' transform='translate(64, 64) scale(1.5)'/%3E%3C/svg%3E">
 
@@ -35,7 +35,7 @@
         .tab-inactive { background-color: transparent; color: #475569; }
         .tab-inactive:hover { background-color: #e2e8f0; }
 
-        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #16a34a; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        .loader { border: 2px solid #e2e8f0; border-radius: 50%; border-top: 2px solid #16a34a; width: 14px; height: 14px; display: inline-block; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
@@ -43,21 +43,18 @@
 
     <!-- SCHERMATA DI LOGIN & REGISTRAZIONE -->
     <div id="login-screen" class="fixed inset-0 bg-[#0f172a] z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-[32px] shadow-2xl max-w-sm w-full p-8 text-center border border-slate-200 relative overflow-hidden animate-fadeIn">
-            
-            <div id="cloud-status" class="absolute top-4 right-4 flex items-center gap-2 text-xs font-bold text-slate-400">
-                <div class="loader w-3 h-3 border-2 border-slate-200 border-top-slate-500"></div> Sincronizzazione...
-            </div>
+        <div class="bg-white rounded-[32px] shadow-2xl max-w-sm w-full p-8 text-center border border-slate-200 relative overflow-hidden">
 
-            <!-- Logo Foglia Ufficiale Centrato -->
+            <!-- Logo Foglia Medico/Nutrizionale Ottimizzato e non deformato -->
             <div class="w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-green-100 p-4">
-                <svg width="100%" height="100%" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M241.16,104.53a80.14,80.14,0,0,0-109.43,18.8l-1.07,1.52A80.12,80.12,0,0,0,111.9,235.6l5.77,8.2A111.45,111.45,0,0,0,48,272a8,8,0,0,0,16,0,95.53,95.53,0,0,1,64-90.22,80.14,80.14,0,0,0,80.68,54.89,8,8,0,0,0,1.25-15.9,64.13,64.13,0,0,1-58.45-38.31,8,8,0,0,0-13.88-1.55l-5.77-8.2a64.11,64.11,0,0,1,15-88.59l1.07-1.52a64.12,64.12,0,0,1,87.55-15.05A64.13,64.13,0,0,1,208,240a8,8,0,0,0,16,0A80.13,80.13,0,0,0,241.16,104.53Z" fill="#16a34a" transform="translate(64, 64) scale(1.5)"/>
+                <svg class="w-16 h-16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2 22C2 22 8 22 13 17C18 12 22 6 22 2C22 2 18 2 13 7C8 12 2 18 2 22Z" fill="#16a34a" />
+                    <path d="M2 22C5 17 12 15 17 13" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" />
                 </svg>
             </div>
             
             <h1 class="text-2xl font-black text-slate-800 mb-1">SmartFDiet</h1>
-            <p class="text-slate-500 text-sm font-medium mb-8">AOU Maggiore di Novara - 1800 Kcal</p>
+            <p class="text-slate-500 text-xs font-semibold mb-6">AOU Maggiore di Novara - 1800 Kcal</p>
             
             <!-- PANNELLO ACCESSO -->
             <div id="panel-login" class="space-y-4">
@@ -95,6 +92,12 @@
                     </button>
                 </div>
             </div>
+
+            <!-- Stato di Connessione Elegante e non invasivo all'interno della Card -->
+            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-center gap-2 text-xs font-semibold text-slate-400">
+                <span id="cloud-status-icon" class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                <span id="cloud-status-text">Inizializzazione...</span>
+            </div>
             
         </div>
     </div>
@@ -104,9 +107,9 @@
         
         <!-- HEADER APP -->
         <header class="bg-slate-900 px-4 py-4 shadow-md sticky top-0 z-40 w-full">
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center max-w-7xl mx-auto">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white animate-pulse">
+                    <div class="w-8 h-8 bg-green-500 rounded flex items-center justify-center text-white">
                         <i class="fa-solid fa-leaf"></i>
                     </div>
                     <h1 class="text-white font-bold text-xl tracking-tight">SmartFDiet <span class="hidden sm:inline font-normal opacity-70 text-sm">| 1800 Kcal</span></h1>
@@ -123,7 +126,7 @@
 
         <!-- MENU TABS -->
         <div class="px-4 sm:px-6 lg:px-8 mt-6">
-            <div class="flex p-1 bg-slate-200/80 rounded-xl backdrop-blur-sm border border-slate-300/50">
+            <div class="flex p-1 bg-slate-200/80 rounded-xl backdrop-blur-sm border border-slate-300/50 max-w-md mx-auto">
                 <button id="btn-tab-dieta" onclick="switchTab('dieta')" class="flex-1 py-2.5 text-center font-bold text-sm rounded-lg transition-all tab-active">
                     <i class="fa-solid fa-utensils mr-2"></i>Dieta Medica
                 </button>
@@ -133,7 +136,7 @@
             </div>
         </div>
 
-        <main class="flex-1 w-full p-4 sm:px-6 lg:px-8 pb-10">
+        <main class="flex-1 w-full p-4 sm:px-6 lg:px-8 pb-10 max-w-7xl mx-auto">
             
             <!-- ================= SEZIONE DIETA ================= -->
             <div id="section-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
@@ -173,7 +176,7 @@
                             
                             <!-- OVERLAY DI BLOCCO (LUCCHETTO) -->
                             <div id="lock-overlay" class="hidden absolute -inset-4 bg-white/80 backdrop-blur-[2px] z-10 rounded-xl flex flex-col items-center justify-center border-2 border-green-500">
-                                <div class="bg-green-100 p-4 rounded-full text-green-600 mb-3 shadow-inner animate-bounce">
+                                <div class="bg-green-100 p-4 rounded-full text-green-600 mb-3 shadow-inner">
                                     <i class="fa-solid fa-lock text-3xl"></i>
                                 </div>
                                 <span class="font-bold text-slate-800 text-lg">Giornata Inviata al Cloud</span>
@@ -249,7 +252,7 @@
                                                 <option value="Salumi g 120" data-cost="salumi">Salumi (Bresaola/Crudo/Cotto/Speck/Tacchino) g 120 (1-2 v/sett)</option>
                                             </optgroup>
                                             <optgroup label="Formaggi (Max 2 volte/sett complessivi)">
-                                                <option value="Formaggi Meno Grassi g 120" data-cost="formaggi">Formaggi MENO GRASSI (Ricotta/Tomino/Fiocchi) g 120</option>
+                                                <option value="Formaggi Meno Grassi g 120" data-cost="formaggi">Formaggi MENO GRASSI (Ricotta/Tomino/Fiocchi/Tofu) g 120</option>
                                                 <option value="Formaggi Semi-Grassi g 100" data-cost="formaggi">Formaggi SEMI-GRASSI (Mozzarella/Certosa/Crescenza/Feta) g 100</option>
                                                 <option value="Formaggi Grassi g 80" data-cost="formaggi">Formaggi GRASSI (Gorgonzola/Parmigiano/Grana/Brie) g 80</option>
                                             </optgroup>
@@ -298,7 +301,7 @@
                                         </select>
                                     </div>
                                     <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Segundo Piatto</label>
+                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Secondo Piatto</label>
                                         <select id="cen-pro" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 outline-none">
                                         </select>
                                     </div>
@@ -398,7 +401,7 @@
 
     <!-- Modale Avvisi Custom (Evita alert nativi) -->
     <div id="custom-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[60] p-4 transition-opacity">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-200 animate-bounce">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border border-slate-200">
             <div id="modal-icon" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-50 mb-4">
                 <i class="fa-solid fa-hand text-3xl text-red-500"></i>
             </div>
@@ -478,12 +481,13 @@
             }
         }
 
-        // ================= INIZIALIZZAZIONE CLOUD ================= //
+        // ================= INIZIALIZZAZIONE CLOUD RESILIENTE ================= //
         async function initCloud() {
-            loadLocalBackup(); // Carichiamo immediatamente i dati locali come backup istantaneo
+            loadLocalBackup(); // Carica subito la memoria locale per una reattività ottimale
 
             if(Object.keys(firebaseConfig).length === 0) {
-                document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-circle-check text-blue-500"></i> Offline';
+                document.getElementById('cloud-status-icon').className = "w-2.5 h-2.5 rounded-full bg-slate-400";
+                document.getElementById('cloud-status-text').innerText = "Database Offline (Backup locale)";
                 return;
             }
 
@@ -492,18 +496,25 @@
                 auth = getAuth(app);
                 db = getFirestore(app);
 
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
+                // Proviamo ad autenticarci. Se fallisce perché l'utente non ha attivato l'accesso anonimo, procediamo comunque!
+                // Firestore in modalità test permette letture/scritture non autenticate.
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    cloudUser = auth.currentUser;
+                } catch(authError) {
+                    console.warn("Autenticazione fallita (anonimo disattivato su Firebase Console). Procedo senza auth in modalità test:", authError);
                 }
-                cloudUser = auth.currentUser;
 
-                // Connessione in tempo reale al database per la sincronizzazione istantanea
+                // Connessione in tempo reale al database Firestore per la sincronizzazione istantanea
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'master');
                 
                 onSnapshot(docRef, (docSnap) => {
-                    document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-cloud-check text-green-500"></i> Sincronizzato';
+                    document.getElementById('cloud-status-icon').className = "w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse";
+                    document.getElementById('cloud-status-text').innerText = "Cloud Sincronizzato";
                     
                     if (docSnap.exists()) {
                         const data = docSnap.data();
@@ -520,25 +531,27 @@
                         renderGlicemia();
                     }
                 }, (error) => {
-                    console.error("Sync Cloud fallito:", error);
-                    document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Offline (Salvataggio Locale)';
+                    console.error("Sincronizzazione Firestore fallita (probabilmente regole o rete):", error);
+                    document.getElementById('cloud-status-icon').className = "w-2.5 h-2.5 rounded-full bg-red-500";
+                    document.getElementById('cloud-status-text').innerText = "Connessione Cloud non riuscita";
                     loadLocalBackup();
                 });
 
             } catch(e) {
-                console.error("Inizializzazione Firebase Fallita:", e);
-                document.getElementById('cloud-status').innerHTML = '<i class="fa-solid fa-circle-exclamation text-red-500"></i> Errore';
+                console.error("Inizializzazione SDK Firebase fallita:", e);
+                document.getElementById('cloud-status-icon').className = "w-2.5 h-2.5 rounded-full bg-red-500";
+                document.getElementById('cloud-status-text').innerText = "Errore di connessione";
                 loadLocalBackup();
             }
         }
 
         // ================= FUNZIONE DI SALVATAGGIO CLOUD / LOCALE ================= //
         async function syncToCloud() {
-            // Salva sempre localmente per una fluidità istantanea (Optimistic UI)
+            // Salva subito localmente per azzerare la latenza visiva (Optimistic UI)
             localStorage.setItem('smartfdiet_session', JSON.stringify({ currentUser: appState.currentUser }));
             localStorage.setItem('smartfdiet_backup', JSON.stringify({ dieta: appState.dieta, glicemia: appState.glicemia, visitors: appState.visitors }));
 
-            if(cloudUser && db) {
+            if(db) {
                 try {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'appState', 'master');
                     await setDoc(docRef, {
@@ -547,7 +560,7 @@
                         visitors: appState.visitors
                     }, { merge: true });
                 } catch(e) {
-                    console.error("Salvataggio su cloud fallito, mantenuto localmente:", e);
+                    console.error("Salvataggio Cloud fallito temporaneamente. I dati sono salvati sul telefono:", e);
                 }
             }
         }
@@ -704,16 +717,15 @@
             const day = document.getElementById('giorno-select').value;
             const data = appState.dieta[day];
 
-            // Al sblocco rimuoviamo per liberare il budget, ma i campi nel form restano scritti!
+            // Rimuove temporaneamente il blocco per ricalcolare il budget
             delete appState.dieta[day];
             
-            // Aggiornamento ottimista immediato dello schermo
             syncToCloud();
             updateDashboard();
             
             document.getElementById('lock-overlay').classList.add('hidden');
             
-            // Ri-compiliamo preventivamente i campi così l'utente può correggere senza perdere i dati inseriti
+            // I dati rimangono comunque già pre-compilati nei form per non rischiare di perderli!
             if (data && data.raw) {
                 document.getElementById('col-liq').value = data.raw.col_liq || '';
                 document.getElementById('col-sol').value = data.raw.col_sol || '';
@@ -776,7 +788,6 @@
                 costs: newCosts
             };
 
-            // Aggiornamento istantaneo locale ed in cloud
             syncToCloud();
             updateDashboard();
             
@@ -833,7 +844,7 @@
                     count++; const d = appState.dieta[day].testo;
                     let editBtn = isAdmin ? `<button onclick="document.getElementById('giorno-select').value='${day}'; window.loadDay(); window.switchTab('dieta');" class="absolute top-2 right-2 text-blue-500 text-xs font-bold bg-blue-50 px-2 py-1 rounded hover:bg-blue-100"><i class="fa-solid fa-pen"></i></button>` : '';
                     list.innerHTML += `
-                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm relative group animate-fadeIn">
+                        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm relative group">
                             ${editBtn}
                             <div class="font-black text-slate-800 text-sm border-b border-slate-200 pb-1 mb-2">${day}</div>
                             <div class="text-xs text-slate-600 mb-1 line-clamp-1"><i class="fa-solid fa-mug-saucer text-slate-400 w-3"></i> ${d.col}</div>
@@ -861,15 +872,12 @@
 
             document.getElementById('glicemia-valore').value = '';
             
-            // Salvataggio ottimista immediato
             syncToCloud();
             renderGlicemia();
         };
 
         window.deleteGlicemia = function(id) {
             appState.glicemia = appState.glicemia.filter(g => g.id !== id);
-            
-            // Aggiornamento locale immediato
             syncToCloud();
             renderGlicemia();
         };
@@ -890,7 +898,7 @@
                 let trashBtn = isAdmin ? `<button onclick="window.deleteGlicemia(${g.id})" class="text-slate-300 hover:text-red-500 transition-colors ml-2"><i class="fa-solid fa-trash"></i></button>` : '';
 
                 list.innerHTML += `
-                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm flex items-center justify-between animate-fadeIn">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm flex items-center justify-between">
                         <div>
                             <div class="text-[10px] text-slate-400 font-bold mb-1"><i class="fa-regular fa-clock"></i> ${g.data}</div>
                             <div class="text-sm font-black text-slate-800">${g.momento}</div>
@@ -934,7 +942,7 @@
 
         // ================= AVVIO APP ================= //
         window.onload = function() {
-            // Sincronizzazione dinamica dei secondi piatti pranzo <-> cena
+            // Sincronizzazione automatica della colonna della cena con le opzioni del pranzo
             const praPro = document.getElementById('pra-pro');
             const cenPro = document.getElementById('cen-pro');
             if (praPro && cenPro) {
