@@ -6,15 +6,15 @@
     <title>SmartFDiet - Referto Ufficiale</title>
     <meta name="theme-color" content="#0f172a">
     
-    <!-- PWA Manifest per installazione nativa su Android/iOS -->
-    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27%252316a34a%27%253E%253Cpath%20d%3D%27M17.5%203C13.5%203%209.5%205.5%207%209.5C5.5%2012%205%2015%205.5%2018C4%2019.5%203%2021%203%2021L4.5%2022.5C4.5%2022.5%206%2021.5%207.5%2020C10.5%2020.5%2013.5%2020%2016%2018.5C20%2016%2022.5%2012%2022.5%208C22.5%205%2020%203%2017.5%203ZM15.5%2016.5C13.5%2018%2011%2018%208.5%2017.5L16%2010L17.5%2011.5L10%2019C12%2019%2014%2018.5%2015.5%2016.5Z%27%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+    <!-- PWA Manifest per installazione nativa -->
+    <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20512%20512%27%253E%253Crect%20width%3D%27512%27%20height%3D%27512%27%20rx%3D%27115%27%20fill%3D%27%2523f0fdf4%27%2F%253E%253Cpath%20d%3D%27M361.74%20156.8c-60.67%200-118.89%2022.01-164.15%2050.21l-1.6%202.28a120.18%20120.18%200%200%200-28.16%20144.11l8.66%2012.3A167.18%20167.18%200%200%200%2072%20408a12%2012%200%200%200%2024%200%20143.3%20143.3%200%200%201%2096-135.33%20120.21%20120.21%200%200%200%20121.02%2082.34%2012%2012%200%200%200%201.87-23.85%2096.2%2096.2%200%200%201-87.67-57.47%2012%2012%200%200%200-20.82-2.32l-8.66-12.3a96.17%2096.17%200%200%201%2022.5-132.88l1.6-2.28A96.18%2096.18%200%200%201%20312%20101.43a96.2%2096.2%200%200%201%20131.33-22.57%2012%2012%200%200%200%2024%200%20120.2%20120.2%200%200%200-105.59-136.2Z%27%20fill%3D%27%252316a34a%27%20transform%3D%27translate(30%2C30)%20scale(0.85)%27%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; } /* Sfondo scuro desktop */
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; }
         .glass-panel { background: rgba(255, 255, 255, 1); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
@@ -26,7 +26,6 @@
         }
         select:disabled { background-color: #f8fafc; cursor: not-allowed; opacity: 0.7; }
         
-        /* Stili per le tab attive */
         .tab-active { background-color: #16a34a; color: white; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
         .tab-inactive { background-color: transparent; color: #475569; }
         .tab-inactive:hover { background-color: #e2e8f0; }
@@ -35,18 +34,21 @@
 
 <body class="text-slate-800 antialiased min-h-screen flex flex-col items-center">
 
-    <!-- SCHERMATA DI LOGIN (PIN) -->
+    <!-- SCHERMATA DI LOGIN & REGISTRAZIONE -->
     <div id="login-screen" class="fixed inset-0 bg-[#0f172a] z-50 flex items-center justify-center p-4 transition-opacity duration-300">
         <div class="bg-white rounded-[32px] shadow-2xl max-w-sm w-full p-8 text-center border border-slate-200">
-            <!-- Icona Foglia Stile Apple -->
-            <div class="w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-green-100">
-                <i class="fa-solid fa-leaf text-5xl text-green-600"></i>
+            <!-- Icona Foglia -->
+            <div class="w-24 h-24 bg-green-50 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-sm border border-green-100 p-4">
+                <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M361.74 156.8c-60.67 0-118.89 22.01-164.15 50.21l-1.6 2.28a120.18 120.18 0 0 0-28.16 144.11l8.66 12.3A167.18 167.18 0 0 0 72 408a12 12 0 0 0 24 0 143.3 143.3 0 0 1 96-135.33 120.21 120.21 0 0 0 121.02 82.34 12 12 0 0 0 1.87-23.85 96.2 96.2 0 0 1-87.67-57.47 12 12 0 0 0-20.82-2.32l-8.66-12.3a96.17 96.17 0 0 1 22.5-132.88l1.6-2.28A96.18 96.18 0 0 1 312 101.43a96.2 96.2 0 0 1 131.33-22.57 12 12 0 0 0 24 0 120.2 120.2 0 0 0-105.59-136.2Z" fill="#16a34a"/>
+                </svg>
             </div>
             
             <h1 class="text-2xl font-black text-slate-800 mb-1">SmartFDiet</h1>
-            <p class="text-slate-500 text-sm font-medium mb-8">Protocollo 1800 Kcal & Glicemia</p>
+            <p class="text-slate-500 text-sm font-medium mb-8">Area Personale & Condivisa</p>
             
-            <div class="space-y-4">
+            <!-- PANNELLO ACCESSO -->
+            <div id="panel-login" class="space-y-4">
                 <div>
                     <input type="password" id="pin-input" pattern="[0-9]*" inputmode="numeric" placeholder="C O D I C E   P I N" 
                            class="w-full text-center tracking-[0.4em] text-xl text-slate-900 font-black py-4 bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-green-500 focus:ring-4 focus:ring-green-500/20 outline-none transition-all placeholder:text-slate-400 placeholder:text-sm placeholder:tracking-[0.2em] placeholder:font-bold">
@@ -54,12 +56,38 @@
                 <button onclick="eseguiLogin()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-green-600/30 transition-all flex justify-center items-center gap-2 text-lg">
                     <i class="fa-solid fa-lock-open"></i> Accedi
                 </button>
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <p class="text-xs text-slate-500 mb-2">Vuoi visionare la dieta?</p>
+                    <button onclick="toggleAuthMode('register')" class="text-sm font-bold text-slate-700 hover:text-green-600 transition-colors">
+                        <i class="fa-solid fa-user-plus mr-1"></i> Registrati come Visitatore
+                    </button>
+                </div>
             </div>
-            <p class="text-xs text-slate-400 mt-6 mt-4">Inserisci il PIN (Es: 1234) per sbloccare l'app.</p>
+
+            <!-- PANNELLO REGISTRAZIONE VISITATORE -->
+            <div id="panel-register" class="space-y-4 hidden">
+                <div>
+                    <input type="text" id="reg-nick" placeholder="Il tuo Nickname (es. Dott. Rossi)" 
+                           class="w-full text-center text-slate-900 font-bold py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none transition-all placeholder:text-slate-400">
+                </div>
+                <div>
+                    <input type="password" id="reg-pin" pattern="[0-9]*" inputmode="numeric" placeholder="Crea un PIN numerico" 
+                           class="w-full text-center tracking-[0.2em] text-lg text-slate-900 font-black py-3 bg-slate-50 border-2 border-slate-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/20 outline-none transition-all placeholder:text-slate-400 placeholder:text-sm placeholder:tracking-normal">
+                </div>
+                <button onclick="registraVisitatore()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-600/30 transition-all flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-check"></i> Conferma & Entra
+                </button>
+                <div class="mt-4 pt-4 border-t border-slate-100">
+                    <button onclick="toggleAuthMode('login')" class="text-sm font-bold text-slate-500 hover:text-slate-800 transition-colors">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Torna al Login
+                    </button>
+                </div>
+            </div>
+            
         </div>
     </div>
 
-    <!-- MAIN APP (Nascosta all'avvio se non loggato) -->
+    <!-- MAIN APP (Nascosta all'avvio) -->
     <div id="main-app" class="hidden w-full max-w-7xl flex flex-col min-h-screen bg-[#f1f5f9] sm:my-4 sm:rounded-3xl sm:shadow-2xl sm:overflow-hidden relative">
         
         <!-- HEADER APP -->
@@ -72,8 +100,11 @@
                     <h1 class="text-white font-bold text-xl tracking-tight">SmartFDiet <span class="hidden sm:inline font-normal opacity-70 text-sm">| 1800 Kcal</span></h1>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button onclick="eseguiLogout()" class="text-white bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg font-bold text-sm shadow-sm transition-colors flex items-center gap-2">
-                        <i class="fa-solid fa-right-from-bracket"></i> <span class="hidden sm:inline">Log out</span>
+                    <div id="header-user-info" class="hidden sm:flex items-center gap-2 text-sm font-medium bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                        <!-- Iniettato via JS (es. Chef Fabrizio o Visitatore) -->
+                    </div>
+                    <button onclick="eseguiLogout()" class="text-white bg-slate-700 hover:bg-red-500 px-4 py-2 rounded-lg font-bold text-sm shadow-sm transition-colors flex items-center gap-2 border border-slate-600 hover:border-red-500">
+                        <i class="fa-solid fa-door-open"></i> <span class="hidden sm:inline">Log out</span>
                     </button>
                 </div>
             </div>
@@ -97,13 +128,25 @@
             <div id="section-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 
                 <!-- COLONNA SINISTRA (Form Dieta) -->
-                <div class="lg:col-span-2 space-y-6">
+                <div class="lg:col-span-2 space-y-6 relative">
+                    
+                    <!-- OVERLAY VISITATORE (SOLA LETTURA) -->
+                    <div id="visitor-overlay-dieta" class="hidden absolute inset-0 bg-slate-100/60 backdrop-blur-[2px] z-30 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-slate-300">
+                        <div class="bg-slate-800 text-white px-6 py-3 rounded-xl shadow-xl flex items-center gap-3">
+                            <i class="fa-solid fa-eye text-2xl text-blue-400"></i>
+                            <div>
+                                <div class="font-bold">Modalità Sola Lettura</div>
+                                <div class="text-xs text-slate-300 font-normal">Consulta il Diario qui a destra</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-200 relative">
                         
                         <!-- HEADER GIORNO -->
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-slate-100 pb-4">
                             <h2 class="text-2xl font-black text-slate-800"><i class="fa-regular fa-calendar text-green-600 mr-2"></i>Compilazione</h2>
-                            <select id="giorno-select" onchange="loadDay()" class="bg-slate-100 border border-slate-200 rounded-xl py-2 pl-4 pr-10 font-bold text-slate-800 text-lg cursor-pointer focus:ring-2 focus:ring-green-500 outline-none">
+                            <select id="giorno-select" onchange="loadDay()" class="bg-slate-100 border border-slate-200 rounded-xl py-2 pl-4 pr-10 font-bold text-slate-800 text-lg cursor-pointer focus:ring-2 focus:ring-green-500 outline-none z-20 relative">
                                 <option value="Lunedì">Lunedì</option>
                                 <option value="Martedì">Martedì</option>
                                 <option value="Mercoledì">Mercoledì</option>
@@ -117,14 +160,14 @@
                         <!-- AREA PASTI (Relativa per il lucchetto) -->
                         <div id="form-pasti" class="relative space-y-6">
                             
-                            <!-- OVERLAY DI BLOCCO (LUCCHETTO) -->
+                            <!-- OVERLAY DI BLOCCO (LUCCHETTO - Solo admin) -->
                             <div id="lock-overlay" class="hidden absolute -inset-4 bg-white/80 backdrop-blur-[2px] z-10 rounded-xl flex flex-col items-center justify-center border-2 border-green-500">
                                 <div class="bg-green-100 p-4 rounded-full text-green-600 mb-3">
                                     <i class="fa-solid fa-lock text-3xl"></i>
                                 </div>
                                 <span class="font-bold text-slate-800 text-lg">Giornata Registrata</span>
                                 <span class="text-slate-500 text-sm mb-4 text-center px-4">I macronutrienti sono stati scalati dal budget. Cambia giorno in alto per continuare.</span>
-                                <button onclick="unlockDay()" class="text-sm bg-slate-800 hover:bg-slate-700 text-white px-5 py-2 rounded-lg font-bold transition-colors">
+                                <button onclick="unlockDay()" class="admin-action text-sm bg-slate-800 hover:bg-slate-700 text-white px-5 py-2 rounded-lg font-bold transition-colors">
                                     <i class="fa-solid fa-pen-to-square mr-2"></i> Sblocca e Modifica
                                 </button>
                             </div>
@@ -252,7 +295,7 @@
                             </div>
 
                             <div class="pt-2">
-                                <button onclick="salvaDieta()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-md transition-all flex justify-center items-center gap-2 text-lg">
+                                <button onclick="salvaDieta()" class="admin-action w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-md transition-all flex justify-center items-center gap-2 text-lg">
                                     <i class="fa-solid fa-cloud-arrow-up"></i> Registra Giornata
                                 </button>
                             </div>
@@ -267,7 +310,7 @@
                         <div id="budget-container" class="space-y-4">
                             <!-- Generato via JS -->
                         </div>
-                        <button onclick="resetSettimana()" class="w-full mt-6 text-sm text-red-500 font-bold hover:text-red-700 transition-colors py-2 border border-red-100 rounded-lg bg-red-50">
+                        <button id="btn-azzera" onclick="resetSettimana()" class="admin-action w-full mt-6 text-sm text-red-500 font-bold hover:text-red-700 transition-colors py-2 border border-red-100 rounded-lg bg-red-50">
                             <i class="fa-solid fa-rotate-left mr-1"></i> Azzera Settimana
                         </button>
                     </div>
@@ -285,7 +328,15 @@
             <div id="section-glicemia" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
                 
                 <!-- Inserimento Glicemia -->
-                <div class="lg:col-span-1 space-y-6">
+                <div class="lg:col-span-1 space-y-6 relative">
+                    <!-- OVERLAY VISITATORE (SOLA LETTURA) -->
+                    <div id="visitor-overlay-glicemia" class="hidden absolute inset-0 bg-slate-100/60 backdrop-blur-[2px] z-30 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-slate-300">
+                        <div class="bg-slate-800 text-white px-6 py-3 rounded-xl shadow-xl flex items-center gap-3">
+                            <i class="fa-solid fa-eye text-2xl text-blue-400"></i>
+                            <div class="font-bold">Sola Lettura</div>
+                        </div>
+                    </div>
+
                     <div class="glass-panel rounded-2xl p-6 border border-slate-200">
                         <h2 class="text-xl font-black text-slate-800 mb-5 border-b border-slate-100 pb-3"><i class="fa-solid fa-plus-circle text-blue-600 mr-2"></i>Nuova Misurazione</h2>
                         
@@ -307,7 +358,7 @@
                                 <input type="number" id="glicemia-valore" placeholder="Es. 110" class="w-full bg-white border border-slate-300 rounded-lg px-3 py-3 text-lg font-bold text-center focus:ring-2 focus:ring-blue-500 outline-none">
                             </div>
                             
-                            <button onclick="salvaGlicemia()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition-all flex justify-center items-center gap-2">
+                            <button onclick="salvaGlicemia()" class="admin-action w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition-all flex justify-center items-center gap-2">
                                 <i class="fa-solid fa-save"></i> Registra
                             </button>
                         </div>
@@ -364,8 +415,15 @@
             speciale: { name: "Ravioli/Gnocchi", max: 1, color: "bg-stone-500", icon: "fa-bowl-food" }
         };
 
-        // STATO APPLICAZIONE (Dieta + Glicemia)
-        let appState = { dieta: {}, glicemia: [] };
+        const ADMIN_PIN = "713";
+
+        // STATO APPLICAZIONE
+        let appState = { 
+            dieta: {}, 
+            glicemia: [],
+            visitors: [], // [{nickname: "...", pin: "..."}]
+            currentUser: null // {role: "admin"|"visitor", name: "..."}
+        };
 
         // INITIALIZE APP
         window.onload = function() {
@@ -378,45 +436,127 @@
                 const parsed = JSON.parse(stored);
                 appState.dieta = parsed.dieta || {};
                 appState.glicemia = parsed.glicemia || [];
+                appState.visitors = parsed.visitors || [];
+                appState.currentUser = parsed.currentUser || null;
             }
             
-            // Verifica Login
-            const isLoggedIn = localStorage.getItem('smartfdiet_logged_in');
-            if(isLoggedIn === 'true') {
+            // Verifica Login Passato
+            if(appState.currentUser) {
+                procediAccessoApp();
+            }
+        };
+
+        /* ================= GESTIONE LOGIN & RUOLI ================= */
+        function toggleAuthMode(mode) {
+            const pLogin = document.getElementById('panel-login');
+            const pReg = document.getElementById('panel-register');
+            if(mode === 'register') {
+                pLogin.classList.add('hidden');
+                pReg.classList.remove('hidden');
+            } else {
+                pReg.classList.add('hidden');
+                pLogin.classList.remove('hidden');
+            }
+        }
+
+        function eseguiLogin() {
+            const pin = document.getElementById('pin-input').value;
+            
+            if(pin === ADMIN_PIN) {
+                // Admin Access
+                appState.currentUser = { role: 'admin', name: 'Chef Fabrizio' };
+                procediAccessoApp();
+            } else {
+                // Check if visitor
+                const vis = appState.visitors.find(v => v.pin === pin);
+                if(vis) {
+                    appState.currentUser = { role: 'visitor', name: vis.nickname };
+                    procediAccessoApp();
+                } else {
+                    showModal("Credenziali Errate", "Il PIN inserito non è valido. Riprova o registrati come visitatore.", "error");
+                }
+            }
+        }
+
+        function registraVisitatore() {
+            const nick = document.getElementById('reg-nick').value.trim();
+            const pin = document.getElementById('reg-pin').value;
+
+            if(nick.length < 2) {
+                showModal("Errore", "Inserisci un Nickname valido.", "error"); return;
+            }
+            if(pin.length < 4 || pin === ADMIN_PIN) {
+                showModal("Errore PIN", "Il PIN deve avere almeno 4 cifre e non può essere uguale a quello dell'Amministratore.", "error"); return;
+            }
+            if(appState.visitors.find(v => v.pin === pin)) {
+                showModal("Errore", "Questo PIN è già in uso. Scegline un altro.", "error"); return;
+            }
+
+            // Salva nuovo visitatore
+            appState.visitors.push({ nickname: nick, pin: pin });
+            appState.currentUser = { role: 'visitor', name: nick };
+            
+            procediAccessoApp();
+        }
+
+        function procediAccessoApp() {
+            saveData();
+            applicaPermessiUI();
+            
+            document.getElementById('login-screen').classList.add('opacity-0');
+            setTimeout(() => {
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('main-app').classList.remove('hidden');
                 updateDashboard();
                 loadDay();
                 renderGlicemia();
-            }
-        };
-
-        /* ================= GESTIONE LOGIN/LOGOUT ================= */
-        function eseguiLogin() {
-            const pin = document.getElementById('pin-input').value;
-            if(pin.length >= 4) { // Accetta qualsiasi PIN di almeno 4 cifre per comodità
-                localStorage.setItem('smartfdiet_logged_in', 'true');
-                document.getElementById('login-screen').classList.add('opacity-0');
-                setTimeout(() => {
-                    document.getElementById('login-screen').classList.add('hidden');
-                    document.getElementById('main-app').classList.remove('hidden');
-                    updateDashboard();
-                    loadDay();
-                    renderGlicemia();
-                }, 300);
-            } else {
-                showModal("Codice non valido", "Inserisci un codice PIN di almeno 4 cifre (Es: 1234).", "error");
-            }
+            }, 300);
         }
 
         function eseguiLogout() {
-            localStorage.removeItem('smartfdiet_logged_in');
+            appState.currentUser = null;
+            saveData();
+            
             document.getElementById('pin-input').value = '';
+            document.getElementById('reg-nick').value = '';
+            document.getElementById('reg-pin').value = '';
+            toggleAuthMode('login');
+
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
             setTimeout(() => {
                 document.getElementById('login-screen').classList.remove('opacity-0');
             }, 10);
+        }
+
+        function applicaPermessiUI() {
+            const isAdmin = appState.currentUser.role === 'admin';
+            
+            // Header Info
+            const hInfo = document.getElementById('header-user-info');
+            hInfo.classList.remove('hidden');
+            if(isAdmin) {
+                hInfo.innerHTML = `<i class="fa-solid fa-shield-halved text-green-400"></i> <span class="text-slate-200">Chef Fabrizio</span>`;
+            } else {
+                hInfo.innerHTML = `<i class="fa-solid fa-user text-blue-400"></i> <span class="text-slate-200">Visitatore: ${appState.currentUser.name}</span>`;
+            }
+
+            // Azioni Admin (Bottoni, ecc)
+            document.querySelectorAll('.admin-action').forEach(el => {
+                el.style.display = isAdmin ? '' : 'none';
+            });
+
+            // Overlays Visitatore
+            const overDieta = document.getElementById('visitor-overlay-dieta');
+            const overGlicemia = document.getElementById('visitor-overlay-glicemia');
+            
+            if(isAdmin) {
+                overDieta.classList.add('hidden');
+                overGlicemia.classList.add('hidden');
+            } else {
+                overDieta.classList.remove('hidden');
+                overGlicemia.classList.remove('hidden');
+            }
         }
 
         /* ================= TABS NAVIGATION ================= */
@@ -433,7 +573,7 @@
                 secGlicemia.classList.add('hidden');
             } else {
                 btnDieta.className = "flex-1 py-2.5 text-center font-bold text-sm rounded-lg transition-all tab-inactive";
-                btnGlicemia.className = "flex-1 py-2.5 text-center font-bold text-sm rounded-lg transition-all tab-active bg-blue-600"; // Glicemia blu
+                btnGlicemia.className = "flex-1 py-2.5 text-center font-bold text-sm rounded-lg transition-all tab-active bg-blue-600";
                 secDieta.classList.add('hidden');
                 secGlicemia.classList.remove('hidden');
             }
@@ -457,8 +597,10 @@
             const data = appState.dieta[day];
             
             const overlay = document.getElementById('lock-overlay');
+            const isAdmin = appState.currentUser && appState.currentUser.role === 'admin';
             
             if(data) {
+                // Ricarica i dati nei select per memoria
                 document.getElementById('col-liq').value = data.raw.col_liq;
                 document.getElementById('col-sol').value = data.raw.col_sol;
                 document.getElementById('pra-carb').value = data.raw.pra_carb;
@@ -468,8 +610,10 @@
                 document.getElementById('cen-carb').value = data.raw.cen_carb;
                 document.getElementById('cen-pro').value = data.raw.cen_pro;
                 
-                overlay.classList.remove('hidden');
+                // Se sei admin, mostra il lucchetto del giorno salvato. I visitor hanno già l'overlay blu "Sola lettura"
+                if(isAdmin) overlay.classList.remove('hidden');
             } else {
+                // Giorno vuoto: resetta i campi
                 document.getElementById('col-liq').value = '';
                 document.getElementById('col-sol').value = '';
                 document.getElementById('pra-carb').value = '';
@@ -486,13 +630,12 @@
         function unlockDay() {
             const day = document.getElementById('giorno-select').value;
             
-            // Eliminiamo il giorno dallo stato (liberando così il budget)
+            // Elimina i costi per liberare budget
             delete appState.dieta[day];
             saveData();
             updateDashboard();
             
-            // Nascondiamo il lucchetto MA non puliamo i campi! 
-            // In questo modo rimangono compilati pronti per essere modificati.
+            // Nasconde lucchetto. I campi restano pieni per facile modifica!
             document.getElementById('lock-overlay').classList.add('hidden');
         }
 
@@ -551,7 +694,7 @@
             saveData();
             updateDashboard();
             
-            // Avanza
+            // Avanza giorno
             const sel = document.getElementById('giorno-select');
             if(sel.selectedIndex < sel.options.length - 1) sel.selectedIndex++;
             loadDay();
@@ -594,14 +737,21 @@
             list.innerHTML = '';
             let count = 0;
             const daysOrder = ['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
+            const isAdmin = appState.currentUser && appState.currentUser.role === 'admin';
 
             daysOrder.forEach(day => {
                 if(appState.dieta[day]) {
                     count++;
                     const d = appState.dieta[day].testo;
+                    
+                    let editBtn = '';
+                    if(isAdmin) {
+                        editBtn = `<button onclick="document.getElementById('giorno-select').value='${day}'; loadDay(); switchTab('dieta');" class="absolute top-2 right-2 text-blue-500 text-xs font-bold bg-blue-50 px-2 py-1 rounded hover:bg-blue-100"><i class="fa-solid fa-pen"></i></button>`;
+                    }
+
                     list.innerHTML += `
                         <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm relative group">
-                            <button onclick="document.getElementById('giorno-select').value='${day}'; loadDay(); switchTab('dieta');" class="absolute top-2 right-2 text-blue-500 text-xs font-bold bg-blue-50 px-2 py-1 rounded"><i class="fa-solid fa-pen"></i></button>
+                            ${editBtn}
                             <div class="font-black text-slate-800 text-sm border-b border-slate-200 pb-1 mb-2">
                                 ${day} 
                             </div>
@@ -626,7 +776,6 @@
                 return;
             }
 
-            // Create entry
             const now = new Date();
             const timestamp = now.getTime();
             const dataString = now.toLocaleDateString('it-IT') + ' ' + now.toLocaleTimeString('it-IT', {hour: '2-digit', minute:'2-digit'});
@@ -638,7 +787,6 @@
                 valore: valore
             });
 
-            // Keep only last 50
             if(appState.glicemia.length > 50) appState.glicemia.pop();
 
             document.getElementById('glicemia-valore').value = '';
@@ -654,23 +802,21 @@
 
         function getColorForGlycemia(valore, momento) {
             let limitRed;
-            // Seleziona il limite superiore in base al momento
             if (momento.includes("Digiuno") || momento.includes("Pre-")) {
                 limitRed = 100;
-            } else { // Post-prandiale
+            } else {
                 limitRed = 140;
             }
 
-            // Meno di 100/140 è Verde, altrimenti Rosso. Niente zona gialla.
-            if (valore < limitRed) {
-                return "bg-green-500 text-white shadow-green-500/30";
-            }
+            // Solo Verde o Rosso (rimosso il giallo)
+            if (valore < limitRed) return "bg-green-500 text-white shadow-green-500/30";
             return "bg-red-500 text-white shadow-red-500/30";
         }
 
         function renderGlicemia() {
             const list = document.getElementById('glicemia-lista');
             list.innerHTML = '';
+            const isAdmin = appState.currentUser && appState.currentUser.role === 'admin';
 
             if (appState.glicemia.length === 0) {
                 list.innerHTML = '<div class="text-center text-slate-400 mt-10 text-sm italic">Nessuna misurazione registrata.</div>';
@@ -680,17 +826,22 @@
             appState.glicemia.forEach(g => {
                 const colorClass = getColorForGlycemia(g.valore, g.momento);
                 
+                let trashBtn = '';
+                if(isAdmin) {
+                    trashBtn = `<button onclick="deleteGlicemia(${g.id})" class="text-slate-300 hover:text-red-500 transition-colors ml-2"><i class="fa-solid fa-trash"></i></button>`;
+                }
+
                 list.innerHTML += `
                     <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 shadow-sm flex items-center justify-between">
                         <div>
                             <div class="text-[10px] text-slate-400 font-bold mb-1"><i class="fa-regular fa-clock"></i> ${g.data}</div>
                             <div class="text-sm font-black text-slate-800">${g.momento}</div>
                         </div>
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2">
                             <div class="${colorClass} px-3 py-1 rounded-lg font-black text-lg shadow-sm flex items-baseline gap-1">
                                 ${g.valore} <span class="text-[11px] font-bold opacity-90">mg/dL</span>
                             </div>
-                            <button onclick="deleteGlicemia(${g.id})" class="text-slate-300 hover:text-red-500 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                            ${trashBtn}
                         </div>
                     </div>`;
             });
@@ -702,10 +853,9 @@
         }
         
         function resetSettimana() {
-            showModal("Reset Settimana", "Vuoi azzerare tutta la dieta della settimana? (I dati glicemici non verranno toccati)", "warning", true);
+            showModal("Reset Settimana", "Vuoi azzerare tutta la dieta della settimana? (I dati glicemici e i visitatori non verranno toccati)", "warning", true);
         }
 
-        // Funzione Modale Universale
         function showModal(title, msg, type = "error", isConfirm = false) {
             document.getElementById('modal-title').innerText = title;
             document.getElementById('modal-message').innerText = msg;
