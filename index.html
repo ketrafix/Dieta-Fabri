@@ -138,7 +138,7 @@
         <div id="section-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <!-- Colonna Sinistra: COMPILAZIONE -->
-            <div class="lg:col-span-2 space-y-6">
+            <div class="lg:col-span-2 space-y-6" id="colonna-form">
                 <div class="glass-panel rounded-2xl p-6 sm:p-8" id="dieta-form-container">
                     
                     <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-700">
@@ -268,7 +268,7 @@
             </div>
 
             <!-- Colonna Destra: DASHBOARD -->
-            <div class="space-y-6">
+            <div class="space-y-6" id="colonna-dashboard">
                 <!-- Budget Settimanale -->
                 <div class="glass-panel rounded-2xl p-6">
                     <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2 flex justify-between items-center">
@@ -281,7 +281,7 @@
                 </div>
 
                 <!-- Diario Compatto -->
-                <div class="glass-panel rounded-2xl p-6 flex flex-col h-[400px]">
+                <div class="glass-panel rounded-2xl p-6 flex flex-col h-[400px]" id="diario-container">
                     <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-book-medical text-emerald-500 mr-2"></i>Diario Menù</h3>
                     <div id="diario-dieta-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
                         <!-- Card inserite via JS -->
@@ -319,7 +319,7 @@
             </div>
 
             <!-- Diario Glicemia -->
-            <div class="glass-panel rounded-2xl p-6 flex flex-col h-[600px]">
+            <div class="glass-panel rounded-2xl p-6 flex flex-col h-[600px]" id="colonna-glicemia-diario">
                 <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-clipboard-list text-emerald-500 mr-2"></i>Storico Glicemico</h3>
                 <div id="diario-glicemia-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
                     <!-- Valori inseriti via JS -->
@@ -408,10 +408,24 @@
             adminOnlyElements.forEach(el => el.style.display = userRole === 'admin' ? 'block' : 'none');
             
             if(userRole === 'visitor') {
-                document.getElementById('dieta-form-container').classList.add('read-only-overlay');
-                document.getElementById('glicemia-form-container').classList.add('read-only-overlay');
+                // Nascondi i form di compilazione per mostrare solo i diari a tutto schermo
+                document.getElementById('colonna-form').classList.add('hidden');
+                document.getElementById('glicemia-form-container').classList.add('hidden');
+                
+                // Allarga il layout della dieta
+                const colDash = document.getElementById('colonna-dashboard');
+                colDash.classList.remove('lg:col-span-1');
+                colDash.classList.add('lg:col-span-3');
+                
+                // Allarga il layout della glicemia
+                const colDashGli = document.getElementById('colonna-glicemia-diario');
+                colDashGli.classList.remove('h-[600px]');
+                colDashGli.classList.add('lg:col-span-2');
+                
+                // Trasforma la lista dieta in una bellissima griglia
+                document.getElementById('diario-container').classList.remove('h-[400px]');
+                document.getElementById('diario-dieta-lista').className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4";
             }
-
             // Cambia schermata
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
@@ -610,11 +624,26 @@
             
             days.forEach(d => {
                 dCont.innerHTML += `
-                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 text-sm">
-                    <div class="font-bold text-emerald-400 mb-2">${d.giorno}</div>
-                    <div class="text-slate-300 truncate mb-1"><i class="fa-solid fa-mug-hot text-slate-500 w-4"></i> ${d.colazione}</div>
-                    <div class="text-slate-300 truncate mb-1"><i class="fa-solid fa-sun text-slate-500 w-4"></i> ${d.pranzo}</div>
-                    <div class="text-slate-300 truncate"><i class="fa-solid fa-moon text-slate-500 w-4"></i> ${d.cena}</div>
+                <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-lg relative overflow-hidden group hover:border-emerald-500 transition-colors">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 group-hover:w-2 transition-all"></div>
+                    <div class="font-bold text-emerald-400 mb-4 text-lg border-b border-slate-700 pb-2 flex justify-between items-center">
+                        <span>${d.giorno}</span>
+                        <i class="fa-solid fa-check-circle text-emerald-500/30"></i>
+                    </div>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1"><i class="fa-solid fa-mug-hot mr-1"></i> Colazione</div>
+                            <div class="text-slate-200 text-sm pl-4 border-l-2 border-slate-600/50 leading-snug">${d.colazione}</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1"><i class="fa-solid fa-sun mr-1"></i> Pranzo</div>
+                            <div class="text-slate-200 text-sm pl-4 border-l-2 border-slate-600/50 leading-snug">${d.pranzo}</div>
+                        </div>
+                        <div>
+                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1"><i class="fa-solid fa-moon mr-1"></i> Cena</div>
+                            <div class="text-slate-200 text-sm pl-4 border-l-2 border-slate-600/50 leading-snug">${d.cena}</div>
+                        </div>
+                    </div>
                 </div>`;
             });
         }
