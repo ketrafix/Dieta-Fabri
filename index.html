@@ -15,14 +15,16 @@
     <!-- Manifesto Statico Hardcoded (FORZA L'APP NATIVA SENZA JS) -->
     <link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22SmartFDiet%22%2C%22short_name%22%3A%22SmartFDiet%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230f172a%22%2C%22theme_color%22%3A%22%230f172a%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyMCIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNTYgMTQwIEMyMTAgMTgwIDE3MCAyNTAgMTcwIDMyMCBDMTcwIDM3MCAyMTAgNDAwIDI1NiA0MDAgQzMwMiA0MDAgMzQyIDM3MCAzNDIgMzIwIEMzNDIgMjUwIDMwMiAxODAgMjU2IDE0MCBaIiBmaWxsPSIjMTZhMzRhIi8%2BPHBhdGggZD0iTTI1NiAxNDAgQzI3MCAyNDAgMzAwIDMxMCAzNDAgMzIwIiBzdHJva2U9IiNmMGZkZjQiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg%3D%3D%22%2C%22sizes%22%3A%22192x192%20512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
 
+    <!-- Librerie Esterne -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass-panel { background: #1e293b; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .input-dark { background-color: #0f172a; border: 1px solid #334155; color: #f8fafc; }
+        .input-dark { background-color: #0f172a; border: 1px solid #334155; color: #f8fafc; transition: all 0.2s; }
         .input-dark:focus { border-color: #10b981; outline: none; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
         
         select.input-dark { 
@@ -40,26 +42,35 @@
         .loader { border: 3px solid #1e293b; border-radius: 50%; border-top: 3px solid #10b981; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Stili per la modalità sola lettura (Visitor) */
-        .read-only-overlay { position: relative; }
-        .read-only-overlay::after {
-            content: "MODALITÀ SOLA LETTURA";
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(2px);
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold; font-size: 1.5rem; color: #10b981; letter-spacing: 2px;
-            border-radius: 1rem; z-index: 10;
+        /* Animazioni fluide Punti 5 Roadmap */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
+
+        /* Toast Notifications (Estetica Premium) */
+        #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 100; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
+        .custom-toast { 
+            transform: translateX(120%); opacity: 0; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            pointer-events: auto;
+        }
+        .custom-toast.show { transform: translateX(0); opacity: 1; }
 
         /* Nascondi app fino al login */
         #app-container { display: none; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 sm:p-6">
+<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 overflow-x-hidden">
 
+    <!-- Contenitore Notifiche Toast -->
+    <div id="toast-container"></div>
+
+    <!-- Login Screen -->
     <div id="login-screen" class="w-full max-w-md mt-10">
         <div class="glass-panel rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
-            <!-- Icona Foglia Vettoriale HD (Centrata Perfettamente) -->
+            <!-- Icona Foglia Vettoriale HD -->
             <div class="mx-auto w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-16 h-16">
                     <path d="M256 140 C210 180 170 250 170 320 C170 370 210 400 256 400 C302 400 342 370 342 320 C342 250 302 180 256 140 Z" fill="#16a34a"/>
@@ -71,7 +82,7 @@
 
             <div id="login-admin-form">
                 <input type="password" id="pin-input" placeholder="C O D I C E   P I N" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-emerald-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="eseguiLogin('admin')" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
+                <button onclick="eseguiLogin('admin')" class="w-full bg-emerald-600 hover:bg-emerald-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
                     <i class="fa-solid fa-unlock-keyhole"></i> Accedi
                 </button>
                 <div class="mt-6 pt-6 border-t border-slate-700">
@@ -82,10 +93,10 @@
                 </div>
             </div>
 
-            <div id="login-visitor-form" class="hidden">
+            <div id="login-visitor-form" class="hidden animate-fade-in-up">
                 <input type="text" id="visitor-name" placeholder="Il tuo Nome (es. Dario)" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-3 font-medium focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
                 <input type="password" id="visitor-pin" placeholder="Crea un PIN" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="eseguiLogin('visitor')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
+                <button onclick="eseguiLogin('visitor')" class="w-full bg-blue-600 hover:bg-blue-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
                     <i class="fa-solid fa-eye"></i> Entra in Lettura
                 </button>
                 <div class="mt-6 pt-6 border-t border-slate-700">
@@ -95,7 +106,7 @@
                 </div>
             </div>
             
-            <!-- Indicatore Connessione Login (Migliorato e Pulito) -->
+            <!-- Indicatore Connessione Login -->
             <div id="login-cloud-status" class="mt-6 flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
                 <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
                 Connessione al Cloud in corso...
@@ -103,7 +114,8 @@
         </div>
     </div>
 
-    <div id="app-container" class="w-full max-w-7xl flex-col gap-6">
+    <!-- App Principale -->
+    <div id="app-container" class="w-full max-w-7xl flex-col gap-6 animate-fade-in-up">
         
         <!-- Header -->
         <header class="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 mb-2">
@@ -118,7 +130,7 @@
                     <h1 class="text-xl font-bold text-white tracking-tight">SmartFDiet</h1>
                     <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs font-medium">
                         <span id="user-badge" class="text-emerald-400"><i class="fa-solid fa-shield-halved mr-1"></i>Admin</span>
-                        <span id="cloud-badge" class="text-slate-400 flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-green-500"></div> Sincronizzato</span>
+                        <span id="cloud-badge" class="text-slate-400 flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div> Sincronizzato</span>
                     </div>
                 </div>
             </div>
@@ -135,6 +147,7 @@
             <button onclick="switchTab('glicemia')" id="tab-glicemia" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all"><i class="fa-solid fa-droplet mr-2"></i>Glicemia</button>
         </div>
 
+        <!-- SEZIONE DIETA -->
         <div id="section-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             
             <!-- Colonna Sinistra: COMPILAZIONE -->
@@ -153,7 +166,7 @@
 
                     <div id="day-form-fields" class="space-y-6">
                         <!-- Colazione -->
-                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50">
+                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
                             <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-mug-hot mr-2"></i>Colazione</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -186,7 +199,7 @@
                         </div>
 
                         <!-- Pranzo -->
-                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50">
+                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
                             <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-sun mr-2"></i>Pranzo <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure e 15g Olio)</span></h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
@@ -221,7 +234,7 @@
                         </div>
 
                         <!-- Cena -->
-                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50">
+                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
                             <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-moon mr-2"></i>Cena <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure e 15g Olio)</span></h3>
                             
                             <label class="flex items-center gap-2 text-sm text-slate-300 font-medium cursor-pointer mb-4 bg-slate-900 p-3 rounded-lg border border-slate-700">
@@ -229,7 +242,7 @@
                                 <i class="fa-solid fa-pizza-slice text-amber-500"></i> Usa Bonus Pizza (Margherita/Verdure)
                             </label>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="cena-standard">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 transition-opacity duration-300" id="cena-standard">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 mb-1">Carboidrati</label>
                                     <select id="cena-carb" class="w-full input-dark rounded-lg px-3 py-2 text-sm">
@@ -248,19 +261,19 @@
                             </div>
                         </div>
 
-                        <button id="btn-salva-dieta" onclick="salvaGiorno()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg admin-only">
+                        <button id="btn-salva-dieta" onclick="salvaGiorno()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-all hover:shadow-lg hover:-translate-y-1 admin-only">
                             <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Registra e Invia al Cloud
                         </button>
                     </div>
                     
                     <!-- Box mostrato quando il giorno è bloccato/salvato -->
-                    <div id="day-locked-box" class="hidden text-center py-10">
-                        <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30 text-emerald-500">
+                    <div id="day-locked-box" class="hidden text-center py-10 animate-fade-in-up">
+                        <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
                             <i class="fa-solid fa-check-double text-3xl"></i>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2">Giornata Registrata</h3>
                         <p class="text-slate-400 text-sm mb-6 max-w-sm mx-auto">I dati di questa giornata sono salvati nel Cloud. Le frequenze degli alimenti sono state scalate dal budget.</p>
-                        <button onclick="sbloccaGiorno()" class="bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 px-6 rounded-xl transition-colors admin-only">
+                        <button onclick="sbloccaGiorno()" class="bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 px-6 rounded-xl transition-all hover:-translate-y-1 admin-only">
                             <i class="fa-solid fa-unlock-keyhole mr-2"></i> Sblocca e Modifica
                         </button>
                     </div>
@@ -273,7 +286,7 @@
                 <div class="glass-panel rounded-2xl p-6">
                     <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2 flex justify-between items-center">
                         <span><i class="fa-solid fa-chart-pie text-emerald-500 mr-2"></i>Frequenze</span>
-                        <button onclick="azzeraSettimana()" class="text-xs text-red-400 hover:text-red-300 admin-only" title="Svuota l'intera settimana"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="azzeraSettimana()" class="text-xs text-red-400 hover:text-red-300 transition-colors admin-only" title="Svuota l'intera settimana"><i class="fa-solid fa-trash"></i></button>
                     </h3>
                     <div id="budget-container" class="space-y-4">
                         <!-- Barre iniettate via JS -->
@@ -290,9 +303,10 @@
             </div>
         </div>
 
-        <div id="section-glicemia" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Form Glicemia -->
-            <div class="glass-panel rounded-2xl p-6 sm:p-8 self-start" id="glicemia-form-container">
+        <!-- SEZIONE GLICEMIA -->
+        <div id="section-glicemia" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Form Glicemia (Solo Admin) -->
+            <div class="glass-panel rounded-2xl p-6 sm:p-8 self-start lg:col-span-1 admin-only" id="glicemia-form-container">
                 <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4"><i class="fa-solid fa-syringe text-emerald-500 mr-2"></i>Registra Valore</h2>
                 
                 <div class="space-y-5">
@@ -312,17 +326,29 @@
                         <label class="block text-sm font-medium text-slate-400 mb-1">Note (Opzionale)</label>
                         <input type="text" id="gli-note" placeholder="Es. Sensazione di fame" class="w-full input-dark rounded-xl py-3 px-4">
                     </div>
-                    <button onclick="salvaGlicemia()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg admin-only mt-2">
+                    <button onclick="salvaGlicemia()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:-translate-y-1 mt-2">
                         <i class="fa-solid fa-plus mr-2"></i> Aggiungi al Diario
                     </button>
                 </div>
             </div>
 
-            <!-- Diario Glicemia -->
-            <div class="glass-panel rounded-2xl p-6 flex flex-col h-[600px]" id="colonna-glicemia-diario">
-                <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-clipboard-list text-emerald-500 mr-2"></i>Storico Glicemico</h3>
-                <div id="diario-glicemia-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
-                    <!-- Valori inseriti via JS -->
+            <!-- Dashboard Glicemia (Grafico + Lista) -->
+            <div class="lg:col-span-2 space-y-6" id="colonna-glicemia-diario">
+                
+                <!-- GRAFICO INTERATTIVO CHART.JS -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-chart-line text-emerald-500 mr-2"></i>Andamento Clinico</h3>
+                    <div class="w-full h-64 relative">
+                        <canvas id="glicemiaChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- LISTA STORICO -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col max-h-[400px]">
+                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-clipboard-list text-emerald-500 mr-2"></i>Storico Valori</h3>
+                    <div id="diario-glicemia-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
+                        <!-- Valori inseriti via JS -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -333,7 +359,7 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // LE TUE CHIAVI ESATTE DAL PROGETTO FIREBASE
+        // CHIAVI FIREBASE
         const MY_PRIVATE_FIREBASE_CONFIG = {
             apiKey: "AIzaSyAzFfHPhgo_cbrRTLGl7Ey99GPbC49EoUM",
             authDomain: "dieta-smart-chef.firebaseapp.com",
@@ -344,9 +370,10 @@
             measurementId: "G-KY7DE77ZFZ"
         };
 
-        // STATO GLOBALE APP
         let appConfig = { db: null, userId: "default_user_1", role: null };
         let state = { dieta: {}, glicemia: {} };
+        let chartInstance = null; // Istanza globale per Chart.js
+
         const BUDGET_LIMITS = {
             bianca: { name: "Carne Bianca", max: 3, icon: "fa-drumstick-bite", color: "bg-orange-500" },
             rossa: { name: "Carne Rossa", max: 1, icon: "fa-steak", color: "bg-red-500" },
@@ -359,6 +386,29 @@
             speciale: { name: "Ravioli/Gnocchi", max: 1, icon: "fa-bowl-food", color: "bg-purple-500" }
         };
 
+        // --- SISTEMA TOAST NOTIFICATIONS (Miglioria 5) ---
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            let bgColor = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-red-600' : 'bg-amber-500');
+            let icon = type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info');
+
+            toast.className = `custom-toast flex items-center gap-3 ${bgColor} text-white px-6 py-4 rounded-xl shadow-2xl font-medium text-sm border border-white/10`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-xl"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            // Trigger animazione entrata
+            setTimeout(() => toast.classList.add('show'), 10);
+            
+            // Rimozione automatica
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400); // aspetta fine transizione CSS prima di rimuovere il nodo
+            }, 3000);
+        };
+
         async function initCloud() {
             const statusEl = document.getElementById('login-cloud-status');
             try {
@@ -366,14 +416,13 @@
                 appConfig.db = getFirestore(app);
                 const auth = getAuth(app);
                 
-                // Connessione in test mode anche se l'auth fallisce
-                try { await signInAnonymously(auth); } catch(e) { console.log("Bypass auth anonima, uso test mode DB"); }
+                try { await signInAnonymously(auth); } catch(e) { console.log("Bypass auth anonima, procedo in test mode Firestore."); }
 
-                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-emerald-500"></div> Cloud Connesso e Pronto';
+                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div> Connesso al Cloud';
                 statusEl.classList.replace('text-slate-500', 'text-emerald-500');
             } catch (error) {
                 console.error("Errore Init:", error);
-                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-red-500"></div> Modalità Offline (Nessun Cloud)';
+                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-red-500"></div> Modalità Offline';
                 statusEl.classList.replace('text-slate-500', 'text-red-500');
             }
         }
@@ -391,46 +440,41 @@
 
             if(type === 'admin') {
                 const pin = document.getElementById('pin-input').value;
-                if(pin !== '713') { alert("PIN Errato"); return; }
+                if(pin !== '713') { showToast("PIN Amministratore Errato!", "error"); return; }
                 userRole = 'admin'; userName = 'Chef Fabrizio';
+                showToast("Bentornato Chef!", "success");
             } else {
                 const name = document.getElementById('visitor-name').value;
                 const pin = document.getElementById('visitor-pin').value;
-                if(!name || !pin) { alert("Inserisci Nome e PIN"); return; }
+                if(!name || !pin) { showToast("Inserisci Nome e PIN per entrare.", "error"); return; }
                 userRole = 'visitor'; userName = `Visitatore: ${name}`;
+                showToast(`Benvenuto, ${name}!`, "success");
             }
 
             appConfig.role = userRole;
             document.getElementById('user-badge').innerHTML = userRole === 'admin' ? '<i class="fa-solid fa-shield-halved mr-1"></i> Admin' : `<i class="fa-solid fa-eye mr-1"></i> ${userName}`;
             
-            // Applica restrizioni UI se visitor
             const adminOnlyElements = document.querySelectorAll('.admin-only');
             adminOnlyElements.forEach(el => el.style.display = userRole === 'admin' ? 'block' : 'none');
             
             if(userRole === 'visitor') {
-                // Nascondi i form di compilazione per mostrare solo i diari a tutto schermo
                 document.getElementById('colonna-form').classList.add('hidden');
-                document.getElementById('glicemia-form-container').classList.add('hidden');
                 
-                // Allarga il layout della dieta
                 const colDash = document.getElementById('colonna-dashboard');
                 colDash.classList.remove('lg:col-span-1');
                 colDash.classList.add('lg:col-span-3');
                 
-                // Allarga il layout della glicemia
                 const colDashGli = document.getElementById('colonna-glicemia-diario');
-                colDashGli.classList.remove('h-[600px]');
-                colDashGli.classList.add('lg:col-span-2');
+                colDashGli.classList.remove('lg:col-span-2');
+                colDashGli.classList.add('lg:col-span-3');
                 
-                // Trasforma la lista dieta in una bellissima griglia
                 document.getElementById('diario-container').classList.remove('h-[400px]');
                 document.getElementById('diario-dieta-lista').className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4";
             }
-            // Cambia schermata
+            
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app-container').style.display = 'flex';
             
-            // Avvia la sincronizzazione SOLO per leggere, mai sovrascrivere.
             startSync();
         };
 
@@ -458,8 +502,12 @@
         window.switchTab = function(tab) {
             document.getElementById('section-dieta').classList.toggle('hidden', tab !== 'dieta');
             document.getElementById('section-glicemia').classList.toggle('hidden', tab !== 'glicemia');
-            document.getElementById('tab-dieta').className = tab === 'dieta' ? 'flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all' : 'flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all';
-            document.getElementById('tab-glicemia').className = tab === 'glicemia' ? 'flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all' : 'flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all';
+            
+            const activeClass = 'flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all';
+            const inactiveClass = 'flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50';
+            
+            document.getElementById('tab-dieta').className = tab === 'dieta' ? activeClass : inactiveClass;
+            document.getElementById('tab-glicemia').className = tab === 'glicemia' ? activeClass : inactiveClass;
         };
 
         window.togglePizza = function() {
@@ -510,6 +558,7 @@
                 delete state.dieta[day]; 
                 checkIfDayLocked();
                 renderDietaDashboard();
+                showToast(`Giorno ${day} sbloccato per la modifica`, "warning");
             }
         };
 
@@ -526,7 +575,7 @@
             const ceP = document.getElementById('cena-pro');
 
             if(!colL || !colS || !prC.value || !prP.value || (!isPizza && (!ceC.value || !ceP.value))) {
-                alert("Completa tutti i campi prima di salvare!"); return;
+                showToast("Compila tutte le portate prima di salvare!", "error"); return;
             }
 
             let newCosts = {};
@@ -539,7 +588,7 @@
             const currentTotals = calcTotals();
             for(let cat in newCosts) {
                 if((currentTotals[cat] || 0) + newCosts[cat] > BUDGET_LIMITS[cat].max) {
-                    alert(`Superato il limite settimanale per: ${BUDGET_LIMITS[cat].name}. Scegli un'altra opzione.`);
+                    showToast(`Budget esaurito per: ${BUDGET_LIMITS[cat].name}. Scegli un'altra proteina.`, "error");
                     return;
                 }
             }
@@ -557,12 +606,14 @@
             state.dieta[day] = dayData;
             checkIfDayLocked();
             renderDietaDashboard();
+            showToast(`Giorno ${day} registrato con successo!`, "success");
 
             if(appConfig.db) {
                 try { await setDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day), dayData); } 
                 catch (e) { console.error("Errore salvataggio:", e); }
             }
             
+            // Reset Campi e avanza giorno
             document.getElementById('col-liquido').value = ''; document.getElementById('col-solido').value = '';
             document.getElementById('pranzo-carb').value = ''; document.getElementById('pranzo-pro').value = '';
             document.getElementById('cena-pizza').checked = false; togglePizza();
@@ -583,6 +634,7 @@
             state.dieta = {};
             checkIfDayLocked();
             renderDietaDashboard();
+            showToast("Settimana e Budget azzerati.", "warning");
         };
 
         function calcTotals() {
@@ -608,11 +660,11 @@
                 bCont.innerHTML += `
                 <div>
                     <div class="flex justify-between text-xs mb-1">
-                        <span class="text-slate-400 font-medium"><i class="fa-solid ${lim.icon} w-5"></i> ${lim.name}</span>
+                        <span class="text-slate-400 font-medium"><i class="fa-solid ${lim.icon} w-5 text-center"></i> ${lim.name}</span>
                         <span class="font-bold ${isOver ? 'text-emerald-400' : 'text-slate-200'}">${val} / ${lim.max}</span>
                     </div>
-                    <div class="w-full bg-slate-800 rounded-full h-1.5">
-                        <div class="${lim.color} h-1.5 rounded-full transition-all" style="width: ${perc}%"></div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                        <div class="${lim.color} h-full rounded-full transition-all duration-500 ease-out" style="width: ${perc}%"></div>
                     </div>
                 </div>`;
             }
@@ -620,11 +672,11 @@
             const dCont = document.getElementById('diario-dieta-lista');
             dCont.innerHTML = '';
             const days = Object.values(state.dieta).sort((a,b) => b.timestamp - a.timestamp);
-            if(days.length === 0) { dCont.innerHTML = '<div class="text-slate-500 text-sm text-center mt-10">Nessun pasto registrato</div>'; return; }
+            if(days.length === 0) { dCont.innerHTML = '<div class="text-slate-500 text-sm text-center mt-10"><i class="fa-solid fa-calendar-xmark text-3xl mb-3 opacity-30 block"></i>Nessun pasto registrato</div>'; return; }
             
             days.forEach(d => {
                 dCont.innerHTML += `
-                <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-lg relative overflow-hidden group hover:border-emerald-500 transition-colors">
+                <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-lg relative overflow-hidden group hover:border-emerald-500 transition-colors animate-fade-in-up">
                     <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 group-hover:w-2 transition-all"></div>
                     <div class="font-bold text-emerald-400 mb-4 text-lg border-b border-slate-700 pb-2 flex justify-between items-center">
                         <span>${d.giorno}</span>
@@ -654,13 +706,14 @@
             const valore = parseInt(document.getElementById('gli-valore').value);
             const note = document.getElementById('gli-note').value;
             
-            if(!valore) return;
+            if(!valore) { showToast("Inserisci un valore numerico!", "error"); return; }
 
             const id = Date.now().toString();
             const data = { momento, valore, note, timestamp: Date.now() };
 
             state.glicemia[id] = data; 
             renderGlicemia();
+            showToast("Misurazione glicemica salvata", "success");
 
             if(appConfig.db) {
                 await setDoc(doc(appConfig.db, "users", appConfig.userId, "glicemia", id), data);
@@ -672,36 +725,134 @@
             if(appConfig.role !== 'admin') return;
             delete state.glicemia[id];
             renderGlicemia();
+            showToast("Misurazione eliminata", "warning");
             if(appConfig.db) await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "glicemia", id));
         };
+
+        // --- SISTEMA GRAFICO CHART.JS (Miglioria 1) ---
+        function renderGlicemiaChart(recsAsc) {
+            const ctx = document.getElementById('glicemiaChart');
+            if(!ctx) return;
+            
+            if (recsAsc.length === 0) {
+                // Svuota grafico se non ci sono dati
+                if(chartInstance) { chartInstance.destroy(); chartInstance = null; }
+                return;
+            }
+
+            const labels = recsAsc.map(r => {
+                const d = new Date(r.timestamp);
+                let mom = r.momento.includes('Digiuno') ? 'Dig.' : (r.momento.includes('Pranzo') ? 'Pran.' : 'Cen.');
+                return `${d.getDate()}/${d.getMonth()+1} ${mom}`;
+            });
+            
+            const data = recsAsc.map(r => r.valore);
+            
+            // Logica Colori Pallini: Verde se in target, Rosso se fuori
+            const pointColors = recsAsc.map(r => {
+                let targetMax = r.momento.includes("Digiuno") ? 100 : 140;
+                return r.valore <= targetMax ? '#10b981' : '#ef4444'; 
+            });
+
+            if(chartInstance) {
+                chartInstance.data.labels = labels;
+                chartInstance.data.datasets[0].data = data;
+                chartInstance.data.datasets[0].pointBackgroundColor = pointColors;
+                chartInstance.update();
+            } else {
+                Chart.defaults.color = '#94a3b8';
+                Chart.defaults.font.family = "'Inter', sans-serif";
+                
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Glicemia (mg/dL)',
+                            data: data,
+                            borderColor: '#3b82f6', // Linea Azzurra
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: pointColors,
+                            pointBorderColor: '#1e293b',
+                            pointBorderWidth: 2,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            fill: true,
+                            tension: 0.4 // Curvatura fluida
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#1e293b',
+                                titleColor: '#f8fafc',
+                                bodyColor: '#cbd5e1',
+                                borderColor: '#334155',
+                                borderWidth: 1,
+                                padding: 12,
+                                displayColors: false,
+                                callbacks: {
+                                    label: function(context) { return context.parsed.y + ' mg/dL'; }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                grid: { color: '#334155', borderDash: [5, 5] },
+                                min: 60,
+                                suggestedMax: 160
+                            },
+                            x: {
+                                grid: { display: false }
+                            }
+                        }
+                    }
+                });
+            }
+        }
 
         function renderGlicemia() {
             const list = document.getElementById('diario-glicemia-lista');
             list.innerHTML = '';
-            const recs = Object.entries(state.glicemia).sort((a,b) => b[1].timestamp - a[1].timestamp);
             
-            if(recs.length === 0) { list.innerHTML = '<div class="text-slate-500 text-sm text-center mt-10">Nessuna misurazione</div>'; return; }
+            // Array per la lista (Decrescente: ultimi in alto)
+            const recsDesc = Object.entries(state.glicemia).sort((a,b) => b[1].timestamp - a[1].timestamp);
+            
+            // Array per il grafico (Crescente: andamento temporale corretto da sx a dx)
+            const recsAsc = Object.values(state.glicemia).sort((a,b) => a.timestamp - b.timestamp);
+            
+            renderGlicemiaChart(recsAsc);
+            
+            if(recsDesc.length === 0) { 
+                list.innerHTML = '<div class="text-slate-500 text-sm text-center mt-10"><i class="fa-solid fa-droplet-slash text-3xl mb-3 opacity-30 block"></i>Nessuna misurazione registrata</div>'; 
+                return; 
+            }
 
-            recs.forEach(([id, r]) => {
+            recsDesc.forEach(([id, r]) => {
                 const dateObj = new Date(r.timestamp);
                 const timeStr = `${dateObj.getDate()}/${dateObj.getMonth()+1} - ${dateObj.getHours()}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
                 
                 let isDigiuno = r.momento.includes("Digiuno");
                 let targetMax = isDigiuno ? 100 : 140;
-                let colorClass = r.valore < targetMax ? "text-emerald-400" : "text-red-400";
+                let colorClass = r.valore <= targetMax ? "text-emerald-400" : "text-red-400";
                 
                 list.innerHTML += `
-                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center relative group">
-                    ${appConfig.role === 'admin' ? `<button onclick="eliminaGlicemia('${id}')" class="absolute top-2 right-2 text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash"></i></button>` : ''}
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center relative group animate-fade-in-up">
+                    ${appConfig.role === 'admin' ? `<button onclick="eliminaGlicemia('${id}')" class="absolute top-2 right-2 text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-trash"></i></button>` : ''}
                     <div>
-                        <div class="text-xs text-slate-500 font-bold mb-1">${timeStr} | ${r.momento}</div>
-                        ${r.note ? `<div class="text-xs text-slate-400 italic">${r.note}</div>` : ''}
+                        <div class="text-xs text-slate-500 font-bold mb-1"><i class="fa-regular fa-clock mr-1"></i> ${timeStr} | ${r.momento}</div>
+                        ${r.note ? `<div class="text-xs text-slate-400 italic">"${r.note}"</div>` : ''}
                     </div>
                     <div class="text-2xl font-bold ${colorClass}">${r.valore} <span class="text-xs text-slate-500 font-normal">mg/dL</span></div>
                 </div>`;
             });
         }
 
+        // Boot
         document.getElementById('cena-pro').innerHTML = document.getElementById('pranzo-pro').innerHTML;
         initCloud();
     </script>
