@@ -1,0 +1,16 @@
+{
+"name": "SmartFDiet",
+"short_name": "SmartFDiet",
+"start_url": "./index.html",
+"display": "standalone",
+"background_color": "#0f172a",
+"theme_color": "#0f172a",
+"icons": [
+{
+"src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjEyMCIgZmlsbD0iI2YwZmRmNCIvPjxwYXRoIGQ9Ik0yNTYgMTQwIEMyMTAgMTgwIDE3MCAyNTAgMTcwIDMyMCBDMTcwIDM3MCAyMTAgNDAwIDI1NiA0MDAgQzMwMiA0MDAgMzQyIDM3MCAzNDIgMzIwIEMzNDIgMjUwIDMwMiAxODAgMjU2IDE0MCBaIiBmaWxsPSIjMTZhMzRhIi8+PHBhdGggZD0iTTI1NiAxNDAgQzI3MCAyNDAgMzAwIDMxMCAzNDAgMzIwIiBzdHJva2U9IiNmMGZkZjQiIHN0cm9rZS13aWR0aD0iMTAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvc3ZnPg==",
+"sizes": "512x512",
+"type": "image/svg+xml",
+"purpose": "any maskable"
+}
+]
+}
