@@ -10,8 +10,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <!-- Font Google -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- PWA Settings -->
-    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0f172a">
     <style>
         body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
@@ -152,20 +150,17 @@
     <script>
         // Gestione Tabulazioni
         function switchTab(tabId) {
-            // Nascondi tutto
             document.getElementById('tab-dieta').classList.add('hidden');
             document.getElementById('tab-glicemia').classList.add('hidden');
             document.getElementById('tab-ai').classList.add('hidden');
             document.getElementById('tab-ai').classList.remove('block');
             
-            // Resetta bottoni
             const btns = ['btn-dieta', 'btn-glicemia', 'btn-ai'];
             btns.forEach(id => {
                 document.getElementById(id).classList.remove('active');
                 document.getElementById(id).classList.add('inactive');
             });
 
-            // Attiva Tab selezionato
             document.getElementById('tab-' + tabId).classList.remove('hidden');
             if(tabId === 'ai') document.getElementById('tab-ai').classList.add('block');
             document.getElementById('btn-' + tabId).classList.remove('inactive');
@@ -176,8 +171,9 @@
         // IL CERVELLO ARTIFICIALE (GEMINI AI)
         // ==========================================
         
-        // LA TUA CHIAVE ESATTA E IL MOTORE CORRETTO
-        const apiKey = "AQ.Ab8RN6I058eQQTnIQcvm9RYijNLA7JJaC9-VJIrZoNnMSiGk0w"; 
+        // LA TUA NUOVA CHIAVE PRESA DALLO SCREENSHOT (AQ...)
+        const apiKey = "AQ.Ab8RN6I-AdztFQAE20AuPjZglyh-i3m5TDpjlRxbwiZpv2zDlQ"; 
+        
         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
         // Funzione base che contatta i server di Google
@@ -185,7 +181,7 @@
             const outputEl = document.getElementById(outputId);
             outputEl.classList.remove('hidden');
             
-            // Animazione di caricamento bellissima
+            // Animazione di caricamento
             outputEl.innerHTML = `
                 <div class="flex flex-col items-center justify-center py-6">
                     <div class="loader mb-4"></div>
@@ -194,13 +190,11 @@
             `;
 
             try {
-                // Prepara il pacchetto dati per l'intelligenza artificiale
                 const payload = {
                     contents: [{ parts: [{ text: promptTesto }] }],
                     systemInstruction: { parts: [{ text: sysInstruction }] }
                 };
 
-                // Invia la richiesta
                 const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -210,27 +204,28 @@
                 const data = await response.json();
                 
                 // Se Google risponde correttamente
-                if (data.candidates && data.candidates.length > 0) {
+                if (response.ok && data.candidates && data.candidates.length > 0) {
                     let text = data.candidates[0].content.parts[0].text;
                     
-                    // Formatta il testo in HTML (mette in grassetto e va a capo)
+                    // Formatta il testo in HTML
                     text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-emerald-400 font-bold">$1</strong>');
                     text = text.replace(/\n/g, '<br>');
                     
-                    // Mostra il risultato a schermo
-                    outputEl.innerHTML = `<div class="animate-fade-in">${text}</div>`;
+                    outputEl.innerHTML = `<div class="animate-fade-in text-slate-200">${text}</div>`;
                 } else {
-                    // Se la chiave API è sbagliata o non autorizzata
+                    // RIVELATORE DI BUG POTENZIATO
+                    console.error("Errore di Google:", data);
+                    let veroErrore = data.error ? data.error.message : "Errore sconosciuto";
+                    
                     outputEl.innerHTML = `
-                        <div class="text-red-400 text-center py-4">
-                            <i class="fa-solid fa-triangle-exclamation text-3xl mb-2 block"></i>
-                            <strong>Errore di Generazione:</strong><br>
-                            La chiave API non sembra essere valida o non ha i permessi attivi.<br>
-                            Assicurati di aver generato una chiave funzionante da Google AI Studio (di solito iniziano con 'AIza...').
+                        <div class="text-red-400 bg-red-900/20 p-4 rounded-xl border border-red-500/30">
+                            <i class="fa-solid fa-triangle-exclamation mb-2 text-2xl"></i><br>
+                            <strong>Google ha bloccato la richiesta! Motivo esatto:</strong><br>
+                            <span class="italic text-slate-300 mt-2 block">${veroErrore}</span><br>
+                            <span class="text-xs text-slate-500">Se vedi questo errore, mandami lo screenshot e capiamo cosa blocca Google.</span>
                         </div>`;
                 }
             } catch (err) {
-                // Se manca la connessione internet
                 outputEl.innerHTML = `
                     <div class="text-red-400 text-center py-4">
                         <i class="fa-solid fa-wifi text-3xl mb-2 block"></i>
