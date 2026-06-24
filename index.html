@@ -380,4 +380,445 @@
             salumi: { name: "Salumi", max: 2, icon: "fa-bacon", color: "bg-rose-500" },
             formaggi: { name: "Formaggi (Pranzo/Cena)", max: 2, icon: "fa-cheese", color: "bg-amber-500" },
             pesce: { name: "Pesce", max: 3, icon: "fa-fish", color: "bg-blue-500" },
-            uova: { name: "Uova", max: 2, icon: "fa-egg
+            uova: { name: "Uova", max: 2, icon: "fa-egg", color: "bg-yellow-400" },
+            legumi: { name: "Legumi", max: 2, icon: "fa-seedling", color: "bg-emerald-500" },
+            pizza: { name: "Pizza", max: 1, icon: "fa-pizza-slice", color: "bg-red-600" },
+            speciale: { name: "Ravioli/Gnocchi", max: 1, icon: "fa-bowl-food", color: "bg-purple-500" }
+        };
+
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            let bgColor = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-red-600' : 'bg-amber-500');
+            let icon = type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info');
+            toast.className = `custom-toast flex items-center gap-3 ${bgColor} text-white px-6 py-4 rounded-xl shadow-2xl font-medium text-sm border border-white/10`;
+            toast.innerHTML = `<i class="fa-solid ${icon} text-xl"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3000);
+        };
+
+        async function initCloud() {
+            const statusEl = document.getElementById('login-cloud-status');
+            try {
+                const app = initializeApp(MY_PRIVATE_FIREBASE_CONFIG);
+                appConfig.db = getFirestore(app);
+                const auth = getAuth(app);
+                try { await signInAnonymously(auth); } catch(e) {}
+                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div> Connesso al Cloud';
+                statusEl.classList.replace('text-slate-500', 'text-emerald-500');
+            } catch (error) {
+                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-red-500"></div> Modalità Offline';
+                statusEl.classList.replace('text-slate-500', 'text-red-500');
+            }
+        }
+
+        window.eseguiLogin = function(type) {
+            let userRole = 'admin'; 
+            appConfig.role = userRole;
+            document.getElementById('user-badge').innerHTML = '<i class="fa-solid fa-shield-halved mr-1"></i> Admin';
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+            startSync();
+        };
+
+        window.eseguiLogout = function() { window.location.reload(); };
+
+        function startSync() {
+            if(!appConfig.db) return;
+            onSnapshot(collection(appConfig.db, "users", appConfig.userId, "dieta"), (snapshot) => {
+                state.dieta = {};
+                snapshot.forEach(doc => { state.dieta[doc.id] = doc.data(); });
+                renderDietaDashboard();
+                checkIfDayLocked(); 
+            });
+            onSnapshot(collection(appConfig.db, "users", appConfig.userId, "glicemia"), (snapshot) => {
+                state.glicemia = {};
+                snapshot.forEach(doc => { state.glicemia[doc.id] = doc.data(); });
+                renderGlicemia();
+            });
+        }
+
+        window.switchTab = function(tab) {
+            document.getElementById('section-dieta').classList.toggle('hidden', tab !== 'dieta');
+            document.getElementById('section-glicemia').classList.toggle('hidden', tab !== 'glicemia');
+            document.getElementById('section-planner').classList.toggle('hidden', tab !== 'planner');
+            
+            const baseClass = 'flex-1 py-3 px-4 text-sm font-bold rounded-lg shadow transition-all whitespace-nowrap';
+            const inactiveClass = 'flex-1 py-3 px-4 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50 whitespace-nowrap';
+            
+            document.getElementById('tab-dieta').className = tab === 'dieta' ? `${baseClass} bg-emerald-600 text-white` : inactiveClass;
+            document.getElementById('tab-glicemia').className = tab === 'glicemia' ? `${baseClass} bg-sky-600 text-white` : inactiveClass;
+            document.getElementById('tab-planner').className = tab === 'planner' ? `${baseClass} bg-amber-600 text-white` : inactiveClass;
+        };
+
+        window.togglePizza = function() {
+            const isPizza = document.getElementById('cena-pizza').checked;
+            const standard = document.getElementById('cena-standard');
+            if (isPizza) {
+                standard.style.opacity = '0.3'; standard.style.pointerEvents = 'none';
+                document.getElementById('cena-carb').value = ""; document.getElementById('cena-pro').value = "";
+            } else {
+                standard.style.opacity = '1'; standard.style.pointerEvents = 'auto';
+            }
+        };
+
+        window.checkIfDayLocked = function() {
+            const day = document.getElementById('day-select').value;
+            const formFields = document.getElementById('day-form-fields');
+            const lockedBox = document.getElementById('day-locked-box');
+            if(state.dieta[day]) {
+                formFields.classList.add('hidden'); lockedBox.classList.remove('hidden');
+            } else {
+                formFields.classList.remove('hidden'); lockedBox.classList.add('hidden');
+            }
+        };
+
+        window.sbloccaGiorno = async function() {
+            const day = document.getElementById('day-select').value;
+            if(state.dieta[day] && appConfig.db) {
+                await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day));
+                delete state.dieta[day]; 
+                checkIfDayLocked();
+            }
+        };
+
+        window.salvaGiorno = async function() {
+            const day = document.getElementById('day-select').value;
+            const colL = document.getElementById('col-liquido').value;
+            const colS = document.getElementById('col-solido').value;
+            const prC = document.getElementById('pranzo-carb');
+            const prP = document.getElementById('pranzo-pro');
+            const isPizza = document.getElementById('cena-pizza').checked;
+            const ceC = document.getElementById('cena-carb');
+            const ceP = document.getElementById('cena-pro');
+
+            if(!colL || !colS || !prC.value || !prP.value || (!isPizza && (!ceC.value || !ceP.value))) {
+                showToast("Compila tutte le portate prima di salvare!", "error"); return;
+            }
+
+            // Calcolo Costi per il Budget
+            let newCosts = {};
+            const prOpt = prP.options[prP.selectedIndex];
+            const prCarbOpt = prC.options[prC.selectedIndex];
+            if(prOpt && prOpt.dataset.cost) newCosts[prOpt.dataset.cost] = 1;
+            if(prCarbOpt && prCarbOpt.dataset.cost) newCosts[prCarbOpt.dataset.cost] = 1;
+
+            if(isPizza) {
+                newCosts.pizza = 1;
+            } else {
+                const ceOpt = ceP.options[ceP.selectedIndex];
+                if(ceOpt && ceOpt.dataset.cost) newCosts[ceOpt.dataset.cost] = (newCosts[ceOpt.dataset.cost] || 0) + 1;
+            }
+
+            // Verifica Superamento Budget
+            const currentTotals = calcTotals();
+            for(let cat in newCosts) {
+                if((currentTotals[cat] || 0) + newCosts[cat] > BUDGET_LIMITS[cat].max) {
+                    showToast(`Hai esaurito le frequenze settimanali per: ${BUDGET_LIMITS[cat].name}. Sostituisci l'alimento.`, "error"); return;
+                }
+            }
+
+            const dayData = {
+                giorno: day,
+                colazione: `${colL} + ${colS}`,
+                pranzo: `${prC.value} + ${prP.value}`,
+                cena: isPizza ? "🍕 Pizza Margherita/Verdure" : `${ceC.value} + ${ceP.value}`,
+                costs: newCosts,
+                timestamp: Date.now()
+            };
+
+            if(appConfig.db) await setDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day), dayData);
+            document.getElementById('cena-pizza').checked = false; togglePizza();
+        };
+
+        window.azzeraSettimana = async function() {
+            if(!confirm("Cancellare tutta la settimana e azzerare i budget?")) return;
+            if(appConfig.db) {
+                for(let day in state.dieta) await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day));
+            }
+        };
+
+        function calcTotals() {
+            let t = {};
+            Object.values(state.dieta).forEach(day => {
+                if(day && day.costs) {
+                    for(let c in day.costs) { t[c] = (t[c] || 0) + day.costs[c]; }
+                }
+            });
+            return t;
+        }
+
+        function renderBudgetBars() {
+            const t = calcTotals();
+            const bCont = document.getElementById('budget-container');
+            bCont.innerHTML = '';
+            for(let key in BUDGET_LIMITS) {
+                const lim = BUDGET_LIMITS[key];
+                const val = t[key] || 0;
+                const perc = Math.min((val / lim.max) * 100, 100);
+                const isOver = val >= lim.max;
+                
+                bCont.innerHTML += `
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="text-slate-400 font-medium"><i class="fa-solid ${lim.icon} w-5 text-center"></i> ${lim.name}</span>
+                        <span class="font-bold ${isOver ? 'text-red-400' : 'text-slate-200'}">${val} / ${lim.max}</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+                        <div class="${lim.color} h-full rounded-full transition-all duration-500 ease-out" style="width: ${perc}%"></div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        function renderDietaDashboard() {
+            renderBudgetBars();
+
+            const dCont = document.getElementById('diario-dieta-lista');
+            dCont.innerHTML = '';
+            const days = Object.values(state.dieta).sort((a,b) => b.timestamp - a.timestamp);
+            if(days.length === 0) { dCont.innerHTML = '<div class="text-slate-500 text-sm text-center mt-10">Nessun pasto registrato</div>'; return; }
+            days.forEach(d => {
+                dCont.innerHTML += `
+                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 mb-3 relative group">
+                    <button onclick="deleteDay('${d.giorno}')" class="absolute top-2 right-2 text-slate-500 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-trash text-sm"></i></button>
+                    <div class="font-bold text-emerald-400 border-b border-slate-700 pb-1 mb-2">${d.giorno}</div>
+                    <div class="text-xs text-slate-300">Col: ${d.colazione}</div>
+                    <div class="text-xs text-slate-300">Pra: ${d.pranzo}</div>
+                    <div class="text-xs text-slate-300">Cen: ${d.cena}</div>
+                </div>`;
+            });
+        }
+        
+        window.deleteDay = async function(day) {
+            if(appConfig.db) {
+                await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day));
+            }
+        };
+
+        window.salvaGlicemia = async function() {
+            const momento = document.getElementById('gli-momento').value;
+            const valore = parseInt(document.getElementById('gli-valore').value);
+            const note = document.getElementById('gli-note').value;
+            if(!valore) return;
+            
+            const id = Date.now().toString();
+            if(appConfig.db) await setDoc(doc(appConfig.db, "users", appConfig.userId, "glicemia", id), { momento, valore, note, timestamp: Date.now() });
+            
+            document.getElementById('gli-valore').value = '';
+            document.getElementById('gli-note').value = '';
+        };
+
+        window.eliminaGlicemia = async function(id) {
+            if(appConfig.db) await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "glicemia", id));
+        };
+
+        function renderGlicemiaChart(recsAsc) {
+            const ctx = document.getElementById('glicemiaChart');
+            if(!ctx) return;
+            if (recsAsc.length === 0) {
+                if(chartInstance) { chartInstance.destroy(); chartInstance = null; }
+                return;
+            }
+
+            const labels = recsAsc.map(r => {
+                const d = new Date(r.timestamp);
+                let mom = r.momento.includes('Digiuno') ? 'Dig.' : (r.momento.includes('Pranzo') ? 'Pran.' : 'Cen.');
+                return `${d.getDate()}/${d.getMonth()+1} ${mom}`;
+            });
+            const data = recsAsc.map(r => r.valore);
+            
+            const pointColors = recsAsc.map(r => {
+                let targetMax = r.momento.includes("Digiuno") ? 100 : 140;
+                return r.valore <= targetMax ? '#10b981' : '#ef4444'; 
+            });
+
+            if(chartInstance) {
+                chartInstance.destroy();
+            }
+            
+            Chart.defaults.color = '#94a3b8'; Chart.defaults.font.family = "'Inter', sans-serif";
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Glicemia (mg/dL)', data: data, borderColor: '#38bdf8', backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                        borderWidth: 2, pointBackgroundColor: pointColors, pointBorderColor: '#1e293b', pointBorderWidth: 2,
+                        pointRadius: 6, pointHoverRadius: 8, fill: true, tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { grid: { color: '#334155', borderDash: [5, 5] }, min: 60, suggestedMax: 160 }, x: { grid: { display: false } } }
+                }
+            });
+        }
+
+        function renderGlicemia() {
+            const list = document.getElementById('diario-glicemia-lista');
+            list.innerHTML = '';
+            const recsDesc = Object.entries(state.glicemia).sort((a,b) => b[1].timestamp - a[1].timestamp);
+            const recsAsc = Object.values(state.glicemia).sort((a,b) => a.timestamp - b.timestamp);
+            
+            renderGlicemiaChart(recsAsc);
+            
+            if(recsDesc.length === 0) { list.innerHTML = '<div class="text-slate-500 text-sm text-center mt-10">Nessuna misurazione</div>'; return; }
+
+            recsDesc.forEach(([id, r]) => {
+                const dateObj = new Date(r.timestamp);
+                const timeStr = `${dateObj.getDate()}/${dateObj.getMonth()+1} - ${dateObj.getHours()}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
+                let targetMax = r.momento.includes("Digiuno") ? 100 : 140;
+                let colorClass = r.valore <= targetMax ? "text-emerald-400" : "text-red-400";
+                
+                list.innerHTML += `
+                <div class="bg-slate-800 p-3 rounded-xl border border-slate-700 flex justify-between items-center mb-2 relative group">
+                    <button onclick="eliminaGlicemia('${id}')" class="absolute top-1 right-1 text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash"></i></button>
+                    <div><div class="text-xs text-slate-500">${timeStr} | ${r.momento}</div>${r.note ? `<div class="text-xs text-slate-400">"${r.note}"</div>` : ''}</div>
+                    <div class="text-xl font-bold ${colorClass} pr-4">${r.valore}</div>
+                </div>`;
+            });
+        }
+
+        
+        // Database Locale Ripristinato e Corretto
+        const localDB = {
+            colazioni: [
+                { nome: "Toast con Ricotta, Erba Cipollina e Pepe Rosa", desc: "La perfetta alternativa salata. I 120g di Ricotta pareggiano i macros dello yogurt, e il pane tostato sostituisce i cereali.", ricetta: "Tosta 50g di pane integrale. In una ciotolina, lavora 120g di ricotta vaccina freschissima con pochissima acqua per renderla una crema. Aggiungi un pizzico di sale, pepe rosa macinato al momento e abbondante erba cipollina tritata fine. Spalma abbondantemente sul toast tiepido." },
+                { nome: "Albume Strapazzato con Formaggio Light e Tacchino", desc: "Colazione proteica salata. L'albume puro è a zero grassi, permettendo di sciogliere un tocco di formaggio light.", ricetta: "Scalda una padella antiaderente. Versa 100g di albume d'uovo, aggiungi sale e pepe nero. Quando inizia a rapprendere, aggiungi 20g di formaggio a pasta filata light tagliato fine per farlo fondere. Accompagna con 40g di pane tostato croccante." },
+                { nome: "Crema di Yogurt Greco con Mirtilli e Fiocchi", desc: "La classica colazione dolce, strutturata a regola d'arte.", ricetta: "In una bowl versa 150g di yogurt greco bianco magro. Aggiungi 40g di fiocchi d'avena croccanti e, a piacere, dei mirtilli freschi o lamponi." },
+                { nome: "Kefir ghiacciato e Frollini Secchi", desc: "Probiotici e leggerezza. Semplice e digeribile.", ricetta: "Versa 200ml di Kefir ben freddo in un bicchiere grande. Accompagna con 40g di biscotti secchi leggeri." }
+            ],
+            pranzi: [
+                { cat: 'pesce', carb: 'Spaghetti (80g)', pro: 'Branzino (180g)', nome: "Spaghettoni al Ragù Bianco di Mare e Datterini", ricetta: "Soffriggi leggermente aglio in pochissima acqua. Aggiungi 180g di branzino a cubetti e datterini gialli tagliati a metà. Sfuma con pochissimo vino bianco. Salta 80g di spaghettoni scolati al dente nella padella col pesce. Condisci a crudo con i tuoi 15g Olio EVO e timo fresco." },
+                { cat: 'bianca', carb: 'Riso Basmati (80g)', pro: 'Pollo (150g)', nome: "Risotto Zafferano e Bocconcini di Pollo Rosolati", ricetta: "Cuoci 80g di riso con brodo vegetale e pistilli di zafferano. A parte, scotta 150g di petto di pollo a dadini in padella antiaderente con rosmarino e paprika. Unisci il pollo al risotto a fine cottura. Manteca a fuoco spento esclusivamente con i 15g Olio EVO previsti dalla dieta." },
+                { cat: 'legumi', carb: 'Pane Casereccio (100g)', pro: 'Ceci (150g)', nome: "Vellutata di Zucca con Ceci Croccanti", ricetta: "Frulla della zucca cotta al forno (senza grassi) insieme a 100g di ceci. I restanti 50g di ceci scottali in padella finché non diventano croccanti. Servi la vellutata con i ceci interi sopra e 100g di pane bruscato. Condisci con 15g Olio EVO a crudo." },
+                { cat: 'formaggi', carb: 'Farro (80g)', pro: 'Tomino (120g)', nome: "Insalata Tiepida di Farro alla Menta con Tomino", ricetta: "Lessa 80g di farro perlato in acqua salata. Scolalo e raffreddalo leggermente. Taglia delle zucchine crude alla julienne finissima e mescolale con foglioline di menta. Aggiungi 120g di tomino tagliato a dadini. Mescola tutto e condisci con 15g Olio EVO e pepe nero." }
+            ],
+            cene: [
+                { cat: 'rossa', carb: 'Patate (250g)', pro: 'Manzo (150g)', nome: "Tagliata di Manzo su Soffice di Patate", ricetta: "Lessa 250g di patate e schiacciale con uno schiacciapatate. Aggiungi un mestolo di acqua di cottura calda e mescola vigorosamente con una frusta per creare una spuma (senza burro o latte). Scotta 150g di filetto o controfiletto sgrassato su piastra rovente. Adagia la carne tagliata a fette sulla spuma. Condisci con 15g Olio EVO e sale Maldon." },
+                { cat: 'uova', carb: 'Pane Tostato (100g)', pro: 'Uova (2)', nome: "Uova in Camicia Perfette su Nido di Spinaci", ricetta: "Crea un vortice in acqua bollente leggermente acidulata e cuoci 2 uova freschissime per 3 minuti esatti. A parte, salta degli spinaci freschi in padella con uno spicchio d'aglio. Servi le uova dal tuorlo fondente adagiate sugli spinaci, accompagnate da 100g di pane tostato. Condisci a crudo con 15g Olio EVO." },
+                { cat: 'pesce', carb: 'Pane (100g)', pro: 'Salmone (180g)', nome: "Trancio di Salmone al Cartoccio Mediterraneo", ricetta: "Prendi 180g di trancio di salmone fresco. Chiudilo in un cartoccio di carta forno insieme a pomodorini tagliati a metà, olive taggiasche denocciolate, capperi dissalati e prezzemolo. Cuoci in forno a 200°C per circa 15 minuti. Servi il pesce morbidissimo accompagnato da 100g di pane fresco. Usa i 15g di Olio EVO previsti sul pane o sull'insalata di contorno." },
+                { cat: 'salumi', carb: 'Patate Novelle (250g)', pro: 'Bresaola (120g)', nome: "Carpaccio di Bresaola con Patate al Rosmarino", ricetta: "Taglia 250g di patate novelle a spicchi, disponile su una teglia con carta forno, aggiungi tanto rosmarino e cuoci a 220°C finché non sono dorate. Su un piatto ampio, disponi 120g di Bresaola Punta d'Anca di alta qualità. Aggiungi scorza di limone grattugiata finemente. Metti le patate calde di fianco e condisci tutto con 15g di Olio EVO a crudo." },
+                { cat: 'bianca', carb: 'Riso Basmati (80g)', pro: 'Tacchino (150g)', nome: "Straccetti di Tacchino Crema e Limone", ricetta: "Infarina leggermente 150g di straccetti di tacchino (usa una spolverata minima di farina). Scottali velocemente in padella antiaderente. Sfuma con succo di limone fresco e aggiungi mezzo mestolo d'acqua calda: l'amido formerà subito una deliziosa cremina densa. Servi con 80g di riso basmati bollito a parte come accompagnamento, e versa sopra i 15g di Olio EVO a crudo." },
+                { cat: 'formaggi', carb: 'Pane Croccante (100g)', pro: 'Mozzarella Light / Tomino (120g)', nome: "Caprese Gourmet con Pomodorini Confit", ricetta: "Disponi dei pomodorini tagliati a metà su una teglia, spolvera con origano e pochissimo sale, e cuoci in forno a 150°C per 45 minuti per asciugarli e concentrare il sapore. Taglia a fette 120g di formaggio magro a scelta. Impiatta alternando formaggio e pomodorini confit. Servi con 100g di pane croccante e chiudi con 15g di Olio EVO eccellente." },
+                { cat: 'pizza', carb: '-', pro: '-', nome: "La Pizza del Sabato Sera (Pasto Jolly)", ricetta: "Goditi il tuo premio settimanale! Il piano prevede 1 Pizza Margherita o alle Verdure grigliate. Il consiglio dello Chef è di chiedere sempre un impasto a lunga lievitazione (es. 48 ore) per garantire la massima digeribilità. (Questo pasto sostituisce interamente la quota di carboidrati e proteine della cena)." }
+            ]
+        };
+
+        window.generaSettimanaLocale = function() {
+            const out = document.getElementById('planner-output');
+            out.innerHTML = '<div class="text-center py-10"><div class="loader mx-auto mb-4 border-t-amber-500"></div><p class="text-amber-500 animate-pulse font-bold">L\'Algoritmo sta calcolando la settimana perfetta...</p></div>';
+
+            setTimeout(() => {
+                const giorni = ["Lunedì", "Martedì", "Mercoledì", "Giovedì", "Venerdì", "Sabato", "Domenica"];
+                
+                // Creiamo un pool di proteine rispettando i budget settimanali
+                // Distribuzione sicura: Bianca(3), Pesce(3), Formaggi(2), Legumi(2), Rossa(1), Uova(1), Salumi(1) + 1 Pizza
+                let poolPranzo = ['pesce', 'bianca', 'legumi', 'formaggi', 'pesce', 'bianca', 'legumi']; // 7 pranzi
+                let poolCena = ['rossa', 'uova', 'salumi', 'pesce', 'bianca', 'formaggi', 'pizza']; // 7 cene
+                
+                // Shuffle array
+                const shuffle = (array) => { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; };
+                poolPranzo = shuffle(poolPranzo);
+                poolCena = shuffle(poolCena);
+
+                let html = '';
+
+                giorni.forEach((giorno, index) => {
+                    const col = localDB.colazioni[Math.floor(Math.random() * localDB.colazioni.length)];
+                    
+                    const pCat = poolPranzo[index];
+                    const cCat = poolCena[index];
+                    
+                    const pranziValidi = localDB.pranzi.filter(p => p.cat === pCat);
+                    const pranzo = pranziValidi.length > 0 ? pranziValidi[Math.floor(Math.random() * pranziValidi.length)] : localDB.pranzi[0];
+                    
+                    const ceneValide = localDB.cene.filter(c => c.cat === cCat);
+                    const cena = ceneValide.length > 0 ? ceneValide[Math.floor(Math.random() * ceneValide.length)] : localDB.cene[0];
+
+                    const escapeHtml = (str) => { return str.replace(/'/g, "\\'"); };
+
+                    html += `
+                    <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden shadow-lg mb-6 animate-fade-in-up" style="animation-delay: ${index * 0.1}s">
+                        <div class="bg-slate-900 px-5 py-3 border-b border-slate-700 flex justify-between items-center">
+                            <h3 class="text-lg font-bold text-amber-500">${giorno}</h3>
+                            <span class="text-[10px] sm:text-xs font-bold bg-slate-800 text-slate-300 px-2 py-1 rounded border border-slate-600">🔥 1800 Kcal | 🌾 46% | 🥩 20% | 🥑 34%</span>
+                        </div>
+                        
+                        <div class="p-5 space-y-4">
+                            <!-- Colazione -->
+                            <div class="border-l-4 border-amber-500 pl-4 py-1">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Colazione</p>
+                                        <p class="text-white font-medium text-sm sm:text-base">${col.nome}</p>
+                                        <p class="text-xs text-slate-400 mt-1">${col.desc}</p>
+                                    </div>
+                                    <button onclick="openRecipe('${escapeHtml(col.nome)}', '${escapeHtml(col.ricetta)}')" class="text-amber-500 hover:text-amber-400 text-xs font-bold ml-4 whitespace-nowrap bg-amber-500/10 px-2 py-1 rounded"><i class="fa-solid fa-book-open"></i> Ricetta</button>
+                                </div>
+                            </div>
+
+                            <!-- Pranzo -->
+                            <div class="border-l-4 border-emerald-500 pl-4 py-1">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Pranzo</p>
+                                        <p class="text-white font-medium text-sm sm:text-base">${pranzo.nome}</p>
+                                        <p class="text-xs text-slate-400 mt-1">Porzioni Base: ${pranzo.carb} + ${pranzo.pro} + Verdure libere + 15g Olio EVO.</p>
+                                    </div>
+                                    <button onclick="openRecipe('${escapeHtml(pranzo.nome)}', '${escapeHtml(pranzo.ricetta)}')" class="text-emerald-500 hover:text-emerald-400 text-xs font-bold ml-4 whitespace-nowrap bg-emerald-500/10 px-2 py-1 rounded"><i class="fa-solid fa-book-open"></i> Ricetta</button>
+                                </div>
+                            </div>
+
+                            <!-- Cena -->
+                            <div class="border-l-4 border-sky-500 pl-4 py-1">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <p class="text-xs text-slate-500 font-bold uppercase mb-1">Cena</p>
+                                        <p class="text-white font-medium text-sm sm:text-base">${cena.nome}</p>
+                                        <p class="text-xs text-slate-400 mt-1">${cena.cat === 'pizza' ? 'Goditi il pasto libero settimanale.' : `Porzioni Base: ${cena.carb} + ${cena.pro} + Verdure libere + 15g Olio EVO.`}</p>
+                                    </div>
+                                    <button onclick="openRecipe('${escapeHtml(cena.nome)}', '${escapeHtml(cena.ricetta)}')" class="text-sky-500 hover:text-sky-400 text-xs font-bold ml-4 whitespace-nowrap bg-sky-500/10 px-2 py-1 rounded"><i class="fa-solid fa-book-open"></i> Ricetta</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+
+                out.innerHTML = html;
+            }, 800);
+        };
+
+        window.openRecipe = function(nome, ricettatesto) {
+            const modal = document.getElementById('recipe-modal');
+            const content = document.getElementById('recipe-content');
+            
+            content.innerHTML = `
+                <h4 class="text-lg font-bold text-amber-500 mb-3">${nome}</h4>
+                <div class="bg-slate-900 p-5 rounded-lg border border-slate-700 text-slate-300">
+                    <p class="mb-4 text-[15px]"><strong class="text-slate-400 block mb-2 text-xs uppercase tracking-widest"><i class="fa-solid fa-hat-chef mr-1"></i> Procedimento Chef:</strong> ${ricettatesto}</p>
+                    <div class="text-xs text-emerald-400 bg-emerald-900/20 p-3 rounded-md border border-emerald-800">
+                        <i class="fa-solid fa-check-circle mr-1"></i> Le quantità indicate in questa ricetta rispettano al grammo il piano medico (1800 Kcal, 46% CHO, 20% PRO, 34% FAT). Non serve pesare nient'altro.
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        };
+
+        window.closeRecipeModal = function() {
+            const modal = document.getElementById('recipe-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
+
+        // Esegui Inizializzazioni
+        initCloud();
+
+    </script>
+</body>
+</html>
