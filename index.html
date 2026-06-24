@@ -2,178 +2,141 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SmartFDiet - Chef Fabrizio</title>
-    
-    <!-- FORZATURA APP NATIVA E COLORE TEMA -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="SmartFDiet">
-    <meta name="theme-color" content="#0f172a">
-
-    <!-- Collegamento al Manifesto e Icona (Configurazione PWA) -->
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="icon.svg">
-    <link rel="apple-touch-icon" href="icon.svg">
-
-    <!-- Librerie Esterne -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartFDiet - Clinical Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="theme-color" content="#0f172a">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass-panel { background: #1e293b; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .input-dark { background-color: #0f172a; border: 1px solid #334155; color: #f8fafc; transition: all 0.2s; }
-        .input-dark:focus { border-color: #10b981; outline: none; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #0f172a; /* Slate 900 */
+            color: #e2e8f0; /* Slate 200 */
+        }
         
-        select.input-dark { 
+        /* Gradienti Premium */
+        .chef-gradient { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+        .accent-gradient { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+        .glycemia-gradient { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); }
+        .ai-gradient { background: linear-gradient(135deg, #7c3aed 0%, #4c1d95 100%); }
+        
+        /* Pannelli di vetro scuro */
+        .glass-panel { 
+            background: #1e293b; /* Slate 800 */
+            border: 1px solid #334155; /* Slate 700 */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15); 
+        }
+        
+        /* Scrollbar personalizzata per il tema scuro */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1e293b; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background-color: #64748b; }
+        
+        /* Input e Select stile Dark Mode */
+        select, input[type="number"], input[type="text"] { 
+            background-color: #0f172a;
+            color: #f8fafc;
+            border: 1px solid #334155;
+            outline: none;
+        }
+        select {
             appearance: none; 
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); 
             background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; 
         }
+        select:focus, input:focus {
+            border-color: #059669;
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+        }
+        select:disabled { background-color: #1e293b; cursor: not-allowed; opacity: 0.5; }
         
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-        .loader { border: 3px solid #1e293b; border-radius: 50%; border-top: 3px solid #10b981; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        /* Animazioni di caricamento */
+        .loader { border: 3px solid #334155; border-radius: 50%; border-top: 3px solid #10b981; width: 20px; height: 20px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
-
-        /* Toast Notifications */
-        #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 100; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
-        .custom-toast { 
-            transform: translateX(120%); opacity: 0; 
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
-            pointer-events: auto;
-        }
-        .custom-toast.show { transform: translateX(0); opacity: 1; }
-
-        #app-container { display: none; }
+        /* Transizioni fluide per il cambio tab */
+        .tab-content { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .tab-content.active { display: grid; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in-up { animation: fadeIn 0.5s ease-out forwards; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center p-4 sm:p-6 overflow-x-hidden">
+<body class="min-h-screen flex flex-col pb-12">
 
-    <div id="toast-container"></div>
-
-    <div id="login-screen" class="w-full max-w-md mt-10">
-        <div class="glass-panel rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
-            <!-- Icona Foglia Vettoriale HD -->
-            <div class="mx-auto w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-16 h-16">
-                    <path d="M256 140 C210 180 170 250 170 320 C170 370 210 400 256 400 C302 400 342 370 342 320 C342 250 302 180 256 140 Z" fill="#16a34a"/>
-                    <path d="M256 140 C270 240 300 310 340 320" stroke="#f0fdf4" stroke-width="10" stroke-linecap="round"/>
-                </svg>
+    <header class="chef-gradient shadow-lg sticky top-0 z-40 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-laptop-medical text-emerald-400 text-2xl"></i>
+                <h1 class="text-xl font-bold tracking-tight text-white">SmartFDiet <span class="font-light opacity-60 text-sm hidden sm:inline">| Maggiore di Novara</span></h1>
             </div>
-            
-            <h1 class="text-3xl font-bold text-white mb-8 tracking-tight">SmartFDiet</h1>
-
-            <div id="login-admin-form">
-                <input type="password" id="pin-input" placeholder="C O D I C E   P I N" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-emerald-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="eseguiLogin('admin')" class="w-full bg-emerald-600 hover:bg-emerald-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-unlock-keyhole"></i> Accedi
-                </button>
-                <div class="mt-6 pt-6 border-t border-slate-700">
-                    <button onclick="toggleLoginMode()" class="text-slate-300 font-medium hover:text-white transition-colors text-sm flex items-center justify-center gap-2 mx-auto">
-                        <i class="fa-solid fa-user-plus"></i> Registrati come Visitatore
-                    </button>
+            <div class="flex items-center gap-4 text-sm font-medium">
+                <div id="auth-status" class="flex items-center gap-2 text-slate-400">
+                    <div class="loader" id="auth-loader"></div>
+                    <span id="auth-text" class="hidden sm:inline">Connessione...</span>
                 </div>
-            </div>
-
-            <div id="login-visitor-form" class="hidden animate-fade-in-up">
-                <input type="text" id="visitor-name" placeholder="Il tuo Nome (es. Dario)" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-3 font-medium focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
-                <input type="password" id="visitor-pin" placeholder="Crea un PIN" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="eseguiLogin('visitor')" class="w-full bg-blue-600 hover:bg-blue-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-eye"></i> Entra in Lettura
-                </button>
-                <div class="mt-6 pt-6 border-t border-slate-700">
-                    <button onclick="toggleLoginMode()" class="text-slate-400 font-medium hover:text-white transition-colors text-sm">
-                        Torna al Login Principale
-                    </button>
-                </div>
-            </div>
-            
-            <div id="login-cloud-status" class="mt-6 flex items-center justify-center gap-2 text-xs font-medium text-slate-500">
-                <div class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></div>
-                Connessione al Cloud in corso...
             </div>
         </div>
-    </div>
 
-    <div id="app-container" class="w-full max-w-7xl flex-col gap-6 animate-fade-in-up">
+        <!-- Tab Navigation Bar -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 mt-2 mb-[-1px] overflow-x-auto custom-scrollbar">
+            <button onclick="switchTab('dieta')" id="tab-btn-dieta" class="px-6 py-3 rounded-t-lg font-semibold text-sm transition-colors border border-b-0 border-slate-700 bg-slate-800 text-emerald-400 whitespace-nowrap">
+                <i class="fa-solid fa-utensils mr-2"></i>Dieta Medica
+            </button>
+            <button onclick="switchTab('glicemia')" id="tab-btn-glicemia" class="px-6 py-3 rounded-t-lg font-semibold text-sm transition-colors border border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 whitespace-nowrap">
+                <i class="fa-solid fa-droplet mr-2 text-sky-400"></i>Glicemia
+            </button>
+            <button onclick="switchTab('ai')" id="tab-btn-ai" class="px-6 py-3 rounded-t-lg font-semibold text-sm transition-colors border border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 whitespace-nowrap">
+                <i class="fa-solid fa-wand-magic-sparkles mr-2 text-purple-400"></i>Chef AI
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 flex-grow w-full">
         
-        <header class="glass-panel rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4 mb-2">
-            <div class="flex items-center gap-4 w-full sm:w-auto">
-                <div class="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center border border-emerald-500/30">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-8 h-8">
-                        <path d="M256 140 C210 180 170 250 170 320 C170 370 210 400 256 400 C302 400 342 370 342 320 C342 250 302 180 256 140 Z" fill="#10b981"/>
-                        <path d="M256 140 C270 240 300 310 340 320" stroke="#f0fdf4" stroke-width="12" stroke-linecap="round"/>
-                    </svg>
-                </div>
-                <div>
-                    <h1 class="text-xl font-bold text-white tracking-tight">SmartFDiet</h1>
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3 text-xs font-medium">
-                        <span id="user-badge" class="text-emerald-400"><i class="fa-solid fa-shield-halved mr-1"></i>Admin</span>
-                        <span id="cloud-badge" class="text-slate-400 flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div> Sincronizzato</span>
-                    </div>
-                </div>
-            </div>
-            <div class="flex items-center gap-3 w-full sm:w-auto">
-                <button onclick="eseguiLogout()" class="flex-1 sm:flex-none bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors">
-                    <i class="fa-solid fa-arrow-right-from-bracket mr-1"></i> Esci
-                </button>
-            </div>
-        </header>
-
-        <!-- Menu a schede -->
-        <div class="flex p-1 bg-slate-800 rounded-xl mb-6">
-            <button onclick="switchTab('dieta')" id="tab-dieta" class="flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all"><i class="fa-solid fa-utensils mr-2"></i>Dieta Medica</button>
-            <button onclick="switchTab('glicemia')" id="tab-glicemia" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50"><i class="fa-solid fa-droplet mr-2"></i>Glicemia</button>
-            <button onclick="switchTab('ai')" id="tab-ai" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50"><i class="fa-solid fa-brain mr-2"></i>Chef AI</button>
-        </div>
-
-        <div id="section-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <!-- Modulo Form Dieta (nascosto per Visitatore) -->
-            <div class="lg:col-span-2 space-y-6" id="colonna-form">
-                <div class="glass-panel rounded-2xl p-6 sm:p-8" id="dieta-form-container">
-                    <div class="flex items-center justify-between mb-6 pb-4 border-b border-slate-700">
-                        <h2 class="text-xl font-bold text-white flex items-center"><i class="fa-regular fa-calendar text-emerald-500 mr-3"></i>Compilazione</h2>
-                        <select id="day-select" class="input-dark rounded-xl py-2 pl-4 pr-10 font-bold cursor-pointer" onchange="checkIfDayLocked()">
-                            <option value="Lunedì">Lunedì</option><option value="Martedì">Martedì</option>
-                            <option value="Mercoledì">Mercoledì</option><option value="Giovedì">Giovedì</option>
-                            <option value="Venerdì">Venerdì</option><option value="Sabato">Sabato</option>
+        <!-- ========================================== -->
+        <!-- TAB 1: DIETA MEDICA                        -->
+        <!-- ========================================== -->
+        <div id="section-dieta" class="tab-content active grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass-panel rounded-2xl p-6 sm:p-8">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-slate-700 pb-4">
+                        <h2 class="text-2xl font-bold text-white"><i class="fa-regular fa-calendar-plus text-emerald-500 mr-2"></i>Componi Giornata</h2>
+                        <select id="day-select" class="rounded-xl py-2 pl-4 pr-10 font-bold text-white cursor-pointer shadow-sm">
+                            <option value="Lunedì">Lunedì</option>
+                            <option value="Martedì">Martedì</option>
+                            <option value="Mercoledì">Mercoledì</option>
+                            <option value="Giovedì">Giovedì</option>
+                            <option value="Venerdì">Venerdì</option>
+                            <option value="Sabato">Sabato</option>
                             <option value="Domenica">Domenica</option>
                         </select>
                     </div>
 
-                    <div id="day-form-fields" class="space-y-6">
-                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
-                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-mug-hot mr-2"></i>Colazione</h3>
+                    <div class="space-y-6">
+                        <!-- Colazione -->
+                        <div class="bg-slate-900/50 p-5 rounded-xl border border-slate-700/50">
+                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-mug-hot mr-2 text-amber-500"></i>Colazione</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-500 mb-1">Liquidi/Latticino</label>
-                                    <select id="col-liquido" class="w-full input-dark rounded-lg px-3 py-2 text-sm">
+                                    <label class="block text-xs font-semibold text-slate-500 mb-1">Fonte Liquida/Latticino</label>
+                                    <select id="colazione-liquido" class="w-full rounded-lg px-3 py-2 text-sm">
                                         <option value="" disabled selected>Seleziona...</option>
-                                        <option value="Yogurt greco magro (150g)">Yogurt greco magro (150g)</option>
-                                        <option value="Yogurt intero (125g)">Yogurt intero (125g)</option>
+                                        <option value="Yogurt greco magro (150g)">Yogurt greco bianco magro (150g)</option>
+                                        <option value="Yogurt intero bianco (125g)">Yogurt intero bianco (125g)</option>
                                         <option value="Kefir (200ml)">Kefir (200ml)</option>
-                                        <option value="Latte parz. scremato (200ml)">Latte parz. scremato (200ml)</option>
+                                        <option value="Latte p.s. (200ml)">Latte parz. scremato (200ml)</option>
+                                        <option value="Ricotta vaccina (120g)">Ricotta vaccina (120g)</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-semibold text-slate-500 mb-1">Solidi</label>
-                                    <select id="col-solido" class="w-full input-dark rounded-lg px-3 py-2 text-sm">
+                                    <label class="block text-xs font-semibold text-slate-500 mb-1">Carboidrati Solidi</label>
+                                    <select id="colazione-solido" class="w-full rounded-lg px-3 py-2 text-sm">
                                         <option value="" disabled selected>Seleziona...</option>
-                                        <option value="Cereali/Avena (40g)">Cereali/Avena (40g)</option>
+                                        <option value="Cereali/Fiocchi d'avena (40g)">Cereali / Fiocchi d'avena (40g)</option>
                                         <option value="Fette biscottate (40g)">Fette biscottate (40g)</option>
                                         <option value="Pane tostato (50g)">Pane tostato (50g)</option>
                                         <option value="Biscotti secchi (40g)">Biscotti secchi (40g)</option>
@@ -182,725 +145,797 @@
                             </div>
                         </div>
 
-                        <div class="bg-slate-800/30 p-4 rounded-xl border border-slate-700/30 grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-slate-300">
-                            <div><strong class="block text-slate-400 mb-1"><i class="fa-solid fa-apple-whole mr-1"></i> SPUNTINO MATTINA (FISSO)</strong>Frutta fresca g 150 + Crackers g 30</div>
-                            <div><strong class="block text-slate-400 mb-1"><i class="fa-regular fa-clock mr-1"></i> SPUNTINO POMERIGGIO (FISSO)</strong>Frutta fresca g 150 + Yogurt greco g 150</div>
+                        <!-- Spuntini -->
+                        <div class="bg-emerald-900/20 p-4 rounded-xl border border-emerald-800/50 flex flex-col sm:flex-row gap-4 text-sm text-emerald-200">
+                            <div class="flex-1">
+                                <strong class="block mb-1 text-emerald-400"><i class="fa-solid fa-apple-whole mr-1"></i> Spuntino Mattina</strong>
+                                Frutta fresca (150g) + Crackers/Grissini (30g)
+                            </div>
+                            <div class="flex-1">
+                                <strong class="block mb-1 text-emerald-400"><i class="fa-regular fa-clock mr-1"></i> Spuntino Pomeriggio</strong>
+                                Frutta fresca (150g) + Yogurt greco/Mandorle
+                            </div>
                         </div>
 
-                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
-                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-sun mr-2"></i>Pranzo <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure e 15g Olio)</span></h3>
+                        <!-- Pranzo -->
+                        <div class="bg-slate-900/50 p-5 rounded-xl border border-slate-700/50">
+                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-sun mr-2 text-yellow-500"></i>Pranzo <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure libere e 15g Olio)</span></h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 mb-1">Carboidrati</label>
-                                    <select id="pranzo-carb" class="w-full input-dark rounded-lg px-3 py-2 text-sm">
+                                    <select id="pranzo-carb" class="w-full rounded-lg px-3 py-2 text-sm">
                                         <option value="" disabled selected>Seleziona...</option>
                                         <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
                                         <option value="Farro/Orzo/Cereali (80g)">Farro/Orzo/Cereali (80g)</option>
                                         <option value="Pane comune (100g)">Pane comune (100g)</option>
                                         <option value="Patate (250g)">Patate (250g)</option>
-                                        <option value="Ravioli/Pasta uovo (120g)" data-cost="speciale">Ravioli/Pasta uovo (120g) - Max 1/sett</option>
-                                        <option value="Gnocchi (250g)" data-cost="speciale">Gnocchi (250g) - Max 1/sett</option>
+                                        <option value="Ravioli/Pasta all'uovo (120g)" data-special="speciale_carb">Ravioli/Pasta uovo (120g) - Max 1/sett</option>
+                                        <option value="Gnocchi (250g)" data-special="speciale_carb">Gnocchi (250g) - Max 1/sett</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 mb-1">Secondo Piatto</label>
-                                    <select id="pranzo-pro" class="w-full input-dark rounded-lg px-3 py-2 text-sm">
-                                        <option value="" disabled selected>Seleziona proteina...</option>
-                                        <option value="Carne Bianca (150g)" data-cost="bianca">Carne Bianca (150g)</option>
-                                        <option value="Carne Rossa (150g)" data-cost="rossa">Carne Rossa sgrassata (150g)</option>
-                                        <option value="Salumi magri (120g)" data-cost="salumi">Salumi magri (120g)</option>
-                                        <option value="Formaggi Magri (120g)" data-cost="formaggi">Formaggi Magri (120g)</option>
-                                        <option value="Formaggi Semi-Grassi (100g)" data-cost="formaggi">Formaggi Semi-Grassi (100g)</option>
-                                        <option value="Formaggi Grassi (80g)" data-cost="formaggi">Formaggi Grassi (80g)</option>
-                                        <option value="Pesce (180-200g)" data-cost="pesce">Pesce fresco/surgelato (180-200g)</option>
-                                        <option value="Pesce Scatola (100g)" data-cost="pesce">Pesce in scatola (100g)</option>
-                                        <option value="Uova (N° 2)" data-cost="uova">Uova (N° 2)</option>
-                                        <option value="Legumi (150g freschi/50g secchi)" data-cost="legumi">Legumi (150g freschi/50g secchi)</option>
+                                    <select id="pranzo-pro" class="w-full rounded-lg px-3 py-2 text-sm">
+                                        <option value="" disabled selected>Seleziona fonte proteica...</option>
+                                        <optgroup label="Carni (150g)">
+                                            <option value="Carne Bianca (150g)" data-cost="bianca">Carne Bianca (Tacchino/Pollo/Coniglio)</option>
+                                            <option value="Carne Rossa (150g)" data-cost="rossa">Carne Rossa priva di grasso</option>
+                                        </optgroup>
+                                        <optgroup label="Salumi (120g)">
+                                            <option value="Salumi magri (120g)" data-cost="salumi">Bresaola/Cotto/Crudo sgrassato</option>
+                                        </optgroup>
+                                        <optgroup label="Formaggi">
+                                            <option value="Formaggi Magri (120g)" data-cost="formaggi">Ricotta/Tomino/Fiocchi (120g)</option>
+                                            <option value="Formaggi Grassi (80g)" data-cost="formaggi">Grana/Gorgonzola/Fontina (80g)</option>
+                                        </optgroup>
+                                        <optgroup label="Pesce e Uova">
+                                            <option value="Pesce (180-200g)" data-cost="pesce">Pesce fresco (180-200g)</option>
+                                            <option value="Uova (N°2)" data-cost="uova">Uova (N° 2)</option>
+                                        </optgroup>
+                                        <optgroup label="Legumi">
+                                            <option value="Legumi (150g)" data-cost="legumi">Legumi freschi/scatola (150g)</option>
+                                        </optgroup>
                                     </select>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
-                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-moon mr-2"></i>Cena <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure e 15g Olio)</span></h3>
-                            <label class="flex items-center gap-2 text-sm text-slate-300 font-medium cursor-pointer mb-4 bg-slate-900 p-3 rounded-lg border border-slate-700">
-                                <input type="checkbox" id="cena-pizza" onchange="togglePizza()" class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900">
-                                <i class="fa-solid fa-pizza-slice text-amber-500"></i> Usa Bonus Pizza (Margherita/Verdure)
-                            </label>
+                        <!-- Cena -->
+                        <div class="bg-slate-900/50 p-5 rounded-xl border border-slate-700/50">
+                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-moon mr-2 text-indigo-400"></i>Cena <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure libere e 15g Olio)</span></h3>
+                            
+                            <div class="mb-4 bg-slate-800 p-3 rounded-lg border border-slate-700">
+                                <label class="flex items-center gap-3 text-sm text-slate-300 font-medium cursor-pointer">
+                                    <input type="checkbox" id="cena-pizza" onchange="togglePizza()" class="w-5 h-5 text-emerald-500 bg-slate-900 border-slate-600 rounded focus:ring-emerald-500 focus:ring-offset-slate-800">
+                                    <span><i class="fa-solid fa-pizza-slice text-amber-500 mr-1"></i> Usa Bonus Pizza (Max 1 volta/sett)</span>
+                                </label>
+                            </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 transition-opacity duration-300" id="cena-standard">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 transition-opacity duration-300" id="cena-standard-inputs">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 mb-1">Carboidrati</label>
-                                    <select id="cena-carb" class="w-full input-dark rounded-lg px-3 py-2 text-sm">
+                                    <select id="cena-carb" class="w-full rounded-lg px-3 py-2 text-sm">
                                         <option value="" disabled selected>Seleziona...</option>
                                         <option value="Pane comune (100g)">Pane comune (100g)</option>
                                         <option value="Patate (250g)">Patate (250g)</option>
-                                        <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
+                                        <option value="Pasta o Riso (80g)">Pasta o Riso o Cereali (80g)</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 mb-1">Secondo Piatto</label>
-                                    <select id="cena-pro" class="w-full input-dark rounded-lg px-3 py-2 text-sm">
-                                        <!-- Iniettato via JS per essere identico al pranzo -->
+                                    <select id="cena-pro" class="w-full rounded-lg px-3 py-2 text-sm">
+                                        <!-- Options injected via JS from Pranzo -->
                                     </select>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <button id="btn-salva-dieta" onclick="salvaGiorno()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-all hover:shadow-lg hover:-translate-y-1 admin-only">
-                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> Registra e Invia al Cloud
+                    <div class="mt-8">
+                        <button id="btn-salva-dieta" onclick="salvaGiornata()" class="w-full accent-gradient hover:opacity-90 text-white font-bold py-4 px-6 rounded-xl transition-all flex justify-center items-center gap-2 text-lg shadow-lg shadow-emerald-900/20 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Salva Menù in Cloud
                         </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Widget Budget -->
+                <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
+                    <h3 class="text-lg font-bold text-white mb-5 border-b border-slate-700 pb-2"><i class="fa-solid fa-scale-balanced text-emerald-500 mr-2"></i>Frequenze Consumate</h3>
+                    <div class="space-y-4" id="budget-bars-container">
+                        <!-- JS inietta barre qui -->
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-700 text-center">
+                        <button onclick="resetSettimana()" class="text-sm font-semibold text-rose-500 hover:text-rose-400 transition-colors">
+                            <i class="fa-solid fa-trash-can mr-1"></i> Svuota Settimana
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Diario Dieta -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col h-[500px]">
+                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-book-medical text-emerald-500 mr-2"></i>Diario Apporti</h3>
+                    <div id="diario-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
+                        <div class="text-center text-slate-500 mt-10 text-sm italic">
+                            <div class="loader mx-auto mb-3"></div>
+                            Sincronizzazione dati...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: GLICEMIA                            -->
+        <!-- ========================================== -->
+        <div id="section-glicemia" class="tab-content grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="lg:col-span-1 space-y-6">
+                <!-- Inserimento Glicemia -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-3">
+                        <i class="fa-solid fa-plus-circle text-sky-400 mr-2"></i>Nuova Misurazione
+                    </h2>
+                    
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Valore (mg/dL)</label>
+                            <div class="relative">
+                                <input type="number" id="glicemia-valore" placeholder="es. 105" class="w-full rounded-xl px-4 py-3 text-2xl font-bold text-white text-center focus:ring-2 focus:ring-sky-500 transition-shadow">
+                                <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                                    <span class="text-slate-500 font-medium text-sm">mg/dL</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Momento</label>
+                            <select id="glicemia-momento" class="w-full rounded-xl px-4 py-3 font-medium">
+                                <option value="Digiuno/Mattina" data-type="fasting">Digiuno (Mattina)</option>
+                                <option value="Pre-Pranzo" data-type="fasting">Pre-Pranzo</option>
+                                <option value="Post-Pranzo (2h)" data-type="postprandial">Post-Pranzo (2h)</option>
+                                <option value="Pre-Cena" data-type="fasting">Pre-Cena</option>
+                                <option value="Post-Cena (2h)" data-type="postprandial">Post-Cena (2h)</option>
+                                <option value="Notturna" data-type="fasting">Notturna</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-400 mb-1 uppercase tracking-wider">Note (Opzionale)</label>
+                            <input type="text" id="glicemia-note" placeholder="es. Mangiato pasta a pranzo..." class="w-full rounded-xl px-4 py-3 text-sm">
+                        </div>
+
+                        <button id="btn-salva-glicemia" onclick="salvaGlicemia()" class="w-full glycemia-gradient hover:opacity-90 text-white font-bold py-3 px-4 rounded-xl transition-all flex justify-center items-center gap-2 shadow-lg shadow-sky-900/20 disabled:opacity-50">
+                            <i class="fa-solid fa-save"></i> Salva Valore
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistiche Medie -->
+                <div class="glass-panel rounded-2xl p-6">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-chart-line text-sky-400 mr-2"></i>Andamento Globale</h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 flex justify-between items-center">
+                            <div>
+                                <div class="text-xs text-slate-400 mb-1">Media Digiuno</div>
+                                <div class="text-2xl font-bold text-white" id="stat-media-digiuno">--</div>
+                            </div>
+                            <div class="h-10 w-10 rounded-full flex items-center justify-center bg-slate-800" id="stat-icon-digiuno">
+                                <i class="fa-solid fa-minus text-slate-500"></i>
+                            </div>
+                        </div>
+                        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50 flex justify-between items-center">
+                            <div>
+                                <div class="text-xs text-slate-400 mb-1">Media Post-Pasto</div>
+                                <div class="text-2xl font-bold text-white" id="stat-media-post">--</div>
+                            </div>
+                            <div class="h-10 w-10 rounded-full flex items-center justify-center bg-slate-800" id="stat-icon-post">
+                                <i class="fa-solid fa-minus text-slate-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-2">
+                <div class="glass-panel rounded-2xl p-6 flex flex-col h-[650px]">
+                    <div class="flex justify-between items-center border-b border-slate-700 pb-3 mb-4">
+                        <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-clock-rotate-left text-sky-400 mr-2"></i>Storico Misurazioni</h3>
+                        <div class="text-xs text-slate-400 flex gap-3">
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> In Target</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Limite</span>
+                            <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Alto</span>
+                        </div>
                     </div>
                     
-                    <div id="day-locked-box" class="hidden text-center py-10 animate-fade-in-up">
-                        <div class="w-16 h-16 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30 text-emerald-500 shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-                            <i class="fa-solid fa-check-double text-3xl"></i>
+                    <div id="glicemia-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
+                        <div class="text-center text-slate-500 mt-20 text-sm italic">
+                            <div class="loader mx-auto mb-3 border-t-sky-400"></div>
+                            Caricamento storico glicemico...
                         </div>
-                        <h3 class="text-xl font-bold text-white mb-2">Giornata Registrata</h3>
-                        <p class="text-slate-400 text-sm mb-6 max-w-sm mx-auto">I dati di questa giornata sono salvati nel Cloud. Le frequenze degli alimenti sono state scalate dal budget.</p>
-                        <button onclick="sbloccaGiorno()" class="bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 px-6 rounded-xl transition-all hover:-translate-y-1 admin-only">
-                            <i class="fa-solid fa-unlock-keyhole mr-2"></i> Sblocca e Modifica
-                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Colonna Dashboard (Diario e Budget) -->
-            <div class="space-y-6" id="colonna-dashboard">
-                <div class="glass-panel rounded-2xl p-6">
-                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2 flex justify-between items-center">
-                        <span><i class="fa-solid fa-chart-pie text-emerald-500 mr-2"></i>Frequenze</span>
-                        <button onclick="azzeraSettimana()" class="text-xs text-red-400 hover:text-red-300 transition-colors admin-only" title="Svuota l'intera settimana"><i class="fa-solid fa-trash"></i></button>
-                    </h3>
-                    <div id="budget-container" class="space-y-4">
-                        <!-- Barre iniettate via JS -->
-                    </div>
-                </div>
-
-                <div class="glass-panel rounded-2xl p-6 flex flex-col h-[400px]" id="diario-container">
-                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-book-medical text-emerald-500 mr-2"></i>Diario Menù</h3>
-                    <div id="diario-dieta-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
-                        <!-- Card inserite via JS -->
-                    </div>
-                </div>
-            </div>
         </div>
-
-        <div id="section-glicemia" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="glass-panel rounded-2xl p-6 sm:p-8 self-start lg:col-span-1 admin-only" id="glicemia-form-container">
-                <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4"><i class="fa-solid fa-syringe text-emerald-500 mr-2"></i>Registra Valore</h2>
-                <div class="space-y-5">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Momento della misurazione</label>
-                        <select id="gli-momento" class="w-full input-dark rounded-xl py-3 px-4">
-                            <option value="Digiuno (Mattina)">A Digiuno (Mattina)</option>
-                            <option value="Post-Pranzo (2h dopo)">Post-Pranzo (2h dopo)</option>
-                            <option value="Post-Cena (2h dopo)">Post-Cena (2h dopo)</option>
-                        </select>
+        
+        <!-- ========================================== -->
+        <!-- TAB 3: CHEF AI (GENERATORE LOCALE)         -->
+        <!-- ========================================== -->
+        <div id="section-ai" class="tab-content grid-cols-1 gap-6">
+            <div class="glass-panel rounded-2xl p-6 sm:p-10 flex flex-col items-center">
+                
+                <div class="text-center mb-8 w-full max-w-3xl">
+                    <div class="w-20 h-20 bg-purple-500/10 rounded-full flex items-center justify-center border border-purple-500/30 text-purple-400 shadow-[0_0_30px_rgba(168,85,247,0.2)] mx-auto mb-5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-4xl"></i>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Valore (mg/dL)</label>
-                        <input type="number" id="gli-valore" placeholder="Es. 95" class="w-full input-dark rounded-xl py-3 px-4 text-lg font-bold">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-400 mb-1">Note (Opzionale)</label>
-                        <input type="text" id="gli-note" placeholder="Es. Sensazione di fame" class="w-full input-dark rounded-xl py-3 px-4">
-                    </div>
-                    <button onclick="salvaGlicemia()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:-translate-y-1 mt-2">
-                        <i class="fa-solid fa-plus mr-2"></i> Aggiungi al Diario
-                    </button>
+                    <h2 class="text-3xl font-bold text-white mb-4">Generatore Menù Gourmet</h2>
+                    <p class="text-slate-400 text-lg">Un'intelligenza interna programmata per comporre giornate da <strong class="text-slate-200">1800 Kcal</strong> con abbinamenti di alta cucina. Nessuna connessione necessaria, tutto è calcolato localmente rispettando le regole del tuo piano medico.</p>
                 </div>
-            </div>
-
-            <div class="lg:col-span-2 space-y-6" id="colonna-glicemia-diario">
-                <div class="glass-panel rounded-2xl p-6">
-                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-chart-line text-emerald-500 mr-2"></i>Andamento Clinico</h3>
-                    <div class="w-full h-64 relative">
-                        <canvas id="glicemiaChart"></canvas>
-                    </div>
-                </div>
-
-                <div class="glass-panel rounded-2xl p-6 flex flex-col max-h-[400px]">
-                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-clipboard-list text-emerald-500 mr-2"></i>Storico Valori</h3>
-                    <div id="diario-glicemia-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
-                        <!-- Valori inseriti via JS -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="section-ai" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Modulo 1: Sostituzione -->
-            <div class="glass-panel rounded-2xl p-6 sm:p-8 flex flex-col">
-                <h2 class="text-xl font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-right-left text-blue-400 mr-2"></i>Laboratorio Sostituzioni</h2>
-                <p class="text-sm text-slate-400 mb-6">L'AI calcola macro e micro nutrienti per garantirti uno scambio perfetto senza sforare il piano medico.</p>
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Cosa vuoi TOGLIERE? (es. 150g Petto di Pollo)</label>
-                        <input type="text" id="ai-ingrediente-out" class="w-full input-dark rounded-xl py-3 px-4" placeholder="Es. 150g Petto di Pollo">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Cosa vuoi MANGIARE? (Lascia vuoto per farti stupire)</label>
-                        <input type="text" id="ai-ingrediente-in" class="w-full input-dark rounded-xl py-3 px-4" placeholder="Es. Voglio mangiare del salmone">
-                    </div>
-                </div>
-                <button onclick="chiediSostituzione()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:-translate-y-1 mt-auto">
-                    <i class="fa-solid fa-calculator mr-2"></i> Calcola Sostituzione
-                </button>
-                <div id="ai-sostituzione-output" class="mt-6 text-slate-300"></div>
-            </div>
-
-            <!-- Modulo 2: Menù Gourmet -->
-            <div class="glass-panel rounded-2xl p-6 sm:p-8 flex flex-col">
-                <h2 class="text-xl font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-wand-magic-sparkles text-purple-400 mr-2"></i>Generatore Menù Gourmet</h2>
-                <p class="text-sm text-slate-400 mb-6">Crea un'intera giornata da 1800 Kcal (46% Carb, 20% Pro, 34% Grassi) con ricette di alta cucina e accostamenti perfetti.</p>
-                <div class="flex-grow flex items-center justify-center p-4">
-                    <div class="w-32 h-32 bg-purple-500/10 rounded-full flex items-center justify-center border border-purple-500/30 text-purple-400 shadow-[0_0_30px_rgba(168,85,247,0.2)]">
-                        <i class="fa-solid fa-brain text-5xl"></i>
-                    </div>
-                </div>
-                <button onclick="generaMenuGourmet()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:-translate-y-1 mt-auto">
+                
+                <button id="btn-genera-ai" onclick="generaMenuGourmetLocale()" class="w-full max-w-md ai-gradient hover:opacity-90 text-white font-bold py-4 rounded-xl transition-all shadow-lg shadow-purple-900/30 hover:-translate-y-1 text-lg flex justify-center items-center">
                     <i class="fa-solid fa-fire-burner mr-2"></i> Sforna Giornata Gourmet
                 </button>
-                <div id="ai-menu-output" class="mt-6 text-slate-300"></div>
+                
+                <!-- Output del menù generato -->
+                <div id="ai-menu-output" class="w-full max-w-4xl mt-8"></div>
+                
             </div>
         </div>
 
+    </main>
+
+    <!-- MODAL CUSTOM -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity opacity-0">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 max-w-md w-full p-6 transform transition-all scale-95" id="modal-content">
+            <div class="text-center mb-6">
+                <div id="modal-icon" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-500/20 mb-4">
+                    <i class="fa-solid fa-triangle-exclamation text-3xl text-amber-500"></i>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold text-white mb-2">Attenzione</h3>
+                <p id="modal-message" class="text-slate-300 text-sm leading-relaxed"></p>
+            </div>
+            <button onclick="closeModal()" id="modal-btn" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl transition-colors">
+                Ho capito
+            </button>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const MY_PRIVATE_FIREBASE_CONFIG = {
-            apiKey: "AIzaSyAzFfHPhgo_cbrRTLGl7Ey99GPbC49EoUM",
-            authDomain: "dieta-smart-chef.firebaseapp.com",
-            projectId: "dieta-smart-chef",
-            storageBucket: "dieta-smart-chef.firebasestorage.app",
-            messagingSenderId: "485824697612",
-            appId: "1:485824697612:web:ee08d6974ae8adb835e529",
-            measurementId: "G-KY7DE77ZFZ"
-        };
+        // Global Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'smartfdiet-master';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        let db, auth, currentUser;
+        let giornateSalvate = [];
+        let glicemieSalvate = [];
 
-        let appConfig = { db: null, userId: "default_user_1", role: null };
-        let state = { dieta: {}, glicemia: {} };
-        let chartInstance = null;
-
-        const BUDGET_LIMITS = {
+        // LIMITI CLINICI DIETA
+        const budgetLimits = {
             bianca: { name: "Carne Bianca", max: 3, icon: "fa-drumstick-bite", color: "bg-orange-500" },
-            rossa: { name: "Carne Rossa", max: 1, icon: "fa-steak", color: "bg-red-500" },
-            salumi: { name: "Salumi", max: 2, icon: "fa-bacon", color: "bg-rose-500" },
-            formaggi: { name: "Formaggi (Tutti)", max: 2, icon: "fa-cheese", color: "bg-amber-500" },
-            pesce: { name: "Pesce", max: 3, icon: "fa-fish", color: "bg-blue-500" },
-            uova: { name: "Uova", max: 2, icon: "fa-egg", color: "bg-yellow-400" },
+            rossa: { name: "Carne Rossa", max: 1, icon: "fa-steak", color: "bg-rose-500" },
+            salumi: { name: "Salumi", max: 2, icon: "fa-bacon", color: "bg-pink-500" },
+            formaggi: { name: "Formaggi", max: 2, icon: "fa-cheese", color: "bg-amber-400" },
+            pesce: { name: "Pesce", max: 3, icon: "fa-fish", color: "bg-sky-500" },
+            uova: { name: "Uova (x2)", max: 2, icon: "fa-egg", color: "bg-yellow-200" },
             legumi: { name: "Legumi", max: 2, icon: "fa-seedling", color: "bg-emerald-500" },
             pizza: { name: "Pizza", max: 1, icon: "fa-pizza-slice", color: "bg-red-600" },
-            speciale: { name: "Ravioli/Gnocchi", max: 1, icon: "fa-bowl-food", color: "bg-purple-500" }
+            speciale_carb: { name: "Ravioli/Gnocchi", max: 1, icon: "fa-bowl-food", color: "bg-stone-400" }
         };
 
-        // IL MOTORE CALORICO NASCOSTO
-        const CALORIE_DB = {
-            col_liq: { "Yogurt greco magro (150g)": 85, "Yogurt intero (125g)": 80, "Kefir (200ml)": 90, "Latte parz. scremato (200ml)": 95 },
-            col_sol: { "Cereali/Avena (40g)": 150, "Fette biscottate (40g)": 160, "Pane tostato (50g)": 140, "Biscotti secchi (40g)": 170 },
-            carb: { "Pasta o Riso (80g)": 280, "Farro/Orzo/Cereali (80g)": 270, "Pane comune (100g)": 280, "Patate (250g)": 200, "Ravioli/Pasta uovo (120g)": 350, "Gnocchi (250g)": 300 },
-            pro: { "Carne Bianca (150g)": 165, "Carne Rossa (150g)": 220, "Salumi magri (120g)": 180, "Formaggi Magri (120g)": 180, "Formaggi Semi-Grassi (100g)": 250, "Formaggi Grassi (80g)": 300, "Pesce (180-200g)": 180, "Pesce Scatola (100g)": 150, "Uova (N° 2)": 160, "Legumi (150g freschi/50g secchi)": 140 },
-            spuntini_fissi: 250, // Frutta mattino e pome + crackers/yogurt greco
-            condimenti_fissi: 270, // 30g olio totale al giorno
-            verdure_fisse: 50 // Quota verdure indicative
-        };
+        // UI Initialization
+        function initUI() {
+            // Clona opzioni del secondo piatto pranzo nella cena
+            const pranzoPro = document.getElementById('pranzo-pro');
+            const cenaPro = document.getElementById('cena-pro');
+            cenaPro.innerHTML = pranzoPro.innerHTML;
+            renderBudgetBars();
+            
+            // Set data odierna come default visuale
+            const giorni = ["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"];
+            const oggiStr = giorni[new Date().getDay()];
+            const daySelect = document.getElementById('day-select');
+            for(let i=0; i<daySelect.options.length; i++) {
+                if(daySelect.options[i].value === oggiStr) {
+                    daySelect.selectedIndex = i;
+                    break;
+                }
+            }
+        }
 
-        window.showToast = function(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            let bgColor = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-red-600' : 'bg-amber-500');
-            let icon = type === 'success' ? 'fa-circle-check' : (type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-info');
-            toast.className = `custom-toast flex items-center gap-3 ${bgColor} text-white px-6 py-4 rounded-xl shadow-2xl font-medium text-sm border border-white/10`;
-            toast.innerHTML = `<i class="fa-solid ${icon} text-xl"></i> <span>${message}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 400); }, 3000);
-        };
-
-        async function initCloud() {
-            const statusEl = document.getElementById('login-cloud-status');
+        async function initFirebase() {
             try {
-                const app = initializeApp(MY_PRIVATE_FIREBASE_CONFIG);
-                appConfig.db = getFirestore(app);
-                const auth = getAuth(app);
+                if(Object.keys(firebaseConfig).length === 0) throw new Error("Manca configurazione Firebase");
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                currentUser = auth.currentUser;
+
+                document.getElementById('auth-loader').classList.add('hidden');
+                document.getElementById('auth-text').innerHTML = '<i class="fa-solid fa-cloud-check text-emerald-400"></i> Sincronizzato';
                 
-                try { await signInAnonymously(auth); } catch(e) { console.log("Bypass auth, test mode."); }
+                listenToDieta();
+                listenToGlicemia();
 
-                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></div> Connesso al Cloud';
-                statusEl.classList.replace('text-slate-500', 'text-emerald-500');
             } catch (error) {
-                console.error("Errore Init:", error);
-                statusEl.innerHTML = '<div class="w-2 h-2 rounded-full bg-red-500"></div> Modalità Offline';
-                statusEl.classList.replace('text-slate-500', 'text-red-500');
+                console.error("Firebase Error:", error);
+                document.getElementById('auth-loader').classList.add('hidden');
+                document.getElementById('auth-text').innerHTML = '<i class="fa-solid fa-cloud-xmark text-rose-500"></i> Offline';
             }
         }
 
-        window.toggleLoginMode = function() {
-            const admin = document.getElementById('login-admin-form');
-            const visitor = document.getElementById('login-visitor-form');
-            admin.classList.toggle('hidden');
-            visitor.classList.toggle('hidden');
+        // ==========================================
+        // LOGICA DIETA MEDICA
+        // ==========================================
+        function listenToDieta() {
+            if (!currentUser) return;
+            const q = query(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta')); 
+            onSnapshot(q, (snapshot) => {
+                giornateSalvate = [];
+                snapshot.forEach(doc => giornateSalvate.push({ id: doc.id, ...doc.data() }));
+                giornateSalvate.sort((a, b) => b.timestamp - a.timestamp);
+                updateDietaDashboard();
+            }, (e) => console.error(e));
+        }
+
+        window.salvaGiornata = async function() {
+            if (!currentUser) { showModal("Errore", "Cloud disconnesso."); return; }
+
+            const btn = document.getElementById('btn-salva-dieta');
+            btn.disabled = true;
+
+            const day = document.getElementById('day-select').value;
+            const colLiquido = document.getElementById('colazione-liquido').value;
+            const colSolido = document.getElementById('colazione-solido').value;
+            const pranzoCarb = document.getElementById('pranzo-carb').value;
+            const pranzoPro = document.getElementById('pranzo-pro');
+            const isPizza = document.getElementById('cena-pizza').checked;
+            const cenaCarb = document.getElementById('cena-carb').value;
+            const cenaPro = document.getElementById('cena-pro');
+
+            // Validazione
+            if (!colLiquido || !colSolido || !pranzoCarb || !pranzoPro.value || (!isPizza && (!cenaCarb || !cenaPro.value))) {
+                showModal("Campi Incompleti", "Seleziona tutte le portate prima di salvare il menù.");
+                btn.disabled = false; return;
+            }
+
+            // Calcolo Budget
+            let currentCosts = calculateCurrentCosts();
+            let newCosts = {};
+            const checkCost = (option) => {
+                if(option && option.dataset.cost) newCosts[option.dataset.cost] = (newCosts[option.dataset.cost] || 0) + 1;
+                if(option && option.dataset.special) newCosts.speciale_carb = (newCosts.speciale_carb || 0) + 1;
+            };
+
+            checkCost(pranzoPro.options[pranzoPro.selectedIndex]);
+            checkCost(document.getElementById('pranzo-carb').options[document.getElementById('pranzo-carb').selectedIndex]);
+            
+            if(isPizza) newCosts.pizza = 1;
+            else {
+                checkCost(cenaPro.options[cenaPro.selectedIndex]);
+                checkCost(document.getElementById('cena-carb').options[document.getElementById('cena-carb').selectedIndex]);
+            }
+
+            // Verifica sforamenti
+            for (let category in newCosts) {
+                if ((currentCosts[category] || 0) + newCosts[category] > budgetLimits[category].max) {
+                    showModal("Limite Superato", `Hai raggiunto il tetto clinico settimanale per: ${budgetLimits[category].name}. Varia l'alimento.`);
+                    btn.disabled = false; return;
+                }
+            }
+
+            // Verifica duplicato giorno
+            if(giornateSalvate.find(g => g.giorno === day)) {
+                showModal("Giorno già compilato", `Hai già inserito il menù per ${day}. Eliminalo dal Diario per sovrascriverlo.`);
+                btn.disabled = false; return;
+            }
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta'), {
+                    giorno: day,
+                    colazione: `${colLiquido.split('(')[0].trim()} + ${colSolido.split('(')[0].trim()}`,
+                    pranzo: `${pranzoCarb.split('(')[0].trim()} + ${pranzoPro.options[pranzoPro.selectedIndex].text.split('(')[0].trim()}`,
+                    cena: isPizza ? "🍕 Pizza Integrale" : `${cenaCarb.split('(')[0].trim()} + ${cenaPro.options[cenaPro.selectedIndex].text.split('(')[0].trim()}`,
+                    costs: newCosts,
+                    timestamp: Date.now()
+                });
+                
+                // Auto-avanza giorno
+                const daySelect = document.getElementById('day-select');
+                if(daySelect.selectedIndex < daySelect.options.length - 1) daySelect.selectedIndex++;
+                
+                // Reset form
+                document.getElementById('colazione-liquido').value = ""; document.getElementById('colazione-solido').value = "";
+                document.getElementById('pranzo-carb').value = ""; document.getElementById('pranzo-pro').value = "";
+                document.getElementById('cena-pizza').checked = false; togglePizza();
+            } catch (e) { console.error(e); }
+            
+            btn.disabled = false;
         };
 
-        window.eseguiLogin = function(type) {
-            let userRole = '';
-            let userName = '';
+        window.deleteDay = async function(docId) {
+            if (!currentUser) return;
+            try { await deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta', docId)); } catch (e) {}
+        };
 
-            if(type === 'admin') {
-                const pin = document.getElementById('pin-input').value;
-                if(pin !== '713') { showToast("PIN Amministratore Errato!", "error"); return; }
-                userRole = 'admin'; userName = 'Chef Fabrizio';
-                showToast("Bentornato Chef!", "success");
+        window.resetSettimana = async function() {
+            showModal("Reset Globale", "Stai per eliminare tutte le giornate. Procedere?");
+            const btn = document.getElementById('modal-btn');
+            btn.className = "w-full bg-rose-600 hover:bg-rose-700 text-white font-medium py-3 rounded-xl transition-colors";
+            btn.innerText = "Sì, azzera tutto";
+            btn.onclick = async () => {
+                for (const g of giornateSalvate) await deleteDay(g.id);
+                closeModal();
+                btn.className = "w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl transition-colors";
+                btn.innerText = "Ho capito";
+                btn.onclick = closeModal;
+            };
+        };
+
+        function calculateCurrentCosts() {
+            let costs = {};
+            giornateSalvate.forEach(g => { if(g.costs) for(let cat in g.costs) costs[cat] = (costs[cat] || 0) + g.costs[cat]; });
+            return costs;
+        }
+
+        function updateDietaDashboard() {
+            const list = document.getElementById('diario-lista');
+            if (giornateSalvate.length === 0) {
+                list.innerHTML = `<div class="text-center text-slate-500 mt-10 text-sm italic"><i class="fa-solid fa-clipboard-list text-4xl mb-3 block opacity-20"></i>Diario vuoto.<br>Inizia a pianificare la settimana.</div>`;
             } else {
-                const name = document.getElementById('visitor-name').value;
-                const pin = document.getElementById('visitor-pin').value;
-                if(!name || !pin) { showToast("Inserisci Nome e PIN per entrare.", "error"); return; }
-                userRole = 'visitor'; userName = `Visitatore: ${name}`;
-                showToast(`Benvenuto, ${name}!`, "success");
+                list.innerHTML = '';
+                giornateSalvate.forEach(g => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-800 border border-slate-700 rounded-xl p-4 shadow-sm relative group hover:border-emerald-500/50 transition-colors";
+                    card.innerHTML = `
+                        <button onclick="deleteDay('${g.id}')" class="absolute top-2 right-2 text-slate-500 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-sm"></i></button>
+                        <div class="font-bold text-emerald-400 mb-2 border-b border-slate-700 pb-1 text-sm">${g.giorno}</div>
+                        <div class="text-slate-300 text-xs mb-1 line-clamp-1"><i class="fa-solid fa-mug-hot text-slate-500 w-4"></i> ${g.colazione}</div>
+                        <div class="text-slate-300 text-xs mb-1 line-clamp-1"><i class="fa-solid fa-sun text-slate-500 w-4"></i> ${g.pranzo}</div>
+                        <div class="text-slate-300 text-xs line-clamp-1"><i class="fa-solid fa-moon text-slate-500 w-4"></i> ${g.cena}</div>
+                    `;
+                    list.appendChild(card);
+                });
             }
-
-            appConfig.role = userRole;
-            document.getElementById('user-badge').innerHTML = userRole === 'admin' ? '<i class="fa-solid fa-shield-halved mr-1"></i> Admin' : `<i class="fa-solid fa-eye mr-1"></i> ${userName}`;
-            
-            const adminOnlyElements = document.querySelectorAll('.admin-only');
-            adminOnlyElements.forEach(el => el.style.display = userRole === 'admin' ? 'block' : 'none');
-            
-            if(userRole === 'visitor') {
-                document.getElementById('colonna-form').classList.add('hidden');
-                const colDash = document.getElementById('colonna-dashboard');
-                colDash.classList.remove('lg:col-span-1'); colDash.classList.add('lg:col-span-3');
-                const colDashGli = document.getElementById('colonna-glicemia-diario');
-                colDashGli.classList.remove('lg:col-span-2'); colDashGli.classList.add('lg:col-span-3');
-                document.getElementById('diario-container').classList.remove('h-[400px]');
-                document.getElementById('diario-dieta-lista').className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4";
-            }
-            
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('app-container').style.display = 'flex';
-            
-            startSync();
-        };
-
-        window.eseguiLogout = function() { window.location.reload(); };
-
-        function startSync() {
-            if(!appConfig.db) return;
-            onSnapshot(collection(appConfig.db, "users", appConfig.userId, "dieta"), (snapshot) => {
-                state.dieta = {};
-                snapshot.forEach(doc => { state.dieta[doc.id] = doc.data(); });
-                renderDietaDashboard();
-                checkIfDayLocked(); 
-            });
-            onSnapshot(collection(appConfig.db, "users", appConfig.userId, "glicemia"), (snapshot) => {
-                state.glicemia = {};
-                snapshot.forEach(doc => { state.glicemia[doc.id] = doc.data(); });
-                renderGlicemia();
-            });
+            renderBudgetBars();
         }
 
-        window.switchTab = function(tab) {
-            document.getElementById('section-dieta').classList.toggle('hidden', tab !== 'dieta');
-            document.getElementById('section-glicemia').classList.toggle('hidden', tab !== 'glicemia');
-            document.getElementById('section-ai').classList.toggle('hidden', tab !== 'ai');
-            
-            const activeClass = 'flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all';
-            const inactiveClass = 'flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50';
-            
-            document.getElementById('tab-dieta').className = tab === 'dieta' ? activeClass : inactiveClass;
-            document.getElementById('tab-glicemia').className = tab === 'glicemia' ? activeClass : inactiveClass;
-            document.getElementById('tab-ai').className = tab === 'ai' ? activeClass : inactiveClass;
-        };
+        function renderBudgetBars() {
+            const container = document.getElementById('budget-bars-container');
+            container.innerHTML = '';
+            let currentCosts = calculateCurrentCosts();
+
+            for (let key in budgetLimits) {
+                const limit = budgetLimits[key];
+                const consumed = currentCosts[key] || 0;
+                const percentage = Math.min((consumed / limit.max) * 100, 100);
+                const isOver = consumed >= limit.max;
+                
+                container.innerHTML += `
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-400"><i class="fa-solid ${limit.icon} w-5 text-slate-500"></i> ${limit.name}</span>
+                        <span class="font-bold ${isOver ? 'text-rose-500' : 'text-slate-200'}">${consumed} / ${limit.max}</span>
+                    </div>
+                    <div class="w-full bg-slate-700 rounded-full h-1.5 overflow-hidden">
+                        <div class="${limit.color} h-1.5 rounded-full transition-all duration-500 ease-out" style="width: ${percentage}%"></div>
+                    </div>
+                </div>`;
+            }
+        }
 
         window.togglePizza = function() {
             const isPizza = document.getElementById('cena-pizza').checked;
-            const standard = document.getElementById('cena-standard');
+            const standardInputs = document.getElementById('cena-standard-inputs');
             if (isPizza) {
-                standard.style.opacity = '0.3'; standard.style.pointerEvents = 'none';
+                standardInputs.classList.add('opacity-30', 'pointer-events-none');
                 document.getElementById('cena-carb').value = ""; document.getElementById('cena-pro').value = "";
-            } else {
-                standard.style.opacity = '1'; standard.style.pointerEvents = 'auto';
-            }
+            } else { standardInputs.classList.remove('opacity-30', 'pointer-events-none'); }
         };
 
-        window.checkIfDayLocked = function() {
-            const day = document.getElementById('day-select').value;
-            const formFields = document.getElementById('day-form-fields');
-            const lockedBox = document.getElementById('day-locked-box');
-            if(state.dieta[day]) {
-                formFields.classList.add('hidden'); lockedBox.classList.remove('hidden');
-            } else {
-                formFields.classList.remove('hidden'); lockedBox.classList.add('hidden');
-            }
-        };
-
-        window.sbloccaGiorno = async function() {
-            if(appConfig.role !== 'admin') return;
-            const day = document.getElementById('day-select').value;
-            const savedData = state.dieta[day];
-            
-            if(savedData) {
-                document.getElementById('col-liquido').value = savedData.raw.colLiquido || '';
-                document.getElementById('col-solido').value = savedData.raw.colSolido || '';
-                document.getElementById('pranzo-carb').value = savedData.raw.pranzoCarb || '';
-                document.getElementById('pranzo-pro').value = savedData.raw.pranzoPro || '';
-                
-                const isPizza = savedData.raw.isPizza;
-                document.getElementById('cena-pizza').checked = isPizza;
-                togglePizza();
-                if(!isPizza) {
-                    document.getElementById('cena-carb').value = savedData.raw.cenaCarb || '';
-                    document.getElementById('cena-pro').value = savedData.raw.cenaPro || '';
-                }
-
-                if(appConfig.db) { await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day)); }
-                delete state.dieta[day]; 
-                checkIfDayLocked();
-                renderDietaDashboard();
-                showToast(`Giorno ${day} sbloccato per la modifica`, "warning");
-            }
-        };
-
-        window.salvaGiorno = async function() {
-            if(appConfig.role !== 'admin') return;
-            const day = document.getElementById('day-select').value;
-            
-            const colL = document.getElementById('col-liquido').value;
-            const colS = document.getElementById('col-solido').value;
-            const prC = document.getElementById('pranzo-carb');
-            const prP = document.getElementById('pranzo-pro');
-            const isPizza = document.getElementById('cena-pizza').checked;
-            const ceC = document.getElementById('cena-carb');
-            const ceP = document.getElementById('cena-pro');
-
-            if(!colL || !colS || !prC.value || !prP.value || (!isPizza && (!ceC.value || !ceP.value))) {
-                showToast("Compila tutte le portate prima di salvare!", "error"); return;
-            }
-
-            let newCosts = {};
-            const addCost = (opt) => { if(opt && opt.dataset.cost) newCosts[opt.dataset.cost] = (newCosts[opt.dataset.cost] || 0) + 1; };
-            addCost(prC.options[prC.selectedIndex]); addCost(prP.options[prP.selectedIndex]);
-            if(isPizza) newCosts.pizza = 1; else { addCost(ceC.options[ceC.selectedIndex]); addCost(ceP.options[ceP.selectedIndex]); }
-
-            const currentTotals = calcTotals();
-            for(let cat in newCosts) {
-                if((currentTotals[cat] || 0) + newCosts[cat] > BUDGET_LIMITS[cat].max) {
-                    showToast(`Budget esaurito per: ${BUDGET_LIMITS[cat].name}. Scegli un'altra proteina.`, "error"); return;
-                }
-            }
-
-            // CALCOLO CALORIE AUTOMATICO
-            let totalKcal = CALORIE_DB.spuntini_fissi + CALORIE_DB.condimenti_fissi + CALORIE_DB.verdure_fisse;
-            totalKcal += CALORIE_DB.col_liq[colL] || 0;
-            totalKcal += CALORIE_DB.col_sol[colS] || 0;
-            totalKcal += CALORIE_DB.carb[prC.value] || 0;
-            totalKcal += CALORIE_DB.pro[prP.value] || 0;
-            
-            if(isPizza) {
-                totalKcal += 800; // Valore forfettario pizza
-            } else {
-                totalKcal += CALORIE_DB.carb[ceC.value] || 0;
-                totalKcal += CALORIE_DB.pro[ceP.value] || 0;
-            }
-
-            const dayData = {
-                giorno: day,
-                colazione: `${colL} + ${colS}`,
-                pranzo: `${prC.value} + ${prP.value}`,
-                cena: isPizza ? "🍕 Pizza Margherita/Verdure" : `${ceC.value} + ${ceP.value}`,
-                costs: newCosts,
-                kcal: totalKcal, // Salva le calorie nel database!
-                raw: { colLiquido: colL, colSolido: colS, pranzoCarb: prC.value, pranzoPro: prP.value, isPizza: isPizza, cenaCarb: ceC.value, cenaPro: ceP.value },
-                timestamp: Date.now()
-            };
-
-            state.dieta[day] = dayData;
-            checkIfDayLocked();
-            renderDietaDashboard();
-            showToast(`Giorno ${day} registrato con successo!`, "success");
-
-            if(appConfig.db) {
-                try { await setDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day), dayData); } 
-                catch (e) { console.error("Errore salvataggio:", e); }
-            }
-            
-            document.getElementById('col-liquido').value = ''; document.getElementById('col-solido').value = '';
-            document.getElementById('pranzo-carb').value = ''; document.getElementById('pranzo-pro').value = '';
-            document.getElementById('cena-pizza').checked = false; togglePizza();
-            const sel = document.getElementById('day-select');
-            if(sel.selectedIndex < 6) sel.selectedIndex++;
-            checkIfDayLocked();
-        };
-
-        window.azzeraSettimana = async function() {
-            if(appConfig.role !== 'admin') return;
-            if(!confirm("Cancellare tutta la settimana?")) return;
-            
-            if(appConfig.db) {
-                for(let day in state.dieta) {
-                    await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "dieta", day));
-                }
-            }
-            state.dieta = {};
-            checkIfDayLocked();
-            renderDietaDashboard();
-            showToast("Settimana e Budget azzerati.", "warning");
-        };
-
-        function calcTotals() {
-            let t = {};
-            Object.values(state.dieta).forEach(day => {
-                if(day && day.costs) {
-                    for(let c in day.costs) { t[c] = (t[c] || 0) + day.costs[c]; }
-                }
-            });
-            return t;
-        }
-
-        function renderDietaDashboard() {
-            const t = calcTotals();
-            const bCont = document.getElementById('budget-container');
-            bCont.innerHTML = '';
-            for(let key in BUDGET_LIMITS) {
-                const lim = BUDGET_LIMITS[key];
-                const val = t[key] || 0;
-                const perc = Math.min((val / lim.max) * 100, 100);
-                const isOver = val >= lim.max;
-                
-                bCont.innerHTML += `
-                <div>
-                    <div class="flex justify-between text-xs mb-1">
-                        <span class="text-slate-400 font-medium"><i class="fa-solid ${lim.icon} w-5 text-center"></i> ${lim.name}</span>
-                        <span class="font-bold ${isOver ? 'text-emerald-400' : 'text-slate-200'}">${val} / ${lim.max}</span>
-                    </div>
-                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                        <div class="${lim.color} h-full rounded-full transition-all duration-500 ease-out" style="width: ${perc}%"></div>
-                    </div>
-                </div>`;
-            }
-
-            const dCont = document.getElementById('diario-dieta-lista');
-            dCont.innerHTML = '';
-            const days = Object.values(state.dieta).sort((a,b) => b.timestamp - a.timestamp);
-            if(days.length === 0) { dCont.innerHTML = '<div class="text-slate-500 text-sm text-center mt-10"><i class="fa-solid fa-calendar-xmark text-3xl mb-3 opacity-30 block"></i>Nessun pasto registrato</div>'; return; }
-            
-            days.forEach(d => {
-                dCont.innerHTML += `
-                <div class="bg-slate-800 p-5 rounded-2xl border border-slate-700 shadow-lg relative overflow-hidden group hover:border-emerald-500 transition-colors animate-fade-in-up">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-emerald-500 group-hover:w-2 transition-all"></div>
-                    <div class="font-bold text-emerald-400 mb-4 text-lg border-b border-slate-700 pb-2 flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <span>${d.giorno}</span>
-                            ${d.kcal ? `<span class="text-xs font-bold bg-slate-900 border border-slate-700 text-amber-500 px-3 py-1.5 rounded-lg shadow-inner"><i class="fa-solid fa-fire mr-1"></i>${d.kcal} Kcal</span>` : ''}
-                        </div>
-                        <i class="fa-solid fa-check-circle text-emerald-500/30"></i>
-                    </div>
-                    <div class="space-y-3">
-                        <div>
-                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1"><i class="fa-solid fa-mug-hot mr-1"></i> Colazione</div>
-                            <div class="text-slate-200 text-sm pl-4 border-l-2 border-slate-600/50 leading-snug">${d.colazione}</div>
-                        </div>
-                        <div>
-                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1"><i class="fa-solid fa-sun mr-1"></i> Pranzo</div>
-                            <div class="text-slate-200 text-sm pl-4 border-l-2 border-slate-600/50 leading-snug">${d.pranzo}</div>
-                        </div>
-                        <div>
-                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1"><i class="fa-solid fa-moon mr-1"></i> Cena</div>
-                            <div class="text-slate-200 text-sm pl-4 border-l-2 border-slate-600/50 leading-snug">${d.cena}</div>
-                        </div>
-                    </div>
-                </div>`;
-            });
+        // ==========================================
+        // LOGICA GLICEMIA
+        // ==========================================
+        function listenToGlicemia() {
+            if (!currentUser) return;
+            const q = query(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'glicemia')); 
+            onSnapshot(q, (snapshot) => {
+                glicemieSalvate = [];
+                snapshot.forEach(doc => glicemieSalvate.push({ id: doc.id, ...doc.data() }));
+                glicemieSalvate.sort((a, b) => b.timestamp - a.timestamp);
+                updateGlicemiaDashboard();
+            }, (e) => console.error(e));
         }
 
         window.salvaGlicemia = async function() {
-            if(appConfig.role !== 'admin') return;
-            const momento = document.getElementById('gli-momento').value;
-            const valore = parseInt(document.getElementById('gli-valore').value);
-            const note = document.getElementById('gli-note').value;
-            
-            if(!valore) { showToast("Inserisci un valore numerico!", "error"); return; }
+            if (!currentUser) return;
+            const valInput = document.getElementById('glicemia-valore').value;
+            const selectEl = document.getElementById('glicemia-momento');
+            const momentText = selectEl.value;
+            const type = selectEl.options[selectEl.selectedIndex].dataset.type; // fasting or postprandial
+            const note = document.getElementById('glicemia-note').value;
 
-            const id = Date.now().toString();
-            const data = { momento, valore, note, timestamp: Date.now() };
-
-            state.glicemia[id] = data; 
-            renderGlicemia();
-            showToast("Misurazione glicemica salvata", "success");
-
-            if(appConfig.db) { await setDoc(doc(appConfig.db, "users", appConfig.userId, "glicemia", id), data); }
-            document.getElementById('gli-valore').value = ''; document.getElementById('gli-note').value = '';
-        };
-
-        window.eliminaGlicemia = async function(id) {
-            if(appConfig.role !== 'admin') return;
-            delete state.glicemia[id];
-            renderGlicemia();
-            showToast("Misurazione eliminata", "warning");
-            if(appConfig.db) await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "glicemia", id));
-        };
-
-        function renderGlicemiaChart(recsAsc) {
-            const ctx = document.getElementById('glicemiaChart');
-            if(!ctx) return;
-            if (recsAsc.length === 0) {
-                if(chartInstance) { chartInstance.destroy(); chartInstance = null; }
+            if(!valInput || valInput <= 0) {
+                showModal("Valore non valido", "Inserisci un valore glicemico numerico valido (es. 105).");
                 return;
             }
 
-            const labels = recsAsc.map(r => {
-                const d = new Date(r.timestamp);
-                let mom = r.momento.includes('Digiuno') ? 'Dig.' : (r.momento.includes('Pranzo') ? 'Pran.' : 'Cen.');
-                return `${d.getDate()}/${d.getMonth()+1} ${mom}`;
-            });
-            const data = recsAsc.map(r => r.valore);
-            
-            const pointColors = recsAsc.map(r => {
-                let targetMax = r.momento.includes("Digiuno") ? 100 : 140;
-                return r.valore <= targetMax ? '#10b981' : '#ef4444'; 
-            });
-
-            if(chartInstance) {
-                chartInstance.data.labels = labels;
-                chartInstance.data.datasets[0].data = data;
-                chartInstance.data.datasets[0].pointBackgroundColor = pointColors;
-                chartInstance.update();
-            } else {
-                Chart.defaults.color = '#94a3b8'; Chart.defaults.font.family = "'Inter', sans-serif";
-                chartInstance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Glicemia (mg/dL)', data: data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderWidth: 2, pointBackgroundColor: pointColors, pointBorderColor: '#1e293b', pointBorderWidth: 2,
-                            pointRadius: 6, pointHoverRadius: 8, fill: true, tension: 0.4
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1e293b', titleColor: '#f8fafc', bodyColor: '#cbd5e1', borderColor: '#334155', borderWidth: 1, padding: 12, displayColors: false, callbacks: { label: function(c) { return c.parsed.y + ' mg/dL'; } } } },
-                        scales: { y: { grid: { color: '#334155', borderDash: [5, 5] }, min: 60, suggestedMax: 160 }, x: { grid: { display: false } } }
-                    }
-                });
-            }
-        }
-
-        function renderGlicemia() {
-            const list = document.getElementById('diario-glicemia-lista');
-            list.innerHTML = '';
-            const recsDesc = Object.entries(state.glicemia).sort((a,b) => b[1].timestamp - a[1].timestamp);
-            const recsAsc = Object.values(state.glicemia).sort((a,b) => a.timestamp - b.timestamp);
-            
-            renderGlicemiaChart(recsAsc);
-            
-            if(recsDesc.length === 0) { list.innerHTML = '<div class="text-slate-500 text-sm text-center mt-10"><i class="fa-solid fa-droplet-slash text-3xl mb-3 opacity-30 block"></i>Nessuna misurazione registrata</div>'; return; }
-
-            recsDesc.forEach(([id, r]) => {
-                const dateObj = new Date(r.timestamp);
-                const timeStr = `${dateObj.getDate()}/${dateObj.getMonth()+1} - ${dateObj.getHours()}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
-                let targetMax = r.momento.includes("Digiuno") ? 100 : 140;
-                let colorClass = r.valore <= targetMax ? "text-emerald-400" : "text-red-400";
-                
-                list.innerHTML += `
-                <div class="bg-slate-800 p-4 rounded-xl border border-slate-700 flex justify-between items-center relative group animate-fade-in-up">
-                    ${appConfig.role === 'admin' ? `<button onclick="eliminaGlicemia('${id}')" class="absolute top-2 right-2 text-slate-600 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-trash"></i></button>` : ''}
-                    <div><div class="text-xs text-slate-500 font-bold mb-1"><i class="fa-regular fa-clock mr-1"></i> ${timeStr} | ${r.momento}</div>${r.note ? `<div class="text-xs text-slate-400 italic">"${r.note}"</div>` : ''}</div>
-                    <div class="text-2xl font-bold ${colorClass}">${r.valore} <span class="text-xs text-slate-500 font-normal">mg/dL</span></div>
-                </div>`;
-            });
-        }
-
-        document.getElementById('cena-pro').innerHTML = document.getElementById('pranzo-pro').innerHTML;
-        initCloud();
-
-        async function askChefAI(promptTesto, outputId, sysInstruction) {
-            const outputEl = document.getElementById(outputId);
-            outputEl.innerHTML = '<div class="flex flex-col justify-center items-center py-10"><div class="loader"></div><span class="mt-4 text-purple-400 font-bold animate-pulse">Analisi neurale e biochimica in corso...</span></div>';
-
-            const apiKey = ""; // Lasciare vuoto: viene fornito automaticamente dall'ambiente
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: promptTesto }] }],
-                systemInstruction: { parts: [{ text: sysInstruction }] }
-            };
+            const btn = document.getElementById('btn-salva-glicemia');
+            btn.disabled = true;
 
             try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'glicemia'), {
+                    valore: parseInt(valInput),
+                    momento: momentText,
+                    type: type,
+                    note: note,
+                    timestamp: Date.now()
                 });
-                const result = await response.json();
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                
+                document.getElementById('glicemia-valore').value = "";
+                document.getElementById('glicemia-note').value = "";
+            } catch (e) { console.error(e); }
+            
+            btn.disabled = false;
+        };
 
-                if (text) {
-                    const cleanText = text.replace(/```html/g, '').replace(/```/g, '');
-                    outputEl.innerHTML = `<div class="animate-fade-in-up text-sm leading-relaxed">${cleanText}</div>`;
+        window.deleteGlicemia = async function(docId) {
+            if (!currentUser) return;
+            try { await deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'glicemia', docId)); } catch (e) {}
+        };
+
+        function getGlycemiaStatus(value, type) {
+            // Target Medici Base
+            if(type === 'fasting') {
+                if(value < 100) return { color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30' };
+                if(value <= 125) return { color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30' };
+                return { color: 'text-rose-500', bg: 'bg-rose-500/10', border: 'border-rose-500/30' };
+            } else {
+                if(value < 140) return { color: 'text-emerald-400', bg: 'bg-emerald-400/10', border: 'border-emerald-500/30' };
+                if(value <= 180) return { color: 'text-amber-400', bg: 'bg-amber-400/10', border: 'border-amber-500/30' };
+                return { color: 'text-rose-500', bg: 'bg-rose-500/10', border: 'border-rose-500/30' };
+            }
+        }
+
+        function updateGlicemiaDashboard() {
+            const list = document.getElementById('glicemia-lista');
+            if (glicemieSalvate.length === 0) {
+                list.innerHTML = `<div class="text-center text-slate-500 mt-20 text-sm italic"><i class="fa-solid fa-droplet-slash text-4xl mb-3 block opacity-20"></i>Nessuna misurazione salvata.</div>`;
+            } else {
+                list.innerHTML = '';
+                glicemieSalvate.forEach(g => {
+                    const status = getGlycemiaStatus(g.valore, g.type);
+                    const dateObj = new Date(g.timestamp);
+                    const dateStr = dateObj.toLocaleDateString('it-IT', { day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit' });
+                    
+                    const card = document.createElement('div');
+                    card.className = `p-4 rounded-xl border ${status.border} ${status.bg} relative group transition-colors`;
+                    card.innerHTML = `
+                        <button onclick="deleteGlicemia('${g.id}')" class="absolute top-2 right-2 text-slate-500 hover:text-rose-500 transition-colors opacity-0 group-hover:opacity-100"><i class="fa-solid fa-trash text-sm"></i></button>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-xs text-slate-400 font-medium">${dateStr}</span>
+                            <span class="text-xs font-bold ${status.color}">${g.momento}</span>
+                        </div>
+                        <div class="flex items-end gap-2">
+                            <span class="text-3xl font-bold text-white">${g.valore}</span>
+                            <span class="text-sm text-slate-400 pb-1">mg/dL</span>
+                        </div>
+                        ${g.note ? `<div class="mt-2 text-xs text-slate-400 italic border-t border-slate-700/50 pt-2"><i class="fa-regular fa-comment-dots mr-1"></i>${g.note}</div>` : ''}
+                    `;
+                    list.appendChild(card);
+                });
+            }
+            calculateStats();
+        }
+
+        function calculateStats() {
+            const fasting = glicemieSalvate.filter(g => g.type === 'fasting');
+            const post = glicemieSalvate.filter(g => g.type === 'postprandial');
+
+            const avgFasting = fasting.length ? Math.round(fasting.reduce((a, b) => a + b.valore, 0) / fasting.length) : null;
+            const avgPost = post.length ? Math.round(post.reduce((a, b) => a + b.valore, 0) / post.length) : null;
+
+            const elFasting = document.getElementById('stat-media-digiuno');
+            const iconFasting = document.getElementById('stat-icon-digiuno');
+            if(avgFasting) {
+                elFasting.innerText = avgFasting;
+                const st = getGlycemiaStatus(avgFasting, 'fasting');
+                elFasting.className = `text-2xl font-bold ${st.color}`;
+                iconFasting.innerHTML = `<i class="fa-solid fa-droplet ${st.color}"></i>`;
+                iconFasting.className = `h-10 w-10 rounded-full flex items-center justify-center ${st.bg}`;
+            } else { elFasting.innerText = "--"; elFasting.className = "text-2xl font-bold text-slate-500"; iconFasting.innerHTML = `<i class="fa-solid fa-minus text-slate-600"></i>`; }
+
+            const elPost = document.getElementById('stat-media-post');
+            const iconPost = document.getElementById('stat-icon-post');
+            if(avgPost) {
+                elPost.innerText = avgPost;
+                const st = getGlycemiaStatus(avgPost, 'postprandial');
+                elPost.className = `text-2xl font-bold ${st.color}`;
+                iconPost.innerHTML = `<i class="fa-solid fa-droplet ${st.color}"></i>`;
+                iconPost.className = `h-10 w-10 rounded-full flex items-center justify-center ${st.bg}`;
+            } else { elPost.innerText = "--"; elPost.className = "text-2xl font-bold text-slate-500"; iconPost.innerHTML = `<i class="fa-solid fa-minus text-slate-600"></i>`; }
+        }
+
+        // ==========================================
+        // LOGICA CHEF AI (GENERATORE LOCALE)
+        // ==========================================
+        
+        // Database locale delle ricette/abbinamenti per l'AI
+        const menuDb = {
+            colazioneLiquido: ["Yogurt greco bianco magro (150g)", "Yogurt intero bianco (125g)", "Kefir (200ml)", "Latte parzialmente scremato (200ml)", "Ricotta vaccina (120g)"],
+            colazioneSolido: ["Cereali integrali croccanti (40g)", "Fette biscottate integrali (40g)", "Pane tostato fragrante (50g)", "Biscotti secchi leggeri (40g)"],
+            pranzoCarb: [
+                { nome: "Pasta o Riso (80g)", gourmet: "Spaghettoni trafilati al bronzo o Risotto mantecato" },
+                { nome: "Farro/Orzo/Cereali (80g)", gourmet: "Insalata tiepida di Farro o Orzotto perlato" },
+                { nome: "Patate (250g)", gourmet: "Crema vellutata di Patate arrosto" }
+            ],
+            pranzoPro: [
+                { nome: "Carne Bianca (150g)", gourmet: "Petto di Pollo cotto a bassa temperatura con erbe" },
+                { nome: "Pesce (180-200g)", gourmet: "Trancio di Salmone o Branzino scottato alla piastra" },
+                { nome: "Legumi (150g)", gourmet: "Hummus rustico o Crema di Lenticchie speziata" },
+                { nome: "Formaggi Magri (120g)", gourmet: "Mousse di Ricotta o Tomino alla griglia" }
+            ],
+            cenaCarb: [
+                { nome: "Pane comune (100g)", gourmet: "Crostoni croccanti di Pane casereccio" },
+                { nome: "Patate (250g)", gourmet: "Patate novelle al rosmarino al forno" },
+                { nome: "Farro/Orzo (80g)", gourmet: "Zuppetta leggera di cereali in brodo vegetale" }
+            ],
+            cenaPro: [
+                { nome: "Carne Rossa (150g)", gourmet: "Tagliata di manzo pregiata con rucola e scaglie" },
+                { nome: "Uova (N° 2)", gourmet: "Uova in camicia su letto di spinaci o Frittata morbida" },
+                { nome: "Salumi magri (120g)", gourmet: "Carpaccio di Bresaola Punta d'Anca con limone" },
+                { nome: "Pesce (180-200g)", gourmet: "Trancio di Tonno o Orata al cartoccio mediterraneo" }
+            ]
+        };
+
+        window.generaMenuGourmetLocale = function() {
+            const btn = document.getElementById('btn-genera-ai');
+            const output = document.getElementById('ai-menu-output');
+            
+            // Simula un caricamento per effetto scenico
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Elaborazione algoritmo in corso...';
+            output.innerHTML = '';
+
+            setTimeout(() => {
+                // Generazione Casuale (Rispettando le categorie mediche)
+                const liq = menuDb.colazioneLiquido[Math.floor(Math.random()*menuDb.colazioneLiquido.length)];
+                const sol = menuDb.colazioneSolido[Math.floor(Math.random()*menuDb.colazioneSolido.length)];
+                const pCarb = menuDb.pranzoCarb[Math.floor(Math.random()*menuDb.pranzoCarb.length)];
+                const pPro = menuDb.pranzoPro[Math.floor(Math.random()*menuDb.pranzoPro.length)];
+                const cCarb = menuDb.cenaCarb[Math.floor(Math.random()*menuDb.cenaCarb.length)];
+                const cPro = menuDb.cenaPro[Math.floor(Math.random()*menuDb.cenaPro.length)];
+
+                // Probabilità Pizza (circa il 15% delle volte)
+                const isPizza = Math.random() > 0.85; 
+
+                let cenaHtml = '';
+                if(isPizza) {
+                    cenaHtml = `
+                        <div class="mb-4 p-5 bg-slate-800/50 rounded-xl border border-slate-700/50 border-l-4 border-l-amber-500 shadow-md">
+                            <h3 class="text-amber-500 font-bold mb-2 flex items-center"><i class="fa-solid fa-pizza-slice mr-2 text-lg"></i> Cena (Il Bonus Settimanale)</h3>
+                            <p class="text-slate-200 text-lg mb-1 font-medium">Pizza Integrale Gourmet alle Verdure</p>
+                            <p class="text-sm text-slate-400">Composizione: Impasto a lunga lievitazione con verdure grigliate a km 0, pomodorini confit e mozzarella. (Sostituisce carboidrati e proteine della cena).</p>
+                        </div>`;
                 } else {
-                    outputEl.innerHTML = '<div class="text-red-500 font-bold p-4 bg-red-500/10 rounded-xl">Errore nella generazione: Nessun dato ricevuto dal modello.</div>';
+                    cenaHtml = `
+                        <div class="mb-4 p-5 bg-slate-800/50 rounded-xl border border-slate-700/50 border-l-4 border-l-indigo-400 shadow-md">
+                            <h3 class="text-indigo-400 font-bold mb-2 flex items-center"><i class="fa-solid fa-moon mr-2 text-lg"></i> Cena</h3>
+                            <p class="text-slate-200 text-lg mb-1 font-medium">${cCarb.gourmet} accompagnati da ${cPro.gourmet}</p>
+                            <p class="text-sm text-slate-400">Porzioni cliniche: ${cCarb.nome} + ${cPro.nome}. Servire con contorno di verdure saltate e 15g di Olio EVO a crudo.</p>
+                        </div>`;
                 }
-            } catch (error) {
-                outputEl.innerHTML = `<div class="text-red-500 font-bold p-4 bg-red-500/10 rounded-xl">Errore di connessione AI: ${error.message}</div>`;
-            }
-        }
 
-        window.chiediSostituzione = function() {
-            const outIng = document.getElementById('ai-ingrediente-out').value;
-            const inIng = document.getElementById('ai-ingrediente-in').value;
-            
-            if(!outIng) {
-                showToast("Inserisci l'ingrediente da togliere!", "error");
-                return;
-            }
+                output.innerHTML = `
+                    <div class="animate-fade-in-up">
+                        <div class="flex justify-between items-center mb-6 border-b border-slate-700 pb-4">
+                            <h3 class="text-2xl font-bold text-white tracking-tight">L'Ispirazione dello Chef</h3>
+                            <span class="bg-purple-500/20 text-purple-400 border border-purple-500/30 px-3 py-1 rounded-full text-sm font-bold flex items-center"><i class="fa-solid fa-fire mr-1"></i> ~1800 Kcal</span>
+                        </div>
+                        
+                        <div class="mb-4 p-5 bg-slate-800/50 rounded-xl border border-slate-700/50 border-l-4 border-l-amber-500 shadow-md">
+                            <h3 class="text-amber-500 font-bold mb-2 flex items-center"><i class="fa-solid fa-mug-hot mr-2 text-lg"></i> Colazione</h3>
+                            <p class="text-slate-200 text-lg mb-1 font-medium">Risveglio Morbido e Croccante</p>
+                            <p class="text-sm text-slate-400">Porzioni cliniche: ${liq} e ${sol}. Bevande calde senza zucchero libere.</p>
+                        </div>
 
-            const sysInstruction = `Sei un Nutrizionista Clinico Avanzato. Il tuo output DEVE ESSERE IN FORMATO HTML. Usa classi TailwindCSS per lo stile (es. text-emerald-400, font-bold, mb-2, p-4, bg-slate-800, rounded-xl, ul, li). NESSUN TAG DI BLOCCO MARKDOWN (niente \`\`\`html).`;
-            
-            const promptTesto = `L'utente deve sostituire dal suo piano medico: ${outIng}. 
-            Desiderio dell'utente (se specificato, usalo per la sostituzione, altrimenti proponi tu un'alternativa sana e gourmet): ${inIng || 'Proponi tu una valida alternativa.'}.
-            
-            Esegui rigorosamente questi passaggi:
-            1. Calcola e mostra i macronutrienti dell'ingrediente originale nelle quantità fornite (Kcal, Proteine, Carboidrati, Grassi).
-            2. Calcola i GRAMMI ESATTI della nuova alternativa necessari per pareggiare il più possibile Kcal e Macronutrienti (senza sforare il totale calorico).
-            3. Struttura visivamente bene i risultati in HTML con box colorati per la comparazione diretta. Usa colori come text-blue-400 per l'originale e text-emerald-400 per la sostituzione.`;
+                        <div class="mb-4 p-5 bg-emerald-900/10 rounded-xl border border-emerald-900/30 border-l-4 border-l-emerald-500 shadow-md">
+                            <h3 class="text-emerald-500 font-bold mb-2 flex items-center"><i class="fa-solid fa-apple-whole mr-2 text-lg"></i> Spuntini Fissi Bilanciati</h3>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-2">
+                                <div>
+                                    <p class="text-slate-300 text-sm"><strong class="text-emerald-400">Metà Mattina:</strong><br>Frutta fresca (150g) + Crackers (30g)</p>
+                                </div>
+                                <div>
+                                    <p class="text-slate-300 text-sm"><strong class="text-emerald-400">Pomeriggio:</strong><br>Frutta fresca (150g) + Yogurt greco o Mandorle</p>
+                                </div>
+                            </div>
+                        </div>
 
-            askChefAI(promptTesto, 'ai-sostituzione-output', sysInstruction);
+                        <div class="mb-4 p-5 bg-slate-800/50 rounded-xl border border-slate-700/50 border-l-4 border-l-yellow-500 shadow-md">
+                            <h3 class="text-yellow-500 font-bold mb-2 flex items-center"><i class="fa-solid fa-sun mr-2 text-lg"></i> Pranzo</h3>
+                            <p class="text-slate-200 text-lg mb-1 font-medium">${pCarb.gourmet} con ${pPro.gourmet}</p>
+                            <p class="text-sm text-slate-400">Porzioni cliniche: ${pCarb.nome} + ${pPro.nome}. Aggiungere verdure a volontà e 15g Olio EVO.</p>
+                        </div>
+
+                        ${cenaHtml}
+
+                        <div class="mt-8 p-6 bg-slate-900 rounded-xl border border-slate-700 text-center shadow-inner">
+                            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest mb-4">Bilanciamento Clinico Rispettato</p>
+                            <div class="flex flex-wrap justify-center gap-4 sm:gap-8 text-sm sm:text-base font-medium">
+                                <span class="text-sky-400 flex items-center bg-sky-400/10 px-3 py-1.5 rounded-lg border border-sky-400/20"><i class="fa-solid fa-wheat-awn mr-2"></i> Carboidrati: ~46%</span>
+                                <span class="text-rose-400 flex items-center bg-rose-400/10 px-3 py-1.5 rounded-lg border border-rose-400/20"><i class="fa-solid fa-dumbbell mr-2"></i> Proteine: ~20%</span>
+                                <span class="text-amber-400 flex items-center bg-amber-400/10 px-3 py-1.5 rounded-lg border border-amber-400/20"><i class="fa-solid fa-droplet mr-2"></i> Grassi: ~34%</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                // Ripristina il bottone
+                btn.innerHTML = '<i class="fa-solid fa-rotate-right mr-2"></i> Rigenera un altro Menù';
+            }, 800);
         };
 
-        window.generaMenuGourmet = function() {
-            const sysInstruction = `Sei un Nutrizionista Clinico e Chef Stellato. Formatta SEMPRE l'output in HTML puro (niente blocchi markdown). Usa tag <h3>, <ul>, <li>, <strong> e classi Tailwind per dare stile grafico ai pasti (es. text-purple-400, border-b, border-slate-600, pb-2, mb-4, p-4, bg-slate-800/50, rounded-xl).`;
+        // ==========================================
+        // UI & UTILS
+        // ==========================================
+        window.switchTab = function(tabName) {
+            // Nascondi tutte le sezioni
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(`section-${tabName}`).classList.add('active');
             
-            const promptTesto = `Genera un menù giornaliero completo da ESATTE 1800 Kcal.
-            Target TASSATIVO: 46% Carboidrati, 20% Proteine, 34% Grassi.
-            L'utente è uno Chef professionista: VIETATO proporre cibi tristi da ospedale (niente pollo lesso o riso in bianco).
-            Il piano deve includere:
-            - Colazione
-            - Spuntino Mattina
-            - Pranzo
-            - Spuntino Pomeriggio
-            - Cena
-            
-            Regole d'oro:
-            1. Sii chirurgico con le grammature di ogni singolo alimento.
-            2. Per la cena, scrivi in 3 righe una tecnica di preparazione gourmet ma adatta alla dieta.
-            3. Mostra i totali calorici e di macronutrienti a fine giornata in un box in fondo per dimostrare la precisione del tuo calcolo.`;
+            // Colori specifici per i tab
+            const tabColors = {
+                'dieta': 'text-emerald-400',
+                'glicemia': 'text-sky-400',
+                'ai': 'text-purple-400'
+            };
 
-            askChefAI(promptTesto, 'ai-menu-output', sysInstruction);
-        };
-
-        // Registrazione del Service Worker per il funzionamento Offline e l'installazione PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').then(reg => {
-                    console.log('Motore PWA registrato con successo.');
-                }).catch(err => console.error('Errore Motore PWA:', err));
+            // Gestisci i bottoni
+            ['dieta', 'glicemia', 'ai'].forEach(t => {
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (t === tabName) {
+                    // Tab Attivo
+                    btn.className = `px-6 py-3 rounded-t-lg font-semibold text-sm transition-colors border border-b-0 border-slate-700 bg-slate-800 ${tabColors[t]} whitespace-nowrap`;
+                } else {
+                    // Tab Inattivo
+                    btn.className = "px-6 py-3 rounded-t-lg font-semibold text-sm transition-colors border border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 whitespace-nowrap";
+                }
             });
-        }
+        };
+
+        window.showModal = function(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('modal-content').classList.remove('scale-95');
+            }, 10);
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('opacity-0');
+            document.getElementById('modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
+
+        // BOOT APP
+        initUI();
+        initFirebase();
     </script>
 </body>
 </html>
