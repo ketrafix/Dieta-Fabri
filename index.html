@@ -12,256 +12,576 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#0f172a">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass-panel { background: #1e293b; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
-        .tab-btn { transition: all 0.2s ease-in-out; }
-        .tab-btn.active { background-color: #10b981; color: white; font-weight: 600; }
-        .tab-btn.inactive { background-color: transparent; color: #94a3b8; }
-        .tab-btn.inactive:hover { background-color: #334155; color: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #334155; }
+        .chef-gradient { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+        .accent-gradient { background: linear-gradient(135deg, #059669 0%, #047857 100%); }
+        .ai-gradient { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+        .glass-panel { background: rgba(255, 255, 255, 1); border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         
-        .loader { border: 3px solid #334155; border-radius: 50%; border-top: 3px solid #a855f7; width: 24px; height: 24px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .tab-btn { transition: all 0.2s ease-in-out; }
+        .tab-btn.active { background-color: #0f172a; color: white; font-weight: 600; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .tab-btn.inactive { background-color: transparent; color: #64748b; }
+        .tab-btn.inactive:hover { background-color: #e2e8f0; color: #0f172a; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
         
         select { 
             appearance: none; 
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); 
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e"); 
             background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; 
         }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #475569; border-radius: 10px; }
+        
+        .loader { border: 3px solid #f3f3f3; border-radius: 50%; border-top: 3px solid #059669; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        .loader-ai { border-top-color: #8b5cf6; width: 40px; height: 40px; border-width: 4px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <!-- HEADER -->
-    <header class="py-6 px-4">
-        <div class="max-w-5xl mx-auto">
-            <div class="glass-panel rounded-2xl p-4 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center border border-emerald-500/30">
-                        <i class="fa-solid fa-droplet text-emerald-400"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold text-white">SmartFDiet</h1>
-                        <div class="flex items-center gap-2 text-xs text-slate-400 mt-1">
-                            <i class="fa-solid fa-shield-halved text-emerald-500"></i> Admin
-                            <span class="w-1 h-1 bg-slate-600 rounded-full"></span>
-                            <i class="fa-solid fa-cloud-check text-emerald-500"></i> Sincronizzato
-                        </div>
-                    </div>
+    <header class="chef-gradient text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <i class="fa-solid fa-file-medical text-emerald-400 text-2xl"></i>
+                <h1 class="text-xl font-bold tracking-tight">SmartFDiet <span class="font-light opacity-80 text-sm hidden sm:inline">| Maggiore di Novara</span></h1>
+            </div>
+            <div class="flex items-center gap-4 text-sm font-medium">
+                <div id="auth-status" class="flex items-center gap-2 text-slate-300">
+                    <div class="loader border-t-emerald-400" id="auth-loader"></div>
+                    <span id="auth-text">Connessione...</span>
                 </div>
-                <button class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-xl text-sm font-medium border border-slate-700 transition-colors">
-                    <i class="fa-solid fa-arrow-right-from-bracket mr-2"></i> Esci
-                </button>
+                <span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full"><i class="fa-solid fa-fire mr-1"></i> 1800 Kcal</span>
             </div>
         </div>
     </header>
 
-    <main class="max-w-5xl mx-auto px-4 w-full flex-grow flex flex-col gap-6 pb-12">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 flex-grow w-full flex flex-col gap-6 pb-12">
         
         <!-- NAVIGAZIONE TABS -->
-        <div class="glass-panel p-2 rounded-2xl flex grid grid-cols-3 gap-2">
-            <button onclick="switchTab('dieta')" id="btn-dieta" class="tab-btn inactive py-3 rounded-xl flex items-center justify-center gap-2">
-                <i class="fa-solid fa-utensils"></i> Dieta Medica
+        <div class="glass-panel p-2 rounded-2xl flex grid grid-cols-2 gap-2 max-w-md mx-auto w-full">
+            <button onclick="switchTab('dieta')" id="btn-dieta" class="tab-btn active py-3 rounded-xl flex items-center justify-center gap-2">
+                <i class="fa-solid fa-utensils"></i> Diario Medico
             </button>
-            <button onclick="switchTab('glicemia')" id="btn-glicemia" class="tab-btn inactive py-3 rounded-xl flex items-center justify-center gap-2">
-                <i class="fa-solid fa-droplet"></i> Glicemia
-            </button>
-            <button onclick="switchTab('ai')" id="btn-ai" class="tab-btn active py-3 rounded-xl flex items-center justify-center gap-2">
+            <button onclick="switchTab('ai')" id="btn-ai" class="tab-btn inactive py-3 rounded-xl flex items-center justify-center gap-2">
                 <i class="fa-solid fa-brain"></i> Chef AI
             </button>
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 3: CHEF AI (MOTORE NEURALE) -->
+        <!-- TAB 1: DIARIO MEDICO COMPLETO -->
         <!-- ========================================== -->
-        <div id="tab-ai" class="block space-y-6">
+        <div id="tab-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
+            <!-- COLONNA SINISTRA: Form di Inserimento -->
+            <div class="lg:col-span-2 space-y-6">
+                <div class="glass-panel rounded-2xl p-6 sm:p-8">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 border-b border-slate-100 pb-4">
+                        <h2 class="text-2xl font-bold text-slate-800"><i class="fa-regular fa-calendar-plus text-emerald-600 mr-2"></i>Componi Giornata</h2>
+                        <select id="day-select" class="bg-slate-100 border border-slate-200 rounded-xl py-2 pl-4 pr-10 font-bold text-slate-800 cursor-pointer focus:ring-2 focus:ring-emerald-500 outline-none shadow-sm">
+                            <option value="Lunedì">Lunedì</option>
+                            <option value="Martedì">Martedì</option>
+                            <option value="Mercoledì">Mercoledì</option>
+                            <option value="Giovedì">Giovedì</option>
+                            <option value="Venerdì">Venerdì</option>
+                            <option value="Sabato">Sabato</option>
+                            <option value="Domenica">Domenica</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-6">
+                        <!-- COLAZIONE -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3"><i class="fa-solid fa-mug-hot mr-2"></i>Colazione</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Fonte Liquida/Latticino</label>
+                                    <select id="colazione-liquido" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                                        <option value="" disabled selected>Seleziona...</option>
+                                        <option value="Yogurt greco magro (150g)">Yogurt greco bianco magro (150g)</option>
+                                        <option value="Yogurt intero bianco (125g)">Yogurt intero bianco (125g)</option>
+                                        <option value="Kefir (200ml)">Kefir (200ml)</option>
+                                        <option value="Latte p.s. (200ml)">Latte parz. scremato (200ml)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Carboidrati Solidi</label>
+                                    <select id="colazione-solido" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                                        <option value="" disabled selected>Seleziona...</option>
+                                        <option value="Cereali d'avena (40g)">Cereali / Fiocchi d'avena (40g)</option>
+                                        <option value="Fette biscottate (40g)">Fette biscottate (40g)</option>
+                                        <option value="Pane tostato (50g)">Pane tostato (50g)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PRANZO -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3"><i class="fa-solid fa-sun mr-2"></i>Pranzo <span class="text-xs font-normal lowercase">(+ Verdure libere e 15g Olio)</span></h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Carboidrati</label>
+                                    <select id="pranzo-carb" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                                        <option value="" disabled selected>Seleziona...</option>
+                                        <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
+                                        <option value="Pane comune (100g)">Pane comune (100g)</option>
+                                        <option value="Patate (250g)">Patate (250g)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Secondo Piatto</label>
+                                    <select id="pranzo-pro" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                                        <option value="" disabled selected>Seleziona fonte proteica...</option>
+                                        <optgroup label="Carni (150g)">
+                                            <option value="Carne Bianca (150g)" data-cost="bianca">Carne Bianca (Tacchino/Pollo/Coniglio)</option>
+                                            <option value="Carne Rossa (150g)" data-cost="rossa">Carne Rossa priva di grasso</option>
+                                        </optgroup>
+                                        <optgroup label="Salumi (120g)">
+                                            <option value="Salumi magri (120g)" data-cost="salumi">Bresaola/Cotto/Crudo sgrassato</option>
+                                        </optgroup>
+                                        <optgroup label="Formaggi">
+                                            <option value="Formaggi Magri (120g)" data-cost="formaggi">Ricotta/Tomino/Fiocchi (120g)</option>
+                                            <option value="Formaggi Grassi (80g)" data-cost="formaggi">Grana/Gorgonzola/Fontina (80g)</option>
+                                        </optgroup>
+                                        <optgroup label="Pesce e Uova">
+                                            <option value="Pesce (180-200g)" data-cost="pesce">Pesce fresco (180-200g)</option>
+                                            <option value="Uova (N°2)" data-cost="uova">Uova (N° 2)</option>
+                                        </optgroup>
+                                        <optgroup label="Legumi">
+                                            <option value="Legumi (150g)" data-cost="legumi">Legumi freschi/scatola (150g)</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CENA -->
+                        <div class="bg-slate-50 p-5 rounded-xl border border-slate-200">
+                            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-3"><i class="fa-solid fa-moon mr-2"></i>Cena <span class="text-xs font-normal lowercase">(+ Verdure libere e 15g Olio)</span></h3>
+                            
+                            <div class="mb-4">
+                                <label class="flex items-center gap-2 text-sm text-slate-700 font-medium cursor-pointer">
+                                    <input type="checkbox" id="cena-pizza" onchange="togglePizza()" class="w-4 h-4 text-emerald-600 focus:ring-emerald-500 border-slate-300 rounded">
+                                    <i class="fa-solid fa-pizza-slice text-amber-500"></i> Usa Bonus Pizza (Max 1 volta/sett)
+                                </label>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="cena-standard-inputs">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Carboidrati</label>
+                                    <select id="cena-carb" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                                        <option value="" disabled selected>Seleziona...</option>
+                                        <option value="Pane comune (100g)">Pane comune (100g)</option>
+                                        <option value="Patate (250g)">Patate (250g)</option>
+                                        <option value="Pasta o Riso (80g)">Pasta o Riso (80g)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Secondo Piatto</label>
+                                    <select id="cena-pro" class="w-full bg-white border border-slate-300 text-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-emerald-500 outline-none">
+                                        <!-- Options injected via JS from Pranzo -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <button id="btn-salva" onclick="salvaGiornata()" class="w-full accent-gradient hover:shadow-lg hover:opacity-90 text-white font-bold py-4 px-6 rounded-xl transition-all flex justify-center items-center gap-2 text-lg">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> Salva Menù in Cloud
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLONNA DESTRA: Dashboard -->
+            <div class="space-y-6">
+                <!-- Widget Budget Settimanale -->
+                <div class="glass-panel rounded-2xl p-6 relative overflow-hidden">
+                    <h3 class="text-lg font-bold text-slate-800 mb-5 border-b pb-2"><i class="fa-solid fa-scale-balanced text-emerald-600 mr-2"></i>Frequenze Consumate</h3>
+                    <div class="space-y-4" id="budget-bars-container">
+                        <!-- Bars injected via JS -->
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-100 text-center">
+                        <button onclick="resetSettimana()" class="text-sm font-semibold text-red-600 hover:text-red-800 transition-colors">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Svuota Settimana
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Diario Giornate Salvate -->
+                <div class="glass-panel rounded-2xl p-6 flex flex-col h-[400px]">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2"><i class="fa-solid fa-book-medical text-emerald-600 mr-2"></i>Diario Apporti</h3>
+                    <div id="diario-lista" class="flex-grow overflow-y-auto custom-scrollbar space-y-3 pr-2">
+                        <div class="text-center text-slate-400 mt-10 text-sm italic" id="empty-diary">
+                            <div class="loader mx-auto mb-2 border-t-emerald-400"></div>
+                            Sincronizzazione Cloud...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: CHEF AI (MOTORE APERTO SENZA CHIAVI) -->
+        <!-- ========================================== -->
+        <div id="tab-ai" class="hidden animate-fade-in space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 <!-- LABORATORIO SOSTITUZIONI -->
-                <div class="glass-panel p-6 sm:p-8 rounded-2xl">
-                    <h3 class="text-xl font-bold mb-2 flex items-center"><i class="fa-solid fa-right-left text-blue-400 mr-3 text-2xl"></i> Laboratorio Sostituzioni</h3>
-                    <p class="text-sm text-slate-400 mb-8 leading-relaxed">L'AI calcola macro e micro nutrienti per garantirti uno scambio perfetto senza sforare il piano medico.</p>
+                <div class="glass-panel p-6 sm:p-8 rounded-2xl flex flex-col h-full border-t-4 border-t-blue-500">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center"><i class="fa-solid fa-right-left text-blue-500 mr-3 text-2xl"></i> Laboratorio Sostituzioni</h3>
+                    <p class="text-sm text-slate-500 mb-8 leading-relaxed">L'AI calcola macro e micro nutrienti per garantirti uno scambio perfetto senza sforare il piano medico (es. Proteine per Proteine).</p>
                     
-                    <div class="space-y-5">
+                    <div class="space-y-5 flex-grow">
                         <div>
                             <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Cosa vuoi TOGLIERE?</label>
-                            <input type="text" id="ai-togliere" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder-slate-600" placeholder="Es. 150g Petto di Pollo">
+                            <input type="text" id="ai-togliere" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder-slate-400" placeholder="Es. 150g Petto di Pollo">
                         </div>
                         <div>
                             <label class="block text-xs font-bold text-slate-500 mb-2 uppercase tracking-wider">Cosa vuoi MANGIARE?</label>
-                            <input type="text" id="ai-mangiare" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-4 py-3 text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder-slate-600" placeholder="Es. Voglio mangiare del salmone">
+                            <input type="text" id="ai-mangiare" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder-slate-400" placeholder="Es. Voglio del salmone fresco">
                         </div>
-                        <button onclick="calcolaSostituzione()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-colors mt-2 shadow-lg shadow-blue-900/20">
-                            <i class="fa-solid fa-calculator mr-2"></i> Calcola Sostituzione
+                        <button onclick="calcolaSostituzione()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors mt-4 shadow-md">
+                            <i class="fa-solid fa-calculator mr-2"></i> Calcola Equivalenza Medica
                         </button>
                         
-                        <!-- Box Risultato AI -->
-                        <div id="ai-sostituzione-output" class="text-sm text-slate-300 mt-4 p-5 bg-[#0f172a] rounded-xl border border-slate-800 hidden leading-relaxed"></div>
+                        <!-- Box Risultato Sostituzione -->
+                        <div id="ai-sostituzione-output" class="text-sm text-slate-700 mt-4 p-5 bg-blue-50 rounded-xl border border-blue-100 hidden leading-relaxed"></div>
                     </div>
                 </div>
 
                 <!-- GENERATORE MENU GOURMET -->
-                <div class="glass-panel p-6 sm:p-8 rounded-2xl flex flex-col">
-                    <h3 class="text-xl font-bold mb-2 flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-purple-400 mr-3 text-2xl"></i> Generatore Menù Gourmet</h3>
-                    <p class="text-sm text-slate-400 mb-8 leading-relaxed">Crea un'intera giornata da 1800 Kcal (46% Carb, 20% Pro, 34% Grassi) con ricette di alta cucina e accostamenti perfetti.</p>
+                <div class="glass-panel p-6 sm:p-8 rounded-2xl flex flex-col h-full border-t-4 border-t-purple-500">
+                    <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-purple-500 mr-3 text-2xl"></i> Generatore Menù Gourmet</h3>
+                    <p class="text-sm text-slate-500 mb-8 leading-relaxed">Crea un'intera giornata da 1800 Kcal con ricette di alta cucina. Rispetta rigorosamente i paletti: 46% Carboidrati, 20% Proteine, 34% Grassi.</p>
                     
-                    <div class="flex flex-col items-center justify-center flex-grow py-6">
-                        <div class="w-24 h-24 rounded-full bg-purple-500/10 flex items-center justify-center mb-8 relative border border-purple-500/20">
-                            <div class="absolute inset-0 rounded-full border border-purple-500/30 animate-ping opacity-20"></div>
-                            <i class="fa-solid fa-brain text-5xl text-purple-400"></i>
+                    <div class="flex flex-col items-center justify-center py-6">
+                        <div class="w-24 h-24 rounded-full bg-purple-100 flex items-center justify-center mb-8 relative border border-purple-200 shadow-inner">
+                            <i class="fa-solid fa-brain text-5xl text-purple-500"></i>
                         </div>
-                        <button onclick="generaMenuGourmet()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-xl transition-colors shadow-lg shadow-purple-900/20">
+                        <button onclick="generaMenuGourmet()" class="w-full ai-gradient hover:opacity-90 text-white font-bold py-4 rounded-xl transition-colors shadow-md">
                             <i class="fa-solid fa-bell-concierge mr-2"></i> Sforna Giornata Gourmet
                         </button>
                     </div>
 
-                    <!-- Box Risultato AI -->
-                    <div id="ai-menu-output" class="text-sm text-slate-300 p-5 bg-[#0f172a] rounded-xl border border-slate-800 hidden leading-relaxed max-h-[400px] overflow-y-auto custom-scrollbar"></div>
+                    <!-- Box Risultato Menu -->
+                    <div id="ai-menu-output" class="text-sm text-slate-700 mt-4 p-5 bg-purple-50 rounded-xl border border-purple-100 hidden leading-relaxed max-h-[350px] overflow-y-auto custom-scrollbar"></div>
                 </div>
-            </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- TAB 1: DIETA MEDICA (Placeholder) -->
-        <!-- ========================================== -->
-        <div id="tab-dieta" class="hidden">
-            <div class="glass-panel p-8 rounded-2xl text-center">
-                <i class="fa-solid fa-utensils text-5xl text-emerald-500/50 mb-4 block"></i>
-                <h2 class="text-2xl font-bold mb-2">Dieta Medica</h2>
-                <p class="text-slate-400">La sezione del diario alimentare è temporaneamente nascosta per focalizzarci sul test dell'Intelligenza Artificiale.</p>
-            </div>
-        </div>
-
-        <!-- ========================================== -->
-        <!-- TAB 2: GLICEMIA (Placeholder) -->
-        <!-- ========================================== -->
-        <div id="tab-glicemia" class="hidden">
-            <div class="glass-panel p-8 rounded-2xl text-center">
-                <i class="fa-solid fa-droplet text-5xl text-blue-500/50 mb-4 block"></i>
-                <h2 class="text-2xl font-bold mb-2">Monitoraggio Glicemia</h2>
-                <p class="text-slate-400">La sezione glicemia è temporaneamente nascosta per focalizzarci sul test dell'Intelligenza Artificiale.</p>
             </div>
         </div>
 
     </main>
 
-    <!-- SCRIPTS DI FUNZIONAMENTO -->
-    <script>
-        // Gestione Tabulazioni
-        function switchTab(tabId) {
+    <!-- MODAL CUSTOM PER AVVISI -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity opacity-0">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 transform transition-all scale-95" id="modal-content">
+            <div class="text-center mb-6">
+                <div id="modal-icon" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-100 mb-4">
+                    <i class="fa-solid fa-hand text-3xl text-red-600"></i>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold text-slate-900 mb-2">Attenzione</h3>
+                <p id="modal-message" class="text-slate-600 text-sm leading-relaxed"></p>
+            </div>
+            <button onclick="closeModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-white font-medium py-3 rounded-xl transition-colors">
+                Ho capito
+            </button>
+        </div>
+    </div>
+
+    <!-- FIREBASE & LOGICA -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, deleteDoc, doc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Variables
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        let db, auth, currentUser;
+        let giornateSalvate = [];
+
+        // LIMITI MEDICI ESATTI
+        const budgetLimits = {
+            bianca: { name: "Carne Bianca", max: 3, icon: "fa-drumstick-bite", color: "bg-orange-400" },
+            rossa: { name: "Carne Rossa", max: 1, icon: "fa-steak", color: "bg-red-500" },
+            salumi: { name: "Salumi Magri", max: 2, icon: "fa-bacon", color: "bg-rose-400" },
+            formaggi: { name: "Formaggi", max: 2, icon: "fa-cheese", color: "bg-yellow-400" },
+            pesce: { name: "Pesce", max: 3, icon: "fa-fish", color: "bg-blue-400" },
+            uova: { name: "Uova (x2)", max: 2, icon: "fa-egg", color: "bg-amber-400" },
+            legumi: { name: "Legumi", max: 2, icon: "fa-seedling", color: "bg-green-500" },
+            pizza: { name: "Pizza Bonus", max: 1, icon: "fa-pizza-slice", color: "bg-red-500" }
+        };
+
+        // GESTIONE TABS (Dieta vs AI)
+        window.switchTab = function(tabId) {
             document.getElementById('tab-dieta').classList.add('hidden');
-            document.getElementById('tab-glicemia').classList.add('hidden');
             document.getElementById('tab-ai').classList.add('hidden');
-            document.getElementById('tab-ai').classList.remove('block');
             
-            const btns = ['btn-dieta', 'btn-glicemia', 'btn-ai'];
-            btns.forEach(id => {
-                document.getElementById(id).classList.remove('active');
-                document.getElementById(id).classList.add('inactive');
-            });
+            document.getElementById('btn-dieta').classList.replace('active', 'inactive');
+            document.getElementById('btn-ai').classList.replace('active', 'inactive');
 
             document.getElementById('tab-' + tabId).classList.remove('hidden');
-            if(tabId === 'ai') document.getElementById('tab-ai').classList.add('block');
-            document.getElementById('btn-' + tabId).classList.remove('inactive');
-            document.getElementById('btn-' + tabId).classList.add('active');
+            document.getElementById('btn-' + tabId).classList.replace('inactive', 'active');
         }
 
-        // ==========================================
-        // IL CERVELLO ARTIFICIALE (GEMINI AI)
-        // ==========================================
-        
-        // LA TUA NUOVA CHIAVE PRESA DALLO SCREENSHOT (AQ...)
-        const apiKey = "AQ.Ab8RN6I-AdztFQAE20AuPjZglyh-i3m5TDpjlRxbwiZpv2zDlQ"; 
-        
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+        // INIZIALIZZAZIONE FORM
+        function initForm() {
+            const pranzoPro = document.getElementById('pranzo-pro');
+            const cenaPro = document.getElementById('cena-pro');
+            cenaPro.innerHTML = pranzoPro.innerHTML; // Copia le opzioni proteine a cena
+            renderBudgetBars();
+        }
 
-        // Funzione base che contatta i server di Google
-        async function askChefAI(promptTesto, outputId, sysInstruction) {
+        // FIREBASE SETUP
+        async function initFirebase() {
+            try {
+                if(Object.keys(firebaseConfig).length === 0) throw new Error("No config");
+                const app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                currentUser = auth.currentUser;
+
+                document.getElementById('auth-loader').classList.add('hidden');
+                document.getElementById('auth-text').innerHTML = '<i class="fa-solid fa-cloud-check text-green-400"></i> Cloud Attivo';
+                listenToData();
+            } catch (error) {
+                console.error("Firebase Error:", error);
+                document.getElementById('auth-loader').classList.add('hidden');
+                document.getElementById('auth-text').innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Offline';
+            }
+        }
+
+        // ASCOLTO DATI CLOUD
+        function listenToData() {
+            if (!currentUser) return;
+            const q = query(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta_medica')); 
+            onSnapshot(q, (snapshot) => {
+                giornateSalvate = [];
+                snapshot.forEach((doc) => giornateSalvate.push({ id: doc.id, ...doc.data() }));
+                giornateSalvate.sort((a, b) => b.timestamp - a.timestamp);
+                updateDashboard();
+            }, (error) => console.error("Firestore Listen Error:", error));
+        }
+
+        // SALVATAGGIO GIORNATA CLOUD
+        window.salvaGiornata = async function() {
+            if (!currentUser) { showModal("Errore", "Cloud non connesso."); return; }
+
+            const day = document.getElementById('day-select').value;
+            const colLiquido = document.getElementById('colazione-liquido').value;
+            const colSolido = document.getElementById('colazione-solido').value;
+            const pranzoCarb = document.getElementById('pranzo-carb').value;
+            const pranzoPro = document.getElementById('pranzo-pro');
+            const isPizza = document.getElementById('cena-pizza').checked;
+            const cenaCarb = document.getElementById('cena-carb').value;
+            const cenaPro = document.getElementById('cena-pro');
+
+            if (!colLiquido || !colSolido || !pranzoCarb || !pranzoPro.value || (!isPizza && (!cenaCarb || !cenaPro.value))) {
+                showModal("Campi Incompleti", "Seleziona tutte le portate prima di salvare.");
+                return;
+            }
+
+            let newCosts = {};
+            const checkCost = (option) => { if(option && option.dataset.cost) newCosts[option.dataset.cost] = (newCosts[option.dataset.cost] || 0) + 1; };
+
+            checkCost(pranzoPro.options[pranzoPro.selectedIndex]);
+            if(isPizza) newCosts.pizza = 1;
+            else checkCost(cenaPro.options[cenaPro.selectedIndex]);
+
+            let currentCosts = calculateCurrentCosts();
+            for (let category in newCosts) {
+                if ((currentCosts[category] || 0) + newCosts[category] > budgetLimits[category].max) {
+                    showModal("Limite Superato", `Hai superato il limite settimanale per: ${budgetLimits[category].name}.`);
+                    return;
+                }
+            }
+
+            if(giornateSalvate.find(g => g.giorno === day)) {
+                showModal("Giorno Esistente", `Hai già inserito un menù per ${day}. Eliminalo dal diario per modificarlo.`);
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta_medica'), {
+                    giorno: day,
+                    colazione: `${colLiquido} + ${colSolido}`,
+                    pranzo: `${pranzoCarb} + ${pranzoPro.options[pranzoPro.selectedIndex].text}`,
+                    cena: isPizza ? "🍕 Pizza Bonus" : `${cenaCarb} + ${cenaPro.options[cenaPro.selectedIndex].text}`,
+                    costs: newCosts,
+                    timestamp: Date.now()
+                });
+                resetFormInputs();
+            } catch (e) { showModal("Errore", "Problema di rete durante il salvataggio."); }
+        };
+
+        window.deleteDay = async function(docId) {
+            if (!currentUser) return;
+            try { await deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta_medica', docId)); } 
+            catch (e) { console.error(e); }
+        };
+
+        window.resetSettimana = async function() {
+            if(confirm("Vuoi davvero cancellare tutta la settimana?")) {
+                for (const g of giornateSalvate) {
+                    await deleteDoc(doc(db, 'artifacts', appId, 'users', currentUser.uid, 'dieta_medica', g.id));
+                }
+            }
+        };
+
+        function calculateCurrentCosts() {
+            let costs = {};
+            giornateSalvate.forEach(g => { if(g.costs) for(let cat in g.costs) costs[cat] = (costs[cat] || 0) + g.costs[cat]; });
+            return costs;
+        }
+
+        function updateDashboard() {
+            const list = document.getElementById('diario-lista');
+            if (giornateSalvate.length === 0) {
+                list.innerHTML = `<div class="text-center text-slate-400 mt-10 text-sm italic"><i class="fa-solid fa-clipboard-list text-4xl mb-3 block opacity-30"></i>Nessun pasto.</div>`;
+            } else {
+                list.innerHTML = '';
+                giornateSalvate.forEach(g => {
+                    const card = document.createElement('div');
+                    card.className = "bg-white border border-slate-200 rounded-xl p-4 shadow-sm relative group hover:border-emerald-200 transition-colors";
+                    card.innerHTML = `
+                        <button onclick="deleteDay('${g.id}')" class="absolute top-2 right-2 text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"><i class="fa-solid fa-trash text-sm"></i></button>
+                        <div class="font-bold text-emerald-700 mb-2 border-b border-emerald-100 pb-1">${g.giorno}</div>
+                        <div class="text-slate-600 text-sm mb-1 truncate"><i class="fa-solid fa-mug-hot text-slate-400 w-4"></i> ${g.colazione}</div>
+                        <div class="text-slate-600 text-sm mb-1 truncate"><i class="fa-solid fa-sun text-slate-400 w-4"></i> ${g.pranzo}</div>
+                        <div class="text-slate-600 text-sm truncate"><i class="fa-solid fa-moon text-slate-400 w-4"></i> ${g.cena}</div>
+                    `;
+                    list.appendChild(card);
+                });
+            }
+            renderBudgetBars();
+        }
+
+        function renderBudgetBars() {
+            const container = document.getElementById('budget-bars-container');
+            container.innerHTML = '';
+            let currentCosts = calculateCurrentCosts();
+            for (let key in budgetLimits) {
+                const limit = budgetLimits[key];
+                const consumed = currentCosts[key] || 0;
+                const percentage = Math.min((consumed / limit.max) * 100, 100);
+                container.innerHTML += `
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span class="font-semibold text-slate-600"><i class="fa-solid ${limit.icon} w-5 text-slate-400"></i> ${limit.name}</span>
+                        <span class="font-bold ${consumed > limit.max ? 'text-red-600' : 'text-slate-800'}">${consumed} / ${limit.max}</span>
+                    </div>
+                    <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                        <div class="${limit.color} h-2 rounded-full transition-all duration-500 ease-out" style="width: ${percentage}%"></div>
+                    </div>
+                </div>`;
+            }
+        }
+
+        window.togglePizza = function() {
+            const isPizza = document.getElementById('cena-pizza').checked;
+            const standardInputs = document.getElementById('cena-standard-inputs');
+            if (isPizza) {
+                standardInputs.classList.add('opacity-30', 'pointer-events-none');
+                document.getElementById('cena-carb').value = ""; document.getElementById('cena-pro').value = "";
+            } else { standardInputs.classList.remove('opacity-30', 'pointer-events-none'); }
+        };
+
+        function resetFormInputs() {
+            document.getElementById('colazione-liquido').value = ""; document.getElementById('colazione-solido').value = "";
+            document.getElementById('pranzo-carb').value = ""; document.getElementById('pranzo-pro').value = "";
+            document.getElementById('cena-pizza').checked = false; togglePizza();
+        }
+
+        window.showModal = function(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => { modal.classList.remove('opacity-0'); document.getElementById('modal-content').classList.remove('scale-95'); }, 10);
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('opacity-0'); document.getElementById('modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
+
+        // ==========================================
+        // MOTORE AI OPEN SOURCE (SENZA CHIAVI)
+        // ==========================================
+        async function askOpenAI(promptTesto, outputId, sysInstruction) {
             const outputEl = document.getElementById(outputId);
             outputEl.classList.remove('hidden');
             
-            // Animazione di caricamento
             outputEl.innerHTML = `
-                <div class="flex flex-col items-center justify-center py-6">
-                    <div class="loader mb-4"></div>
-                    <span class="text-purple-400 font-medium animate-pulse">Analisi biochimica in corso...</span>
-                </div>
-            `;
+                <div class="flex flex-col items-center justify-center py-8">
+                    <div class="loader loader-ai mb-4"></div>
+                    <span class="text-purple-600 font-bold animate-pulse">Elaborazione neurale in corso...</span>
+                </div>`;
 
             try {
-                const payload = {
-                    contents: [{ parts: [{ text: promptTesto }] }],
-                    systemInstruction: { parts: [{ text: sysInstruction }] }
-                };
-
-                const response = await fetch(apiUrl, {
+                // Rete Neurale Aperta. NESSUNA CHIAVE RICHIESTA!
+                const response = await fetch('https://text.pollinations.ai/', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        messages: [
+                            { role: 'system', content: sysInstruction },
+                            { role: 'user', content: promptTesto }
+                        ]
+                    })
                 });
 
-                const data = await response.json();
-                
-                // Se Google risponde correttamente
-                if (response.ok && data.candidates && data.candidates.length > 0) {
-                    let text = data.candidates[0].content.parts[0].text;
-                    
-                    // Formatta il testo in HTML
-                    text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-emerald-400 font-bold">$1</strong>');
+                if (response.ok) {
+                    let text = await response.text();
+                    // Formattazione bella per HTML
+                    text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-slate-900 font-bold">$1</strong>');
                     text = text.replace(/\n/g, '<br>');
-                    
-                    outputEl.innerHTML = `<div class="animate-fade-in text-slate-200">${text}</div>`;
+                    outputEl.innerHTML = `<div class="animate-fade-in text-slate-700">${text}</div>`;
                 } else {
-                    // RIVELATORE DI BUG POTENZIATO
-                    console.error("Errore di Google:", data);
-                    let veroErrore = data.error ? data.error.message : "Errore sconosciuto";
-                    
-                    outputEl.innerHTML = `
-                        <div class="text-red-400 bg-red-900/20 p-4 rounded-xl border border-red-500/30">
-                            <i class="fa-solid fa-triangle-exclamation mb-2 text-2xl"></i><br>
-                            <strong>Google ha bloccato la richiesta! Motivo esatto:</strong><br>
-                            <span class="italic text-slate-300 mt-2 block">${veroErrore}</span><br>
-                            <span class="text-xs text-slate-500">Se vedi questo errore, mandami lo screenshot e capiamo cosa blocca Google.</span>
-                        </div>`;
+                    throw new Error("Server AI saturo");
                 }
             } catch (err) {
                 outputEl.innerHTML = `
-                    <div class="text-red-400 text-center py-4">
+                    <div class="text-red-500 bg-red-50 p-4 rounded-xl border border-red-200 text-center">
                         <i class="fa-solid fa-wifi text-3xl mb-2 block"></i>
-                        <strong>Errore di Rete.</strong> Controlla la connessione e riprova.
+                        <strong>Errore di Connessione al Cloud AI.</strong><br>
+                        <span class="text-sm">Riprova tra qualche secondo. Nessuna chiave richiesta.</span>
                     </div>`;
             }
         }
 
-        // Funzione per il bottone SOSTITUZIONI
         window.calcolaSostituzione = function() {
             const togliere = document.getElementById('ai-togliere').value;
             const mangiare = document.getElementById('ai-mangiare').value;
             
-            if(!togliere || !mangiare) {
-                alert("Chef, compila entrambi i campi per procedere!"); 
-                return;
-            }
+            if(!togliere || !mangiare) { showModal("Attenzione", "Compila entrambi i campi per il calcolo!"); return; }
             
-            const prompt = `Voglio togliere dalla mia dieta oggi: ${togliere}. Voglio mangiare al suo posto: ${mangiare}. Calcolami i grammi ESATTI che devo mangiare del nuovo cibo per avere gli stessi macro (soprattutto proteine e grassi equivalenti). Mostrami prima i macronutrienti del cibo tolto, e poi la quantità in grammi e i macro del nuovo cibo. Sii preciso e matematico.`;
-            const sys = "Sei un nutrizionista clinico esperto a supporto di un cuoco. Fai calcoli matematici precisi al grammo. Rispondi in italiano usando un tono professionale, incoraggiante e da esperto di cucina.";
-            
-            askChefAI(prompt, 'ai-sostituzione-output', sys);
+            const prompt = `Devo togliere dalla dieta: ${togliere}. Voglio sostituirlo con: ${mangiare}. Dimmi esattamente i GRAMMI del nuovo cibo che devo pesare per pareggiare le proteine e i grassi del cibo tolto. Mostrami i macro del cibo tolto, e il calcolo esatto del nuovo cibo.`;
+            const sys = "Sei un nutrizionista clinico matematico esperto. Rispondi in italiano. Vai dritto al punto con i numeri. Non usare Markdown complesso, usa frasi semplici.";
+            askOpenAI(prompt, 'ai-sostituzione-output', sys);
         }
 
-        // Funzione per il bottone MENU GOURMET
         window.generaMenuGourmet = function() {
-            const prompt = "Genera un menù per una singola giornata intera da 1800 Kcal esatte (46% Carboidrati, 20% Proteine, 34% Grassi). Includi: Colazione, Spuntino Mattina, Pranzo, Spuntino Pomeriggio, Cena. Fai in modo che la CENA sia una ricetta gourmet da ristorante stellato ma assolutamente sana, dietetica e compatibile con un paziente diabetico. Non usare cibi ospedalieri o banali. Spiega brevemente il perché degli abbinamenti nutrizionali e come abbassano l'indice glicemico.";
-            const sys = "Sei un Executive Chef stellato e dietista clinico di fama mondiale. Scrivi in italiano. Struttura la risposta in modo chiaro con titoli per ogni pasto. Evidenzia bene le calorie totali e i macronutrienti stimati a fine giornata.";
-            
-            askChefAI(prompt, 'ai-menu-output', sys);
+            const prompt = "Genera un menù giornaliero da ESATTE 1800 Kcal (46% Carboidrati, 20% Proteine, 34% Grassi). Dividi in: Colazione, Pranzo, Cena. La CENA deve essere una ricetta da ristorante gourmet di altissimo livello ma perfettamente dietetica. Dimmi le calorie totali e i macro a fine giornata.";
+            const sys = "Sei un Executive Chef stellato che collabora con diabetologi. Scrivi in italiano. Scrivi in modo chiaro dividendo i pasti. Sii creativo per la cena e fornisci mini-ricetta.";
+            askOpenAI(prompt, 'ai-menu-output', sys);
         }
-    </script>
 
-    <style>
-        .animate-fade-in { animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+        // BOOT
+        initForm();
+        initFirebase();
+    </script>
 </body>
 </html>
