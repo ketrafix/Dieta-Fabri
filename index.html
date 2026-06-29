@@ -70,7 +70,6 @@
 
     <div id="login-screen" class="w-full max-w-md mt-10">
         <div class="glass-panel rounded-3xl p-8 text-center shadow-2xl relative overflow-hidden">
-            <!-- Icona Foglia Vettoriale HD -->
             <div class="mx-auto w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mb-6 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-16 h-16">
                     <path d="M256 140 C210 180 170 250 170 320 C170 370 210 400 256 400 C302 400 342 370 342 320 C342 250 302 180 256 140 Z" fill="#16a34a"/>
@@ -158,8 +157,13 @@
                     </div>
 
                     <div id="day-form-fields" class="space-y-6">
+                        
+                        <!-- Colazione con bottone AI -->
                         <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
-                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-mug-hot mr-2"></i>Colazione</h3>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-mug-hot mr-2"></i>Colazione</h3>
+                                <button onclick="apriSostituzioniAI('colazione')" class="text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/40 px-3 py-1.5 rounded-lg font-bold transition-colors border border-purple-500/30"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Consigli AI</button>
+                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 mb-1">Liquidi/Latticino</label>
@@ -189,8 +193,12 @@
                             <div><strong class="block text-slate-400 mb-1"><i class="fa-regular fa-clock mr-1"></i> SPUNTINO POMERIGGIO (FISSO)</strong>Frutta fresca g 150 + Yogurt greco g 150</div>
                         </div>
 
+                        <!-- Pranzo con bottone AI -->
                         <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
-                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-sun mr-2"></i>Pranzo <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure e 15g Olio)</span></h3>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-sun mr-2"></i>Pranzo <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure e 15g Olio)</span></h3>
+                                <button onclick="apriSostituzioniAI('pranzo')" class="text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/40 px-3 py-1.5 rounded-lg font-bold transition-colors border border-purple-500/30"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Consigli AI</button>
+                            </div>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-semibold text-slate-500 mb-1">Carboidrati</label>
@@ -223,8 +231,13 @@
                             </div>
                         </div>
 
+                        <!-- Cena con bottone AI -->
                         <div class="bg-slate-800/50 p-5 rounded-xl border border-slate-700/50 hover:border-emerald-500/30 transition-colors">
-                            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3"><i class="fa-solid fa-moon mr-2"></i>Cena <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure e 15g Olio)</span></h3>
+                            <div class="flex justify-between items-center mb-3">
+                                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider"><i class="fa-solid fa-moon mr-2"></i>Cena <span class="text-xs font-normal lowercase text-slate-500">(+ Verdure e 15g Olio)</span></h3>
+                                <button onclick="apriSostituzioniAI('cena')" class="text-xs bg-purple-500/20 text-purple-400 hover:bg-purple-500/40 px-3 py-1.5 rounded-lg font-bold transition-colors border border-purple-500/30"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Consigli AI</button>
+                            </div>
+                            
                             <label class="flex items-center gap-2 text-sm text-slate-300 font-medium cursor-pointer mb-4 bg-slate-900 p-3 rounded-lg border border-slate-700">
                                 <input type="checkbox" id="cena-pizza" onchange="togglePizza()" class="w-4 h-4 rounded bg-slate-800 border-slate-600 text-emerald-500 focus:ring-emerald-500 focus:ring-offset-slate-900">
                                 <i class="fa-solid fa-pizza-slice text-amber-500"></i> Usa Bonus Pizza (Margherita/Verdure)
@@ -338,6 +351,35 @@
 
     </div>
 
+    <!-- MODAL CUSTOM -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity opacity-0">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 max-w-md w-full p-6 transform transition-all scale-95" id="modal-content">
+            <div class="text-center mb-6">
+                <div id="modal-icon" class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-amber-500/20 mb-4">
+                    <i class="fa-solid fa-triangle-exclamation text-3xl text-amber-500"></i>
+                </div>
+                <h3 id="modal-title" class="text-xl font-bold text-white mb-2">Attenzione</h3>
+                <p id="modal-message" class="text-slate-300 text-sm leading-relaxed"></p>
+            </div>
+            <button onclick="closeModal()" id="modal-btn" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-medium py-3 rounded-xl transition-colors">
+                Ho capito
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL SOSTITUZIONI AI -->
+    <div id="ai-modal" class="hidden fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity opacity-0">
+        <div class="bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 max-w-2xl w-full p-6 transform transition-all scale-95 flex flex-col max-h-[80vh]" id="ai-modal-content">
+            <div class="flex justify-between items-center mb-4 border-b border-slate-700 pb-4">
+                <h3 class="text-xl font-bold text-white flex items-center"><i class="fa-solid fa-wand-magic-sparkles text-purple-400 mr-3"></i> Consigli dello Chef AI</h3>
+                <button onclick="chiudiSostituzioniAI()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            </div>
+            <div class="overflow-y-auto custom-scrollbar pr-2 space-y-4" id="ai-modal-body">
+                <!-- Injected via JS -->
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -356,6 +398,90 @@
         let appConfig = { db: null, userId: "default_user_1", role: null };
         let state = { dieta: {}, glicemia: {} };
         let chartInstance = null;
+
+        // --- IL CERVELLO LOCALE DELL'AI ---
+        const LOCAL_AI_DB = {
+            colazione: [
+                {
+                    titolo: "Toast Salato al Tacchino",
+                    sostituisce: "Sostituisce: Latte + Cereali",
+                    ingredienti: "50g di Pane tostato + 50g Fesa di Tacchino + 30g Formaggio spalmabile light (es. Philadelphia Active).",
+                    chefTip: "Usa erba cipollina e pepe nero sul formaggio per dare spinta senza aggiungere sale. Macros perfettamente bilanciati."
+                },
+                {
+                    titolo: "Pancake Proteico (Salato o Dolce)",
+                    sostituisce: "Sostituisce: Yogurt Greco + Fette biscottate",
+                    ingredienti: "150g di Albumi (solo il bianco) + 40g di Farina d'Avena.",
+                    chefTip: "Monta gli albumi, amalgama la farina. Cuoci in padellino. Aggiungi sale/pepe per la versione salata, cannella per la dolce. Zero grassi!"
+                },
+                {
+                    titolo: "Crostone Ricotta & Erbette",
+                    sostituisce: "Sostituisce: Ricotta (120g) + Pane (50g)",
+                    ingredienti: "50g Pane tostato + 120g Ricotta vaccina lavorata con erbette fresche aromatiche.",
+                    chefTip: "La ricotta non ti scala i bonus formaggi dei pasti principali. Un'ottima colazione salata e morbida al palato."
+                }
+            ],
+            pranzo: [
+                {
+                    titolo: "Finto Riso (Riso di Cavolfiore)",
+                    sostituisce: "Sostituisce: 80g di Pasta/Riso",
+                    ingredienti: "300g di Cavolfiore frullato a crudo (dimensione chicchi di riso) + Proteina a scelta.",
+                    chefTip: "Se vuoi una giornata 'Low-Carb' per la glicemia: spadella il finto riso con curry, pollo a cubetti e le tue verdure. Volume enorme, calorie quasi a zero."
+                },
+                {
+                    titolo: "Spaghetti di Zucchine (Zoodles)",
+                    sostituisce: "Sostituisce: 80g di Pasta",
+                    ingredienti: "300g di Zucchine tagliate a julienne + Ragù di Tacchino/Tonno.",
+                    chefTip: "Se la pasta ti alza troppo la glicemia a pranzo, usa le zucchine. Tengono il sugo alla perfezione."
+                }
+            ],
+            cena: [
+                {
+                    titolo: "Purea Fredda di Patate (Amido Resistente)",
+                    sostituisce: "Sostituisce: 250g Patate calde",
+                    ingredienti: "250g Patate lesse, fatte raffreddare in frigo per 12 ore.",
+                    chefTip: "Il freddo trasforma gli zuccheri in 'Amido Resistente'. La glicemia post-cena rimarrà piatta come una tavola."
+                },
+                {
+                    titolo: "Insalatona di Legumi Croccanti",
+                    sostituisce: "Sostituisce: Pasta/Pane + Legumi",
+                    ingredienti: "150g Ceci cotti al forno fino a renderli croccanti + Verdure fresche.",
+                    chefTip: "Toglie la voglia di sgranocchiare (chips) a fine giornata e fornisce proteine e fibre a lento rilascio."
+                }
+            ]
+        };
+
+        window.apriSostituzioniAI = function(pasto) {
+            const body = document.getElementById('ai-modal-body');
+            body.innerHTML = '';
+            
+            const ricette = LOCAL_AI_DB[pasto];
+            if(ricette) {
+                ricette.forEach(r => {
+                    body.innerHTML += `
+                    <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
+                        <h4 class="text-emerald-400 font-bold mb-1">${r.titolo}</h4>
+                        <div class="text-xs text-rose-400 mb-2 font-medium bg-rose-500/10 px-2 py-1 rounded inline-block">${r.sostituisce}</div>
+                        <p class="text-sm text-slate-300 mb-2"><strong class="text-slate-400">Ingredienti:</strong> ${r.ingredienti}</p>
+                        <p class="text-sm text-slate-400 italic border-l-2 border-purple-500 pl-2 mt-2"><i class="fa-solid fa-lightbulb text-purple-400 mr-1"></i> ${r.chefTip}</p>
+                    </div>`;
+                });
+            }
+            
+            const modal = document.getElementById('ai-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('ai-modal-content').classList.remove('scale-95');
+            }, 10);
+        };
+
+        window.chiudiSostituzioniAI = function() {
+            const modal = document.getElementById('ai-modal');
+            modal.classList.add('opacity-0');
+            document.getElementById('ai-modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
 
         const BUDGET_LIMITS = {
             bianca: { name: "Carne Bianca", max: 3, icon: "fa-drumstick-bite", color: "bg-orange-500" },
@@ -567,7 +693,7 @@
             totalKcal += CALORIE_DB.pro[prP.value] || 0;
             
             if(isPizza) {
-                totalKcal += 800;
+                totalKcal += 800; 
             } else {
                 totalKcal += CALORIE_DB.carb[ceC.value] || 0;
                 totalKcal += CALORIE_DB.pro[ceP.value] || 0;
@@ -579,7 +705,7 @@
                 pranzo: `${prC.value} + ${prP.value}`,
                 cena: isPizza ? "🍕 Pizza Margherita/Verdure" : `${ceC.value} + ${ceP.value}`,
                 costs: newCosts,
-                kcal: totalKcal,
+                kcal: totalKcal, 
                 raw: { colLiquido: colL, colSolido: colS, pranzoCarb: prC.value, pranzoPro: prP.value, isPizza: isPizza, cenaCarb: ceC.value, cenaPro: ceP.value },
                 timestamp: Date.now()
             };
@@ -786,6 +912,25 @@
                 </div>`;
             });
         }
+
+        window.showModal = function(title, message) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-message').innerText = message;
+            
+            const modal = document.getElementById('custom-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('modal-content').classList.remove('scale-95');
+            }, 10);
+        };
+
+        window.closeModal = function() {
+            const modal = document.getElementById('custom-modal');
+            modal.classList.add('opacity-0');
+            document.getElementById('modal-content').classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        };
 
         document.getElementById('cena-pro').innerHTML = document.getElementById('pranzo-pro').innerHTML;
         initCloud();
