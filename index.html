@@ -138,7 +138,6 @@
         <div class="flex p-1 bg-slate-800 rounded-xl mb-6">
             <button onclick="switchTab('dieta')" id="tab-dieta" class="flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all"><i class="fa-solid fa-utensils mr-2"></i>Dieta Medica</button>
             <button onclick="switchTab('glicemia')" id="tab-glicemia" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50"><i class="fa-solid fa-droplet mr-2"></i>Glicemia</button>
-            <button onclick="switchTab('ai')" id="tab-ai" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50"><i class="fa-solid fa-brain mr-2"></i>Chef AI</button>
         </div>
 
         <div id="section-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -329,43 +328,6 @@
             </div>
         </div>
 
-        <div id="section-ai" class="hidden grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Modulo 1: Sostituzione -->
-            <div class="glass-panel rounded-2xl p-6 sm:p-8 flex flex-col">
-                <h2 class="text-xl font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-right-left text-blue-400 mr-2"></i>Laboratorio Sostituzioni</h2>
-                <p class="text-sm text-slate-400 mb-6">L'AI calcola macro e micro nutrienti per garantirti uno scambio perfetto senza sforare il piano medico.</p>
-                <div class="space-y-4 mb-6">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Cosa vuoi TOGLIERE? (es. 150g Petto di Pollo)</label>
-                        <input type="text" id="ai-ingrediente-out" class="w-full input-dark rounded-xl py-3 px-4" placeholder="Es. 150g Petto di Pollo">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-500 mb-1">Cosa vuoi MANGIARE? (Lascia vuoto per farti stupire)</label>
-                        <input type="text" id="ai-ingrediente-in" class="w-full input-dark rounded-xl py-3 px-4" placeholder="Es. Voglio mangiare del salmone">
-                    </div>
-                </div>
-                <button onclick="chiediSostituzione()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:-translate-y-1 mt-auto">
-                    <i class="fa-solid fa-calculator mr-2"></i> Calcola Sostituzione
-                </button>
-                <div id="ai-sostituzione-output" class="mt-6 text-slate-300"></div>
-            </div>
-
-            <!-- Modulo 2: Menù Gourmet -->
-            <div class="glass-panel rounded-2xl p-6 sm:p-8 flex flex-col">
-                <h2 class="text-xl font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-wand-magic-sparkles text-purple-400 mr-2"></i>Generatore Menù Gourmet</h2>
-                <p class="text-sm text-slate-400 mb-6">Crea un'intera giornata da 1800 Kcal (46% Carb, 20% Pro, 34% Grassi) con ricette di alta cucina e accostamenti perfetti.</p>
-                <div class="flex-grow flex items-center justify-center p-4">
-                    <div class="w-32 h-32 bg-purple-500/10 rounded-full flex items-center justify-center border border-purple-500/30 text-purple-400 shadow-[0_0_30px_rgba(168,85,247,0.2)]">
-                        <i class="fa-solid fa-brain text-5xl"></i>
-                    </div>
-                </div>
-                <button onclick="generaMenuGourmet()" class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:-translate-y-1 mt-auto">
-                    <i class="fa-solid fa-fire-burner mr-2"></i> Sforna Giornata Gourmet
-                </button>
-                <div id="ai-menu-output" class="mt-6 text-slate-300"></div>
-            </div>
-        </div>
-
     </div>
 
     <script type="module">
@@ -506,14 +468,12 @@
         window.switchTab = function(tab) {
             document.getElementById('section-dieta').classList.toggle('hidden', tab !== 'dieta');
             document.getElementById('section-glicemia').classList.toggle('hidden', tab !== 'glicemia');
-            document.getElementById('section-ai').classList.toggle('hidden', tab !== 'ai');
             
             const activeClass = 'flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all';
             const inactiveClass = 'flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50';
             
             document.getElementById('tab-dieta').className = tab === 'dieta' ? activeClass : inactiveClass;
             document.getElementById('tab-glicemia').className = tab === 'glicemia' ? activeClass : inactiveClass;
-            document.getElementById('tab-ai').className = tab === 'ai' ? activeClass : inactiveClass;
         };
 
         window.togglePizza = function() {
@@ -817,81 +777,6 @@
 
         document.getElementById('cena-pro').innerHTML = document.getElementById('pranzo-pro').innerHTML;
         initCloud();
-
-        async function askChefAI(promptTesto, outputId, sysInstruction) {
-            const outputEl = document.getElementById(outputId);
-            outputEl.innerHTML = '<div class="flex flex-col justify-center items-center py-10"><div class="loader"></div><span class="mt-4 text-purple-400 font-bold animate-pulse">Analisi neurale e biochimica in corso...</span></div>';
-
-            const apiKey = ""; // Lasciare vuoto: viene fornito automaticamente dall'ambiente
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{ parts: [{ text: promptTesto }] }],
-                systemInstruction: { parts: [{ text: sysInstruction }] }
-            };
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                const result = await response.json();
-                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
-
-                if (text) {
-                    const cleanText = text.replace(/```html/g, '').replace(/```/g, '');
-                    outputEl.innerHTML = `<div class="animate-fade-in-up text-sm leading-relaxed">${cleanText}</div>`;
-                } else {
-                    outputEl.innerHTML = '<div class="text-red-500 font-bold p-4 bg-red-500/10 rounded-xl">Errore nella generazione: Nessun dato ricevuto dal modello.</div>';
-                }
-            } catch (error) {
-                outputEl.innerHTML = `<div class="text-red-500 font-bold p-4 bg-red-500/10 rounded-xl">Errore di connessione AI: ${error.message}</div>`;
-            }
-        }
-
-        window.chiediSostituzione = function() {
-            const outIng = document.getElementById('ai-ingrediente-out').value;
-            const inIng = document.getElementById('ai-ingrediente-in').value;
-            
-            if(!outIng) {
-                showToast("Inserisci l'ingrediente da togliere!", "error");
-                return;
-            }
-
-            const sysInstruction = `Sei un Nutrizionista Clinico Avanzato. Il tuo output DEVE ESSERE IN FORMATO HTML. Usa classi TailwindCSS per lo stile (es. text-emerald-400, font-bold, mb-2, p-4, bg-slate-800, rounded-xl, ul, li). NESSUN TAG DI BLOCCO MARKDOWN (niente \`\`\`html).`;
-            
-            const promptTesto = `L'utente deve sostituire dal suo piano medico: ${outIng}. 
-            Desiderio dell'utente (se specificato, usalo per la sostituzione, altrimenti proponi tu un'alternativa sana e gourmet): ${inIng || 'Proponi tu una valida alternativa.'}.
-            
-            Esegui rigorosamente questi passaggi:
-            1. Calcola e mostra i macronutrienti dell'ingrediente originale nelle quantità fornite (Kcal, Proteine, Carboidrati, Grassi).
-            2. Calcola i GRAMMI ESATTI della nuova alternativa necessari per pareggiare il più possibile Kcal e Macronutrienti (senza sforare il totale calorico).
-            3. Struttura visivamente bene i risultati in HTML con box colorati per la comparazione diretta. Usa colori come text-blue-400 per l'originale e text-emerald-400 per la sostituzione.`;
-
-            askChefAI(promptTesto, 'ai-sostituzione-output', sysInstruction);
-        };
-
-        window.generaMenuGourmet = function() {
-            const sysInstruction = `Sei un Nutrizionista Clinico e Chef Stellato. Formatta SEMPRE l'output in HTML puro (niente blocchi markdown). Usa tag <h3>, <ul>, <li>, <strong> e classi Tailwind per dare stile grafico ai pasti (es. text-purple-400, border-b, border-slate-600, pb-2, mb-4, p-4, bg-slate-800/50, rounded-xl).`;
-            
-            const promptTesto = `Genera un menù giornaliero completo da ESATTE 1800 Kcal.
-            Target TASSATIVO: 46% Carboidrati, 20% Proteine, 34% Grassi.
-            L'utente è uno Chef professionista: VIETATO proporre cibi tristi da ospedale (niente pollo lesso o riso in bianco).
-            Il piano deve includere:
-            - Colazione
-            - Spuntino Mattina
-            - Pranzo
-            - Spuntino Pomeriggio
-            - Cena
-            
-            Regole d'oro:
-            1. Sii chirurgico con le grammature di ogni singolo alimento.
-            2. Per la cena, scrivi in 3 righe una tecnica di preparazione gourmet ma adatta alla dieta.
-            3. Mostra i totali calorici e di macronutrienti a fine giornata in un box in fondo per dimostrare la precisione del tuo calcolo.`;
-
-            askChefAI(promptTesto, 'ai-menu-output', sysInstruction);
-        };
 
         // Registrazione del Service Worker per il funzionamento Offline e l'installazione PWA
         if ('serviceWorker' in navigator) {
