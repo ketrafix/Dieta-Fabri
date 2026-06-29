@@ -35,6 +35,9 @@
             background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; 
         }
         
+        /* Modifica per l'icona del calendario nel campo datetime-local in dark mode */
+        ::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.6; cursor: pointer; }
+        
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
@@ -290,6 +293,11 @@
                 <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4"><i class="fa-solid fa-syringe text-emerald-500 mr-2"></i>Registra Valore</h2>
                 <div class="space-y-5">
                     <div>
+                        <label class="block text-sm font-medium text-slate-400 mb-1">Data e Ora (Opzionale)</label>
+                        <input type="datetime-local" id="gli-data" class="w-full input-dark rounded-xl py-3 px-4 text-slate-300" title="Lascia vuoto per usare l'ora attuale">
+                        <p class="text-[10px] text-slate-500 mt-1"><i class="fa-solid fa-circle-info"></i> Lascia vuoto per l'ora attuale</p>
+                    </div>
+                    <div>
                         <label class="block text-sm font-medium text-slate-400 mb-1">Momento della misurazione</label>
                         <select id="gli-momento" class="w-full input-dark rounded-xl py-3 px-4">
                             <option value="Digiuno (Mattina)">A Digiuno (Mattina)</option>
@@ -299,7 +307,7 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-400 mb-1">Valore (mg/dL)</label>
-                        <input type="number" id="gli-valore" placeholder="Es. 95" class="w-full input-dark rounded-xl py-3 px-4 text-lg font-bold">
+                        <input type="number" id="gli-valore" placeholder="Es. 103" class="w-full input-dark rounded-xl py-3 px-4 text-lg font-bold">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-400 mb-1">Note (Opzionale)</label>
@@ -361,15 +369,14 @@
             speciale: { name: "Ravioli/Gnocchi", max: 1, icon: "fa-bowl-food", color: "bg-purple-500" }
         };
 
-        // IL MOTORE CALORICO NASCOSTO
         const CALORIE_DB = {
             col_liq: { "Yogurt greco magro (150g)": 85, "Yogurt intero (125g)": 80, "Kefir (200ml)": 90, "Latte parz. scremato (200ml)": 95 },
             col_sol: { "Cereali/Avena (40g)": 150, "Fette biscottate (40g)": 160, "Pane tostato (50g)": 140, "Biscotti secchi (40g)": 170 },
             carb: { "Pasta o Riso (80g)": 280, "Farro/Orzo/Cereali (80g)": 270, "Pane comune (100g)": 280, "Patate (250g)": 200, "Ravioli/Pasta uovo (120g)": 350, "Gnocchi (250g)": 300 },
             pro: { "Carne Bianca (150g)": 165, "Carne Rossa (150g)": 220, "Salumi magri (120g)": 180, "Formaggi Magri (120g)": 180, "Formaggi Semi-Grassi (100g)": 250, "Formaggi Grassi (80g)": 300, "Pesce (180-200g)": 180, "Pesce Scatola (100g)": 150, "Uova (N° 2)": 160, "Legumi (150g freschi/50g secchi)": 140 },
-            spuntini_fissi: 250, // Frutta mattino e pome + crackers/yogurt greco
-            condimenti_fissi: 270, // 30g olio totale al giorno
-            verdure_fisse: 50 // Quota verdure indicative
+            spuntini_fissi: 250, 
+            condimenti_fissi: 270, 
+            verdure_fisse: 50 
         };
 
         window.showToast = function(message, type = 'success') {
@@ -553,7 +560,6 @@
                 }
             }
 
-            // CALCOLO CALORIE AUTOMATICO
             let totalKcal = CALORIE_DB.spuntini_fissi + CALORIE_DB.condimenti_fissi + CALORIE_DB.verdure_fisse;
             totalKcal += CALORIE_DB.col_liq[colL] || 0;
             totalKcal += CALORIE_DB.col_sol[colS] || 0;
@@ -561,7 +567,7 @@
             totalKcal += CALORIE_DB.pro[prP.value] || 0;
             
             if(isPizza) {
-                totalKcal += 800; // Valore forfettario pizza
+                totalKcal += 800;
             } else {
                 totalKcal += CALORIE_DB.carb[ceC.value] || 0;
                 totalKcal += CALORIE_DB.pro[ceP.value] || 0;
@@ -573,7 +579,7 @@
                 pranzo: `${prC.value} + ${prP.value}`,
                 cena: isPizza ? "🍕 Pizza Margherita/Verdure" : `${ceC.value} + ${ceP.value}`,
                 costs: newCosts,
-                kcal: totalKcal, // Salva le calorie nel database!
+                kcal: totalKcal,
                 raw: { colLiquido: colL, colSolido: colS, pranzoCarb: prC.value, pranzoPro: prP.value, isPizza: isPizza, cenaCarb: ceC.value, cenaPro: ceP.value },
                 timestamp: Date.now()
             };
@@ -679,21 +685,26 @@
 
         window.salvaGlicemia = async function() {
             if(appConfig.role !== 'admin') return;
+            const dataInput = document.getElementById('gli-data').value;
             const momento = document.getElementById('gli-momento').value;
             const valore = parseInt(document.getElementById('gli-valore').value);
             const note = document.getElementById('gli-note').value;
             
             if(!valore) { showToast("Inserisci un valore numerico!", "error"); return; }
 
-            const id = Date.now().toString();
-            const data = { momento, valore, note, timestamp: Date.now() };
+            const timestamp = dataInput ? new Date(dataInput).getTime() : Date.now();
+            const id = timestamp.toString() + Math.floor(Math.random() * 1000);
+            const data = { momento, valore, note, timestamp: timestamp };
 
             state.glicemia[id] = data; 
             renderGlicemia();
             showToast("Misurazione glicemica salvata", "success");
 
             if(appConfig.db) { await setDoc(doc(appConfig.db, "users", appConfig.userId, "glicemia", id), data); }
-            document.getElementById('gli-valore').value = ''; document.getElementById('gli-note').value = '';
+            
+            document.getElementById('gli-valore').value = ''; 
+            document.getElementById('gli-note').value = '';
+            document.getElementById('gli-data').value = '';
         };
 
         window.eliminaGlicemia = async function(id) {
@@ -720,7 +731,7 @@
             const data = recsAsc.map(r => r.valore);
             
             const pointColors = recsAsc.map(r => {
-                let targetMax = r.momento.includes("Digiuno") ? 100 : 140;
+                let targetMax = r.momento.includes("Digiuno") ? 150 : 180;
                 return r.valore <= targetMax ? '#10b981' : '#ef4444'; 
             });
 
@@ -744,7 +755,7 @@
                     options: {
                         responsive: true, maintainAspectRatio: false,
                         plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1e293b', titleColor: '#f8fafc', bodyColor: '#cbd5e1', borderColor: '#334155', borderWidth: 1, padding: 12, displayColors: false, callbacks: { label: function(c) { return c.parsed.y + ' mg/dL'; } } } },
-                        scales: { y: { grid: { color: '#334155', borderDash: [5, 5] }, min: 60, suggestedMax: 160 }, x: { grid: { display: false } } }
+                        scales: { y: { grid: { color: '#334155', borderDash: [5, 5] }, min: 60, suggestedMax: 200 }, x: { grid: { display: false } } }
                     }
                 });
             }
@@ -763,7 +774,8 @@
             recsDesc.forEach(([id, r]) => {
                 const dateObj = new Date(r.timestamp);
                 const timeStr = `${dateObj.getDate()}/${dateObj.getMonth()+1} - ${dateObj.getHours()}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
-                let targetMax = r.momento.includes("Digiuno") ? 100 : 140;
+                
+                let targetMax = r.momento.includes("Digiuno") ? 150 : 180;
                 let colorClass = r.valore <= targetMax ? "text-emerald-400" : "text-red-400";
                 
                 list.innerHTML += `
