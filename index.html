@@ -81,22 +81,41 @@
 
             <div id="login-admin-form">
                 <input type="password" id="pin-input" placeholder="C O D I C E   P I N" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-emerald-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="eseguiLogin('admin')" class="w-full bg-emerald-600 hover:bg-emerald-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
+                <button onclick="eseguiLoginAdmin()" class="w-full bg-emerald-600 hover:bg-emerald-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
                     <i class="fa-solid fa-unlock-keyhole"></i> Accedi
                 </button>
                 <div class="mt-6 pt-6 border-t border-slate-700">
                     <button onclick="toggleLoginMode()" class="text-slate-300 font-medium hover:text-white transition-colors text-sm flex items-center justify-center gap-2 mx-auto">
-                        <i class="fa-solid fa-user-plus"></i> Registrati come Visitatore
+                        <i class="fa-solid fa-user-plus"></i> Accesso Visitatore
                     </button>
                 </div>
             </div>
 
-            <div id="login-visitor-form" class="hidden animate-fade-in-up">
-                <input type="text" id="visitor-name" placeholder="Il tuo Nome (es. Dario)" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-3 font-medium focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
-                <input type="password" id="visitor-pin" placeholder="Crea un PIN" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="eseguiLogin('visitor')" class="w-full bg-blue-600 hover:bg-blue-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-eye"></i> Entra in Lettura
-                </button>
+            <div id="login-visitor-container" class="hidden animate-fade-in-up">
+                <!-- TABS LOGIN / REGISTRAZIONE -->
+                <div class="flex p-1 bg-slate-800 rounded-xl mb-4">
+                    <button onclick="toggleVisitorAuthMode('login')" id="tab-vis-login" class="flex-1 py-2 text-sm font-bold rounded-lg bg-blue-600 text-white shadow transition-all">Login</button>
+                    <button onclick="toggleVisitorAuthMode('register')" id="tab-vis-reg" class="flex-1 py-2 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50">Nuovo Visitatore</button>
+                </div>
+
+                <!-- LOGIN FORM -->
+                <div id="vis-login-form">
+                    <input type="text" id="log-visitor-name" placeholder="Il tuo Nome" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-3 font-medium focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
+                    <input type="password" id="log-visitor-pin" placeholder="Il tuo PIN" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
+                    <button onclick="loginVisitatore()" class="w-full bg-blue-600 hover:bg-blue-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i> Accedi
+                    </button>
+                </div>
+
+                <!-- REGISTER FORM -->
+                <div id="vis-register-form" class="hidden">
+                    <input type="text" id="reg-visitor-name" placeholder="Scegli un Nome" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-3 font-medium focus:border-purple-500 focus:outline-none transition-colors" autocomplete="off">
+                    <input type="password" id="reg-visitor-pin" placeholder="Crea un PIN" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-purple-500 focus:outline-none transition-colors" autocomplete="off">
+                    <button onclick="registraVisitatore()" class="w-full bg-purple-600 hover:bg-purple-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-user-plus"></i> Registrati
+                    </button>
+                </div>
+
                 <div class="mt-6 pt-6 border-t border-slate-700">
                     <button onclick="toggleLoginMode()" class="text-slate-400 font-medium hover:text-white transition-colors text-sm">
                         Torna al Login Principale
@@ -383,7 +402,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const MY_PRIVATE_FIREBASE_CONFIG = {
             apiKey: "AIzaSyAzFfHPhgo_cbrRTLGl7Ey99GPbC49EoUM",
@@ -537,35 +556,92 @@
 
         window.toggleLoginMode = function() {
             const admin = document.getElementById('login-admin-form');
-            const visitor = document.getElementById('login-visitor-form');
+            const visitor = document.getElementById('login-visitor-container');
             admin.classList.toggle('hidden');
             visitor.classList.toggle('hidden');
         };
 
-        window.eseguiLogin = function(type) {
-            let userRole = '';
-            let userName = '';
+        window.toggleVisitorAuthMode = function(mode) {
+            const loginForm = document.getElementById('vis-login-form');
+            const regForm = document.getElementById('vis-register-form');
+            const tabLogin = document.getElementById('tab-vis-login');
+            const tabReg = document.getElementById('tab-vis-reg');
 
-            if(type === 'admin') {
-                const pin = document.getElementById('pin-input').value;
-                if(pin !== '713') { showToast("PIN Amministratore Errato!", "error"); return; }
-                userRole = 'admin'; userName = 'Chef Fabrizio';
-                showToast("Bentornato Chef!", "success");
+            const activeClass = 'flex-1 py-2 text-sm font-bold rounded-lg bg-blue-600 text-white shadow transition-all';
+            const inactiveClass = 'flex-1 py-2 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50';
+            const activeRegClass = 'flex-1 py-2 text-sm font-bold rounded-lg bg-purple-600 text-white shadow transition-all';
+
+            if(mode === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                tabLogin.className = activeClass;
+                tabReg.className = inactiveClass;
             } else {
-                const name = document.getElementById('visitor-name').value;
-                const pin = document.getElementById('visitor-pin').value;
-                if(!name || !pin) { showToast("Inserisci Nome e PIN per entrare.", "error"); return; }
-                userRole = 'visitor'; userName = `Visitatore: ${name}`;
-                showToast(`Benvenuto, ${name}!`, "success");
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                tabLogin.className = inactiveClass;
+                tabReg.className = activeRegClass;
             }
+        };
 
-            appConfig.role = userRole;
-            document.getElementById('user-badge').innerHTML = userRole === 'admin' ? '<i class="fa-solid fa-shield-halved mr-1"></i> Admin' : `<i class="fa-solid fa-eye mr-1"></i> ${userName}`;
+        window.eseguiLoginAdmin = function() {
+            const pin = document.getElementById('pin-input').value;
+            if(pin !== '713') { showToast("PIN Amministratore Errato!", "error"); return; }
+            showToast("Bentornato Chef!", "success");
+            finalizeLogin('admin', 'Chef Fabrizio');
+        };
+
+        window.registraVisitatore = async function() {
+            const name = document.getElementById('reg-visitor-name').value.trim();
+            const pin = document.getElementById('reg-visitor-pin').value.trim();
+            if(!name || !pin) { showToast("Inserisci Nome e PIN", "error"); return; }
+            
+            if(!appConfig.db) { showToast("Cloud disconnesso, riprova", "error"); return; }
+            
+            const docRef = doc(appConfig.db, "users", appConfig.userId, "visitors", name.toLowerCase());
+            const docSnap = await getDoc(docRef);
+            
+            if(docSnap.exists()) {
+                showToast("Nome già in uso! Usa la scheda Login.", "error"); return;
+            }
+            
+            await setDoc(docRef, { nome: name, pin: pin });
+            showToast("Registrazione completata! Ora accedi.", "success");
+            toggleVisitorAuthMode('login');
+            document.getElementById('log-visitor-name').value = name;
+            document.getElementById('log-visitor-pin').value = '';
+        };
+
+        window.loginVisitatore = async function() {
+            const name = document.getElementById('log-visitor-name').value.trim();
+            const pin = document.getElementById('log-visitor-pin').value.trim();
+            if(!name || !pin) { showToast("Inserisci Nome e PIN", "error"); return; }
+
+            if(!appConfig.db) { showToast("Cloud disconnesso, riprova", "error"); return; }
+
+            const docRef = doc(appConfig.db, "users", appConfig.userId, "visitors", name.toLowerCase());
+            const docSnap = await getDoc(docRef);
+            
+            if(!docSnap.exists()) {
+                showToast("Visitatore non trovato. Registrati prima!", "error"); return;
+            }
+            
+            if(docSnap.data().pin !== pin) {
+                showToast("PIN errato!", "error"); return;
+            }
+            
+            showToast(`Benvenuto, ${docSnap.data().nome}!`, "success");
+            finalizeLogin('visitor', `Visitatore: ${docSnap.data().nome}`);
+        };
+
+        function finalizeLogin(role, userName) {
+            appConfig.role = role;
+            document.getElementById('user-badge').innerHTML = role === 'admin' ? '<i class="fa-solid fa-shield-halved mr-1"></i> Admin' : `<i class="fa-solid fa-eye mr-1"></i> ${userName}`;
             
             const adminOnlyElements = document.querySelectorAll('.admin-only');
-            adminOnlyElements.forEach(el => el.style.display = userRole === 'admin' ? 'block' : 'none');
+            adminOnlyElements.forEach(el => el.style.display = role === 'admin' ? 'block' : 'none');
             
-            if(userRole === 'visitor') {
+            if(role === 'visitor') {
                 document.getElementById('colonna-form').classList.add('hidden');
                 const colDash = document.getElementById('colonna-dashboard');
                 colDash.classList.remove('lg:col-span-1'); colDash.classList.add('lg:col-span-3');
@@ -579,7 +655,7 @@
             document.getElementById('app-container').style.display = 'flex';
             
             startSync();
-        };
+        }
 
         window.eseguiLogout = function() { window.location.reload(); };
 
