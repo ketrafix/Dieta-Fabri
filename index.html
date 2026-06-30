@@ -5,16 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SmartFDiet - Chef Fabrizio</title>
     
+    <!-- FORZATURA APP NATIVA E COLORE TEMA -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SmartFDiet">
     <meta name="theme-color" content="#0f172a">
 
+    <!-- Collegamento al Manifesto e Icona (Configurazione PWA) -->
     <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/svg+xml" href="icon.svg">
     <link rel="apple-touch-icon" href="icon.svg">
 
+    <!-- Librerie Esterne -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -32,6 +35,7 @@
             background-repeat: no-repeat; background-position: right 1rem center; background-size: 1em; 
         }
         
+        /* Modifica per l'icona del calendario nel campo datetime-local in dark mode */
         ::-webkit-calendar-picker-indicator { filter: invert(1); opacity: 0.6; cursor: pointer; }
         
         .custom-scrollbar::-webkit-scrollbar { width: 6px; }
@@ -48,6 +52,7 @@
         }
         .animate-fade-in-up { animation: fadeInUp 0.4s ease-out forwards; }
 
+        /* Toast Notifications */
         #toast-container { position: fixed; top: 1.5rem; right: 1.5rem; z-index: 100; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
         .custom-toast { 
             transform: translateX(120%); opacity: 0; 
@@ -74,45 +79,47 @@
             
             <h1 class="text-3xl font-bold text-white mb-8 tracking-tight">SmartFDiet</h1>
 
-            <!-- Login Admin -->
             <div id="login-admin-form">
                 <input type="password" id="pin-input" placeholder="C O D I C E   P I N" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-emerald-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="eseguiLogin('admin')" class="w-full bg-emerald-600 hover:bg-emerald-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-unlock-keyhole"></i> Accedi come Chef
+                <button onclick="eseguiLoginAdmin()" class="w-full bg-emerald-600 hover:bg-emerald-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-unlock-keyhole"></i> Accedi
                 </button>
                 <div class="mt-6 pt-6 border-t border-slate-700">
-                    <button onclick="switchLoginMode('visitor-login')" class="text-slate-300 font-medium hover:text-white transition-colors text-sm flex items-center justify-center gap-2 mx-auto">
-                        <i class="fa-solid fa-users"></i> Accesso Visitatori
+                    <button onclick="toggleLoginMode()" class="text-slate-300 font-medium hover:text-white transition-colors text-sm flex items-center justify-center gap-2 mx-auto">
+                        <i class="fa-solid fa-user-plus"></i> Accesso Visitatore
                     </button>
                 </div>
             </div>
 
-            <!-- Login Visitatore -->
-            <div id="login-visitor-form" class="hidden animate-fade-in-up">
-                <h3 class="text-lg font-bold text-emerald-400 mb-4">Login Visitatore</h3>
-                <input type="text" id="visitor-login-name" placeholder="Il tuo Nome" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-3 mb-3 font-medium focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
-                <input type="password" id="visitor-login-pin" placeholder="Il tuo PIN" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-3 mb-4 font-bold tracking-widest focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="eseguiLogin('visitor')" class="w-full bg-blue-600 hover:bg-blue-500 hover:-translate-y-1 text-white font-bold py-3 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2 mb-4">
-                    <i class="fa-solid fa-eye"></i> Entra in Lettura
-                </button>
-                <button onclick="switchLoginMode('visitor-register')" class="text-blue-400 font-medium hover:text-blue-300 transition-colors text-sm mb-4 block w-full">
-                    Non hai un account? Registrati
-                </button>
-                <div class="pt-4 border-t border-slate-700">
-                    <button onclick="switchLoginMode('admin')" class="text-slate-500 font-medium hover:text-white transition-colors text-sm">Torna al Login Chef</button>
+            <div id="login-visitor-container" class="hidden animate-fade-in-up">
+                <!-- TABS LOGIN / REGISTRAZIONE -->
+                <div class="flex p-1 bg-slate-800 rounded-xl mb-4">
+                    <button onclick="toggleVisitorAuthMode('login')" id="tab-vis-login" class="flex-1 py-2 text-sm font-bold rounded-lg bg-blue-600 text-white shadow transition-all">Login</button>
+                    <button onclick="toggleVisitorAuthMode('register')" id="tab-vis-reg" class="flex-1 py-2 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50">Nuovo Visitatore</button>
                 </div>
-            </div>
 
-            <!-- Registrazione Visitatore -->
-            <div id="register-visitor-form" class="hidden animate-fade-in-up">
-                <h3 class="text-lg font-bold text-purple-400 mb-4">Nuovo Visitatore</h3>
-                <input type="text" id="visitor-reg-name" placeholder="Scegli un Nome" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-3 mb-3 font-medium focus:border-purple-500 focus:outline-none transition-colors" autocomplete="off">
-                <input type="password" id="visitor-reg-pin" placeholder="Crea un PIN Segreto" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-3 mb-4 font-bold tracking-widest focus:border-purple-500 focus:outline-none transition-colors" autocomplete="off">
-                <button onclick="registraVisitatore()" class="w-full bg-purple-600 hover:bg-purple-500 hover:-translate-y-1 text-white font-bold py-3 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2 mb-4">
-                    <i class="fa-solid fa-user-plus"></i> Registrami
-                </button>
-                <div class="pt-4 border-t border-slate-700">
-                    <button onclick="switchLoginMode('visitor-login')" class="text-slate-500 font-medium hover:text-white transition-colors text-sm">Torna al Login Visitatore</button>
+                <!-- LOGIN FORM -->
+                <div id="vis-login-form">
+                    <input type="text" id="log-visitor-name" placeholder="Il tuo Nome" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-3 font-medium focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
+                    <input type="password" id="log-visitor-pin" placeholder="Il tuo PIN" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-blue-500 focus:outline-none transition-colors" autocomplete="off">
+                    <button onclick="loginVisitatore()" class="w-full bg-blue-600 hover:bg-blue-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i> Accedi
+                    </button>
+                </div>
+
+                <!-- REGISTER FORM -->
+                <div id="vis-register-form" class="hidden">
+                    <input type="text" id="reg-visitor-name" placeholder="Scegli un Nome" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-3 font-medium focus:border-purple-500 focus:outline-none transition-colors" autocomplete="off">
+                    <input type="password" id="reg-visitor-pin" placeholder="Crea un PIN" class="w-full bg-slate-800 border-2 border-slate-700 text-white text-center rounded-2xl px-6 py-4 mb-4 font-bold tracking-widest focus:border-purple-500 focus:outline-none transition-colors" autocomplete="off">
+                    <button onclick="registraVisitatore()" class="w-full bg-purple-600 hover:bg-purple-500 hover:-translate-y-1 text-white font-bold py-4 rounded-2xl shadow-lg transition-all text-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-user-plus"></i> Registrati
+                    </button>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-slate-700">
+                    <button onclick="toggleLoginMode()" class="text-slate-400 font-medium hover:text-white transition-colors text-sm">
+                        Torna al Login Principale
+                    </button>
                 </div>
             </div>
             
@@ -148,14 +155,13 @@
             </div>
         </header>
 
-        <!-- Menu a 3 schede -->
-        <div class="flex p-1 bg-slate-800 rounded-xl mb-6">
-            <button onclick="switchTab('dieta')" id="tab-dieta" class="flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all"><i class="fa-solid fa-utensils mr-2 hidden sm:inline"></i>Diario</button>
-            <button onclick="switchTab('glicemia')" id="tab-glicemia" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50"><i class="fa-solid fa-droplet mr-2 hidden sm:inline"></i>Glicemia</button>
-            <button onclick="switchTab('piano')" id="tab-piano" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50"><i class="fa-solid fa-file-medical mr-2 hidden sm:inline"></i>Piano Completo</button>
+        <!-- Menu a schede -->
+        <div class="flex p-1 bg-slate-800 rounded-xl mb-6 flex-wrap sm:flex-nowrap gap-1 sm:gap-0">
+            <button onclick="switchTab('dieta')" id="tab-dieta" class="flex-1 py-3 px-2 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all whitespace-nowrap"><i class="fa-solid fa-utensils mr-2"></i>Dieta Medica</button>
+            <button onclick="switchTab('glicemia')" id="tab-glicemia" class="flex-1 py-3 px-2 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50 whitespace-nowrap"><i class="fa-solid fa-droplet mr-2"></i>Glicemia</button>
+            <button onclick="switchTab('piano')" id="tab-piano" class="flex-1 py-3 px-2 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50 whitespace-nowrap"><i class="fa-solid fa-book-open-reader mr-2"></i>Piano Completo</button>
         </div>
 
-        <!-- SEZIONE DIETA MEDICA -->
         <div id="section-dieta" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Modulo Form Dieta (nascosto per Visitatore) -->
             <div class="lg:col-span-2 space-y-6" id="colonna-form">
@@ -315,7 +321,6 @@
             </div>
         </div>
 
-        <!-- SEZIONE GLICEMIA (Grafico a due linee) -->
         <div id="section-glicemia" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="glass-panel rounded-2xl p-6 sm:p-8 self-start lg:col-span-1 admin-only" id="glicemia-form-container">
                 <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4"><i class="fa-solid fa-syringe text-emerald-500 mr-2"></i>Registra Valore</h2>
@@ -349,7 +354,7 @@
 
             <div class="lg:col-span-2 space-y-6" id="colonna-glicemia-diario">
                 <div class="glass-panel rounded-2xl p-6">
-                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-chart-line text-emerald-500 mr-2"></i>Andamento Clinico Separato</h3>
+                    <h3 class="text-lg font-bold text-white mb-4 border-b border-slate-700 pb-2"><i class="fa-solid fa-chart-line text-emerald-500 mr-2"></i>Andamento Clinico</h3>
                     <div class="w-full h-64 relative">
                         <canvas id="glicemiaChart"></canvas>
                     </div>
@@ -364,80 +369,99 @@
             </div>
         </div>
 
-        <!-- SEZIONE PIANO COMPLETO (Visibile a tutti) -->
-        <div id="section-piano" class="hidden animate-fade-in-up space-y-6">
-            <div class="glass-panel rounded-2xl p-8">
-                <h2 class="text-2xl font-bold text-emerald-400 mb-8 border-b border-slate-700 pb-4"><i class="fa-solid fa-file-medical mr-3"></i>Referto Medico & Regole d'Oro</h2>
+        <!-- NUOVA SEZIONE: PIANO COMPLETO -->
+        <div id="section-piano" class="hidden space-y-6 animate-fade-in-up">
+            <div class="glass-panel rounded-2xl p-6 sm:p-8">
+                <h2 class="text-2xl font-bold text-white mb-2"><i class="fa-solid fa-book-open-reader text-blue-500 mr-3"></i> Il Protocollo Ufficiale</h2>
+                <p class="text-slate-400 text-sm mb-6 border-b border-slate-700 pb-4">Guida completa per la consultazione: 1800 Kcal, bilanciate per il controllo glicemico.</p>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Regole Generali -->
-                    <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 shadow-lg hover:border-emerald-500/50 transition-colors">
-                        <h3 class="text-xl font-bold text-white mb-5 flex items-center"><i class="fa-solid fa-scale-balanced text-amber-500 mr-3 text-2xl"></i> Impostazioni Base</h3>
-                        <ul class="space-y-4 text-slate-300 text-sm">
-                            <li class="flex items-start"><i class="fa-solid fa-fire text-orange-500 mt-1 mr-3 text-lg"></i> <div><strong class="text-white block text-base">Calorie Giornaliere:</strong> 1800 Kcal</div></li>
-                            <li class="flex items-start"><i class="fa-solid fa-droplet text-blue-400 mt-1 mr-3 text-lg"></i> <div><strong class="text-white block text-base">Idratazione Tassativa:</strong> Bere circa 2 Litri d'acqua al giorno</div></li>
-                            <li class="flex items-start"><i class="fa-solid fa-bottle-droplet text-yellow-400 mt-1 mr-3 text-lg"></i> <div><strong class="text-white block text-base">Olio Extravergine d'Oliva:</strong> 15g a Pranzo e 15g a Cena (3 cucchiaini)</div></li>
-                            <li class="flex items-start"><i class="fa-solid fa-pizza-slice text-red-500 mt-1 mr-3 text-lg"></i> <div><strong class="text-white block text-base">Bonus Pizza:</strong> 1 volta a settimana a cena (Margherita)</div></li>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Regole Fisse -->
+                    <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+                        <h3 class="text-emerald-400 font-bold mb-3 uppercase tracking-wider text-sm"><i class="fa-solid fa-scale-balanced mr-2"></i> Regole Fisse & Condimenti</h3>
+                        <ul class="space-y-2 text-slate-300 text-sm">
+                            <li><i class="fa-solid fa-droplet text-amber-500 w-5"></i> <strong>Olio EVO:</strong> 15g a Pranzo + 15g a Cena</li>
+                            <li><i class="fa-solid fa-leaf text-green-500 w-5"></i> <strong>Verdure:</strong> Libere a pranzo e cena</li>
+                            <li><i class="fa-solid fa-glass-water text-blue-400 w-5"></i> <strong>Acqua:</strong> Circa 3 Litri al giorno</li>
+                            <li><i class="fa-solid fa-pills text-purple-400 w-5"></i> <strong>Psyllogel:</strong> 30 min prima di pranzo e cena</li>
                         </ul>
                     </div>
 
-                    <!-- Struttura Colazione (Originale Ripristinata) -->
-                    <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 shadow-lg hover:border-blue-500/50 transition-colors">
-                        <h3 class="text-xl font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-mug-saucer text-blue-400 mr-3 text-2xl"></i> La Colazione</h3>
-                        <p class="text-sm text-slate-400 mb-5 leading-relaxed">Scegli una fonte liquida o proteica e abbinala sempre a <strong>40-50g di carboidrati solidi</strong> (Fette biscottate, Pane tostato, Cereali).</p>
-                        
-                        <div class="space-y-3 h-[240px] overflow-y-auto custom-scrollbar pr-2">
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 flex justify-between items-center shadow-inner">
-                                <span class="text-slate-200 font-medium text-sm"><i class="fa-solid fa-spoon text-slate-500 mr-2"></i>Yogurt Greco Magro</span>
-                                <span class="text-emerald-400 font-bold text-sm bg-emerald-500/10 px-3 py-1 rounded-lg">150g</span>
+                    <!-- Spuntini -->
+                    <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700">
+                        <h3 class="text-emerald-400 font-bold mb-3 uppercase tracking-wider text-sm"><i class="fa-solid fa-apple-whole mr-2"></i> Gli Spuntini</h3>
+                        <ul class="space-y-3 text-slate-300 text-sm">
+                            <li class="border-b border-slate-700/50 pb-2"><strong>Mattina (Fisso):</strong> Frutta fresca (150g) + Crackers/Grissini (30g)</li>
+                            <li><strong>Pomeriggio (Fisso):</strong> Frutta fresca (150g) + Yogurt greco magro (150g)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Colazione -->
+                    <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700 lg:col-span-2 hover:border-emerald-500/30 transition-colors">
+                        <h3 class="text-emerald-400 font-bold mb-3 uppercase tracking-wider text-sm"><i class="fa-solid fa-mug-hot mr-2"></i> Colazione (Scegli 1 Liquido/Latticino + 1 Solido)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div>
+                                <strong class="text-slate-400 block mb-2 border-b border-slate-700 pb-1">Fonti Liquide e Latticini</strong>
+                                <ul class="space-y-1 text-slate-300 text-sm">
+                                    <li>• Yogurt greco magro (150g)</li>
+                                    <li>• Ricotta vaccina (120g)</li>
+                                    <li>• Kefir o Latte parz. scremato (200ml)</li>
+                                </ul>
                             </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 flex justify-between items-center shadow-inner">
-                                <span class="text-slate-200 font-medium text-sm"><i class="fa-solid fa-glass-water text-slate-500 mr-2"></i>Kefir / Latte Parz. Scremato</span>
-                                <span class="text-emerald-400 font-bold text-sm bg-emerald-500/10 px-3 py-1 rounded-lg">200ml</span>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 flex justify-between items-center shadow-inner">
-                                <span class="text-slate-200 font-medium text-sm"><i class="fa-solid fa-cheese text-slate-500 mr-2"></i>Fiocchi di Latte (es. Jocca)</span>
-                                <span class="text-emerald-400 font-bold text-sm bg-emerald-500/10 px-3 py-1 rounded-lg">120g</span>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 flex justify-between items-center shadow-inner">
-                                <span class="text-slate-200 font-medium text-sm"><i class="fa-solid fa-cheese text-slate-500 mr-2"></i>Ricotta Vaccina</span>
-                                <span class="text-emerald-400 font-bold text-sm bg-emerald-500/10 px-3 py-1 rounded-lg">120g</span>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 flex justify-between items-center shadow-inner">
-                                <span class="text-slate-200 font-medium text-sm"><i class="fa-solid fa-drumstick-bite text-slate-500 mr-2"></i>Fesa di Tacchino</span>
-                                <span class="text-emerald-400 font-bold text-sm bg-emerald-500/10 px-3 py-1 rounded-lg">60g</span>
-                            </div>
-                            <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-700 flex justify-between items-center shadow-inner">
-                                <span class="text-slate-200 font-medium text-sm"><i class="fa-solid fa-bread-slice text-slate-500 mr-2"></i>Formaggio Light Spalmabile</span>
-                                <span class="text-emerald-400 font-bold text-sm bg-emerald-500/10 px-3 py-1 rounded-lg">50g</span>
+                            <div>
+                                <strong class="text-slate-400 block mb-2 border-b border-slate-700 pb-1">Carboidrati Solidi</strong>
+                                <ul class="space-y-1 text-slate-300 text-sm">
+                                    <li>• Pane tostato (50g)</li>
+                                    <li>• Fette biscottate (40g)</li>
+                                    <li>• Cereali o Fiocchi d'Avena (40g)</li>
+                                    <li>• Biscotti secchi (40g)</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Struttura Pasti Principali -->
-                    <div class="bg-slate-800/50 p-6 rounded-xl border border-slate-700 shadow-lg hover:border-purple-500/50 transition-colors md:col-span-2">
-                        <h3 class="text-xl font-bold text-white mb-6 flex items-center border-b border-slate-700 pb-4"><i class="fa-solid fa-utensils text-emerald-500 mr-3 text-2xl"></i> Pasti Principali (Pranzo & Cena)</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <h4 class="text-amber-500 font-bold mb-4 flex items-center text-lg"><i class="fa-solid fa-wheat-awn mr-2"></i> Carboidrati</h4>
-                                <ul class="text-sm text-slate-300 space-y-3 bg-slate-900/50 p-5 rounded-xl border border-slate-700">
-                                    <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span>Pasta / Riso / Cereali</span> <strong class="text-white bg-slate-800 px-2 py-1 rounded border border-slate-600">80g</strong></li>
-                                    <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span>Pane comune</span> <strong class="text-white bg-slate-800 px-2 py-1 rounded border border-slate-600">100g</strong></li>
-                                    <li class="flex justify-between items-center"><span>Patate</span> <strong class="text-white bg-slate-800 px-2 py-1 rounded border border-slate-600">250g</strong></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 class="text-amber-500 font-bold mb-4 flex items-center text-lg"><i class="fa-solid fa-drumstick-bite mr-2"></i> Proteine (Max Settimanali)</h4>
-                                <ul class="text-sm text-slate-300 space-y-2 bg-slate-900/50 p-5 rounded-xl border border-slate-700">
-                                    <li class="flex justify-between items-center border-b border-slate-800 pb-1"><span>Carne Bianca (150g)</span> <strong class="text-emerald-400">Max 3 volte</strong></li>
-                                    <li class="flex justify-between items-center border-b border-slate-800 pb-1"><span>Carne Rossa (150g)</span> <strong class="text-emerald-400">Max 1 volta</strong></li>
-                                    <li class="flex justify-between items-center border-b border-slate-800 pb-1"><span>Pesce (180-200g)</span> <strong class="text-emerald-400">Max 3 volte</strong></li>
-                                    <li class="flex justify-between items-center border-b border-slate-800 pb-1"><span>Formaggi (80-120g)</span> <strong class="text-emerald-400">Max 2 volte</strong></li>
-                                    <li class="flex justify-between items-center border-b border-slate-800 pb-1"><span>Legumi (150g freschi)</span> <strong class="text-emerald-400">Max 2 volte</strong></li>
-                                    <li class="flex justify-between items-center border-b border-slate-800 pb-1"><span>Uova (2 intere)</span> <strong class="text-emerald-400">Max 2 volte</strong></li>
-                                    <li class="flex justify-between items-center"><span>Salumi magri (120g)</span> <strong class="text-emerald-400">Max 2 volte</strong></li>
-                                </ul>
-                            </div>
+                    <!-- Carboidrati Principali -->
+                    <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700 lg:col-span-2 hover:border-emerald-500/30 transition-colors">
+                        <h3 class="text-emerald-400 font-bold mb-3 uppercase tracking-wider text-sm"><i class="fa-solid fa-wheat-awn mr-2"></i> Fonti di Carboidrati (Pranzo e Cena)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-slate-300 text-sm">
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Pasta/Riso/Cereali:</span> <strong class="text-white">80g</strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Pane comune:</span> <strong class="text-white">100g</strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Patate:</span> <strong class="text-white">250g</strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Gnocchi:</span> <strong class="text-white text-xs text-right">250g<br><span class="text-amber-500">(Max 1/sett)</span></strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Pasta all'uovo:</span> <strong class="text-white text-xs text-right">120g<br><span class="text-amber-500">(Max 1/sett)</span></strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center text-amber-400 border-amber-500/30"><span>Bonus Pizza:</span> <strong class="text-xs text-right">Margherita/Verdure<br>(1/sett a Cena)</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Carboidrati Principali -->
+                    <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700 lg:col-span-2 hover:border-emerald-500/30 transition-colors">
+                        <h3 class="text-emerald-400 font-bold mb-3 uppercase tracking-wider text-sm"><i class="fa-solid fa-wheat-awn mr-2"></i> Fonti di Carboidrati (Pranzo e Cena)</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-slate-300 text-sm">
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Pasta/Riso/Cereali:</span> <strong class="text-white">80g</strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Pane comune:</span> <strong class="text-white">100g</strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Patate:</span> <strong class="text-white">250g</strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Gnocchi:</span> <strong class="text-white text-xs text-right">250g<br><span class="text-amber-500">(Max 1/sett)</span></strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center"><span>Pasta all'uovo:</span> <strong class="text-white text-xs text-right">120g<br><span class="text-amber-500">(Max 1/sett)</span></strong></div>
+                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/50 flex justify-between items-center text-amber-400 border-amber-500/30"><span>Bonus Pizza:</span> <strong class="text-xs text-right">Margherita<br>(1/sett a Cena)</strong></div>
+                        </div>
+                    </div>
+
+                    <!-- Fonti Proteiche e Limiti -->
+                    <div class="bg-slate-800/50 rounded-xl p-5 border border-slate-700 lg:col-span-2 hover:border-emerald-500/30 transition-colors">
+                        <h3 class="text-emerald-400 font-bold mb-3 uppercase tracking-wider text-sm"><i class="fa-solid fa-drumstick-bite mr-2"></i> Secondi Piatti & Limiti Settimanali</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <ul class="space-y-3 text-slate-300 text-sm">
+                                <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span><i class="fa-solid fa-fish text-blue-400 w-6 text-center"></i> Pesce (Fresco/Surgelato)</span> <div class="text-right"><strong class="text-white">180-200g</strong><br><span class="text-xs text-emerald-400">Max 3 a settimana</span></div></li>
+                                <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span><i class="fa-solid fa-drumstick-bite text-orange-400 w-6 text-center"></i> Carne Bianca</span> <div class="text-right"><strong class="text-white">150g</strong><br><span class="text-xs text-emerald-400">Max 3 a settimana</span></div></li>
+                                <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span><i class="fa-solid fa-steak text-red-500 w-6 text-center"></i> Carne Rossa (sgrassata)</span> <div class="text-right"><strong class="text-white">150g</strong><br><span class="text-xs text-amber-500">Max 1 a settimana</span></div></li>
+                                <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span><i class="fa-solid fa-egg text-yellow-400 w-6 text-center"></i> Uova</span> <div class="text-right"><strong class="text-white">N° 2</strong><br><span class="text-xs text-amber-500">Max 2 a settimana</span></div></li>
+                            </ul>
+                            <ul class="space-y-3 text-slate-300 text-sm">
+                                <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span><i class="fa-solid fa-cheese text-amber-400 w-6 text-center"></i> Formaggi Magri</span> <div class="text-right"><strong class="text-white">120g</strong><br><span class="text-xs text-amber-500">Max 2 totali (tutti)</span></div></li>
+                                <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span><i class="fa-solid fa-cheese text-amber-600 w-6 text-center"></i> Formaggi Semi / Grassi</span> <div class="text-right"><strong class="text-white">100g / 80g</strong></div></li>
+                                <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span><i class="fa-solid fa-bacon text-rose-400 w-6 text-center"></i> Salumi Magri</span> <div class="text-right"><strong class="text-white">120g</strong><br><span class="text-xs text-amber-500">Max 2 a settimana</span></div></li>
+                                <li class="flex justify-between items-center border-b border-slate-700/50 pb-2"><span><i class="fa-solid fa-seedling text-emerald-500 w-6 text-center"></i> Legumi (Freschi / Secchi)</span> <div class="text-right"><strong class="text-white">150g / 50g</strong><br><span class="text-xs text-amber-500">Max 2 a settimana</span></div></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -478,9 +502,8 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // MANTIENI LA TUA CONFIGURAZIONE ESATTA
         const MY_PRIVATE_FIREBASE_CONFIG = {
             apiKey: "AIzaSyAzFfHPhgo_cbrRTLGl7Ey99GPbC49EoUM",
             authDomain: "dieta-smart-chef.firebaseapp.com",
@@ -499,10 +522,22 @@
         const LOCAL_AI_DB = {
             colazione: [
                 {
+                    titolo: "Toast Salato al Tacchino",
+                    sostituisce: "Sostituisce: Latte + Cereali",
+                    ingredienti: "50g di Pane tostato + 50g Fesa di Tacchino + 30g Formaggio spalmabile light (es. Philadelphia Active).",
+                    chefTip: "Usa erba cipollina e pepe nero sul formaggio per dare spinta senza aggiungere sale. Macros perfettamente bilanciati."
+                },
+                {
                     titolo: "Pancake Proteico (Salato o Dolce)",
                     sostituisce: "Sostituisce: Yogurt Greco + Fette biscottate",
                     ingredienti: "150g di Albumi (solo il bianco) + 40g di Farina d'Avena.",
                     chefTip: "Monta gli albumi, amalgama la farina. Cuoci in padellino. Aggiungi sale/pepe per la versione salata, cannella per la dolce. Zero grassi!"
+                },
+                {
+                    titolo: "Crostone Ricotta & Erbette",
+                    sostituisce: "Sostituisce: Ricotta (120g) + Pane (50g)",
+                    ingredienti: "50g Pane tostato + 120g Ricotta vaccina lavorata con erbette fresche aromatiche.",
+                    chefTip: "La ricotta non ti scala i bonus formaggi dei pasti principali. Un'ottima colazione salata e morbida al palato."
                 }
             ],
             pranzo: [
@@ -619,76 +654,94 @@
             }
         }
 
-        // GESTIONE DEL LOGIN/REGISTRAZIONE
-        window.switchLoginMode = function(mode) {
-            document.getElementById('login-admin-form').classList.add('hidden');
-            document.getElementById('login-visitor-form').classList.add('hidden');
-            document.getElementById('register-visitor-form').classList.add('hidden');
+        window.toggleLoginMode = function() {
+            const admin = document.getElementById('login-admin-form');
+            const visitor = document.getElementById('login-visitor-container');
+            admin.classList.toggle('hidden');
+            visitor.classList.toggle('hidden');
+        };
 
-            if(mode === 'admin') document.getElementById('login-admin-form').classList.remove('hidden');
-            if(mode === 'visitor-login') document.getElementById('login-visitor-form').classList.remove('hidden');
-            if(mode === 'visitor-register') document.getElementById('register-visitor-form').classList.remove('hidden');
+        window.toggleVisitorAuthMode = function(mode) {
+            const loginForm = document.getElementById('vis-login-form');
+            const regForm = document.getElementById('vis-register-form');
+            const tabLogin = document.getElementById('tab-vis-login');
+            const tabReg = document.getElementById('tab-vis-reg');
+
+            const activeClass = 'flex-1 py-2 text-sm font-bold rounded-lg bg-blue-600 text-white shadow transition-all';
+            const inactiveClass = 'flex-1 py-2 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50';
+            const activeRegClass = 'flex-1 py-2 text-sm font-bold rounded-lg bg-purple-600 text-white shadow transition-all';
+
+            if(mode === 'login') {
+                loginForm.classList.remove('hidden');
+                regForm.classList.add('hidden');
+                tabLogin.className = activeClass;
+                tabReg.className = inactiveClass;
+            } else {
+                loginForm.classList.add('hidden');
+                regForm.classList.remove('hidden');
+                tabLogin.className = inactiveClass;
+                tabReg.className = activeRegClass;
+            }
+        };
+
+        window.eseguiLoginAdmin = function() {
+            const pin = document.getElementById('pin-input').value;
+            if(pin !== '713') { showToast("PIN Amministratore Errato!", "error"); return; }
+            showToast("Bentornato Chef!", "success");
+            finalizeLogin('admin', 'Chef Fabrizio');
         };
 
         window.registraVisitatore = async function() {
-            const name = document.getElementById('visitor-reg-name').value.trim();
-            const pin = document.getElementById('visitor-reg-pin').value.trim();
+            const name = document.getElementById('reg-visitor-name').value.trim();
+            const pin = document.getElementById('reg-visitor-pin').value.trim();
+            if(!name || !pin) { showToast("Inserisci Nome e PIN", "error"); return; }
             
-            if(!name || !pin) { showToast("Scegli un Nome e un PIN!", "error"); return; }
-            if(!appConfig.db) { showToast("Cloud non connesso", "error"); return; }
-
-            const visitorId = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-            try {
-                // Salviamo le credenziali nel DB
-                await setDoc(doc(appConfig.db, "users", appConfig.userId, "visitatori", visitorId), { nome: name, pin: pin });
-                showToast("Registrazione completata! Ora puoi fare il Login.", "success");
-                switchLoginMode('visitor-login');
-                document.getElementById('visitor-login-name').value = name;
-            } catch (e) {
-                console.error(e);
-                showToast("Errore di registrazione", "error");
+            if(!appConfig.db) { showToast("Cloud disconnesso, riprova", "error"); return; }
+            
+            const docRef = doc(appConfig.db, "users", appConfig.userId, "visitors", name.toLowerCase());
+            const docSnap = await getDoc(docRef);
+            
+            if(docSnap.exists()) {
+                showToast("Nome già in uso! Usa la scheda Login.", "error"); return;
             }
+            
+            await setDoc(docRef, { nome: name, pin: pin });
+            showToast("Registrazione completata! Ora accedi.", "success");
+            toggleVisitorAuthMode('login');
+            document.getElementById('log-visitor-name').value = name;
+            document.getElementById('log-visitor-pin').value = '';
         };
 
-        window.eseguiLogin = async function(type) {
-            let userRole = '';
-            let userName = '';
+        window.loginVisitatore = async function() {
+            const name = document.getElementById('log-visitor-name').value.trim();
+            const pin = document.getElementById('log-visitor-pin').value.trim();
+            if(!name || !pin) { showToast("Inserisci Nome e PIN", "error"); return; }
 
-            if(type === 'admin') {
-                const pin = document.getElementById('pin-input').value;
-                if(pin !== '713') { showToast("PIN Chef Errato!", "error"); return; }
-                userRole = 'admin'; userName = 'Chef Fabrizio';
-                showToast("Bentornato Chef!", "success");
-                finalizzaLogin(userRole, userName);
-            } else {
-                const name = document.getElementById('visitor-login-name').value.trim();
-                const pin = document.getElementById('visitor-login-pin').value.trim();
-                if(!name || !pin) { showToast("Inserisci Nome e PIN.", "error"); return; }
-                
-                if(!appConfig.db) { showToast("Cloud offline, riprova.", "error"); return; }
-                
-                const visitorId = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-                try {
-                    const docSnap = await getDoc(doc(appConfig.db, "users", appConfig.userId, "visitatori", visitorId));
-                    if(docSnap.exists() && docSnap.data().pin === pin) {
-                        userRole = 'visitor'; userName = `Visitatore: ${docSnap.data().nome}`;
-                        showToast(`Benvenuto, ${docSnap.data().nome}!`, "success");
-                        finalizzaLogin(userRole, userName);
-                    } else {
-                        showToast("Credenziali errate o utente inesistente.", "error");
-                    }
-                } catch(e) { console.error(e); showToast("Errore di accesso.", "error"); }
+            if(!appConfig.db) { showToast("Cloud disconnesso, riprova", "error"); return; }
+
+            const docRef = doc(appConfig.db, "users", appConfig.userId, "visitors", name.toLowerCase());
+            const docSnap = await getDoc(docRef);
+            
+            if(!docSnap.exists()) {
+                showToast("Visitatore non trovato. Registrati prima!", "error"); return;
             }
+            
+            if(docSnap.data().pin !== pin) {
+                showToast("PIN errato!", "error"); return;
+            }
+            
+            showToast(`Benvenuto, ${docSnap.data().nome}!`, "success");
+            finalizeLogin('visitor', `Visitatore: ${docSnap.data().nome}`);
         };
 
-        function finalizzaLogin(userRole, userName) {
-            appConfig.role = userRole;
-            document.getElementById('user-badge').innerHTML = userRole === 'admin' ? '<i class="fa-solid fa-shield-halved mr-1"></i> Admin' : `<i class="fa-solid fa-eye mr-1"></i> ${userName}`;
+        function finalizeLogin(role, userName) {
+            appConfig.role = role;
+            document.getElementById('user-badge').innerHTML = role === 'admin' ? '<i class="fa-solid fa-shield-halved mr-1"></i> Admin' : `<i class="fa-solid fa-eye mr-1"></i> ${userName}`;
             
             const adminOnlyElements = document.querySelectorAll('.admin-only');
-            adminOnlyElements.forEach(el => el.style.display = userRole === 'admin' ? 'block' : 'none');
+            adminOnlyElements.forEach(el => el.style.display = role === 'admin' ? 'block' : 'none');
             
-            if(userRole === 'visitor') {
+            if(role === 'visitor') {
                 document.getElementById('colonna-form').classList.add('hidden');
                 const colDash = document.getElementById('colonna-dashboard');
                 colDash.classList.remove('lg:col-span-1'); colDash.classList.add('lg:col-span-3');
@@ -726,8 +779,8 @@
             document.getElementById('section-glicemia').classList.toggle('hidden', tab !== 'glicemia');
             document.getElementById('section-piano').classList.toggle('hidden', tab !== 'piano');
             
-            const activeClass = 'flex-1 py-3 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all';
-            const inactiveClass = 'flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50';
+            const activeClass = 'flex-1 py-3 px-2 text-sm font-bold rounded-lg bg-emerald-600 text-white shadow transition-all whitespace-nowrap';
+            const inactiveClass = 'flex-1 py-3 px-2 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all hover:bg-slate-700/50 whitespace-nowrap';
             
             document.getElementById('tab-dieta').className = tab === 'dieta' ? activeClass : inactiveClass;
             document.getElementById('tab-glicemia').className = tab === 'glicemia' ? activeClass : inactiveClass;
@@ -976,24 +1029,20 @@
 
             const labels = recsAsc.map(r => {
                 const d = new Date(r.timestamp);
-                let ora = d.getHours().toString().padStart(2, '0') + ":" + d.getMinutes().toString().padStart(2, '0');
-                return `${d.getDate()}/${d.getMonth()+1} ${ora}`;
+                let mom = r.momento.includes('Digiuno') ? 'Dig.' : (r.momento.includes('Pranzo') ? 'Pran.' : 'Cen.');
+                return `${d.getDate()}/${d.getMonth()+1} ${mom}`;
             });
+            const data = recsAsc.map(r => r.valore);
             
-            // Separazione dei dati per le due linee
-            const dataDigiuno = recsAsc.map(r => r.momento.includes('Digiuno') ? r.valore : null);
-            const dataPost = recsAsc.map(r => !r.momento.includes('Digiuno') ? r.valore : null);
-            
-            // Colori dinamici in base ai TARGET MEDICI ESATTI (Digiuno <= 150, Post <= 180)
-            const colorsDigiuno = dataDigiuno.map(val => val === null ? null : (val <= 150 ? '#10b981' : '#ef4444'));
-            const colorsPost = dataPost.map(val => val === null ? null : (val <= 180 ? '#3b82f6' : '#ef4444'));
+            const pointColors = recsAsc.map(r => {
+                let targetMax = r.momento.includes("Digiuno") ? 150 : 180;
+                return r.valore <= targetMax ? '#10b981' : '#ef4444'; 
+            });
 
             if(chartInstance) {
                 chartInstance.data.labels = labels;
-                chartInstance.data.datasets[0].data = dataDigiuno;
-                chartInstance.data.datasets[0].pointBackgroundColor = colorsDigiuno;
-                chartInstance.data.datasets[1].data = dataPost;
-                chartInstance.data.datasets[1].pointBackgroundColor = colorsPost;
+                chartInstance.data.datasets[0].data = data;
+                chartInstance.data.datasets[0].pointBackgroundColor = pointColors;
                 chartInstance.update();
             } else {
                 Chart.defaults.color = '#94a3b8'; Chart.defaults.font.family = "'Inter', sans-serif";
@@ -1001,35 +1050,15 @@
                     type: 'line',
                     data: {
                         labels: labels,
-                        datasets: [
-                            {
-                                label: 'A Digiuno (<150)', 
-                                data: dataDigiuno, 
-                                borderColor: '#10b981', 
-                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                borderWidth: 3, 
-                                pointBackgroundColor: colorsDigiuno, 
-                                pointBorderColor: '#1e293b', pointBorderWidth: 2,
-                                pointRadius: 6, pointHoverRadius: 8, spanGaps: true, tension: 0.4
-                            },
-                            {
-                                label: 'Post-Pasto (<180)', 
-                                data: dataPost, 
-                                borderColor: '#3b82f6', 
-                                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                                borderWidth: 3, 
-                                pointBackgroundColor: colorsPost, 
-                                pointBorderColor: '#1e293b', pointBorderWidth: 2,
-                                pointRadius: 6, pointHoverRadius: 8, spanGaps: true, tension: 0.4
-                            }
-                        ]
+                        datasets: [{
+                            label: 'Glicemia (mg/dL)', data: data, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 2, pointBackgroundColor: pointColors, pointBorderColor: '#1e293b', pointBorderWidth: 2,
+                            pointRadius: 6, pointHoverRadius: 8, fill: true, tension: 0.4
+                        }]
                     },
                     options: {
                         responsive: true, maintainAspectRatio: false,
-                        plugins: { 
-                            legend: { display: true, position: 'top', labels: { color: '#cbd5e1', usePointStyle: true, boxWidth: 8 } }, 
-                            tooltip: { backgroundColor: '#1e293b', titleColor: '#f8fafc', bodyColor: '#cbd5e1', borderColor: '#334155', borderWidth: 1, padding: 12 } 
-                        },
+                        plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1e293b', titleColor: '#f8fafc', bodyColor: '#cbd5e1', borderColor: '#334155', borderWidth: 1, padding: 12, displayColors: false, callbacks: { label: function(c) { return c.parsed.y + ' mg/dL'; } } } },
                         scales: { y: { grid: { color: '#334155', borderDash: [5, 5] }, min: 60, suggestedMax: 200 }, x: { grid: { display: false } } }
                     }
                 });
@@ -1050,7 +1079,6 @@
                 const dateObj = new Date(r.timestamp);
                 const timeStr = `${dateObj.getDate()}/${dateObj.getMonth()+1} - ${dateObj.getHours()}:${dateObj.getMinutes().toString().padStart(2, '0')}`;
                 
-                // Impostazione corretta del target medico
                 let targetMax = r.momento.includes("Digiuno") ? 150 : 180;
                 let colorClass = r.valore <= targetMax ? "text-emerald-400" : "text-red-400";
                 
@@ -1085,6 +1113,7 @@
         document.getElementById('cena-pro').innerHTML = document.getElementById('pranzo-pro').innerHTML;
         initCloud();
 
+        // Registrazione del Service Worker per il funzionamento Offline e l'installazione PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./sw.js').then(reg => {
