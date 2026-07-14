@@ -1286,6 +1286,54 @@
             }
         };
 
+        window.scaricaPromemoria = function(id) {
+            const v = state.visite[id];
+            if(!v) return;
+
+            const dataVisita = new Date(v.dataVisita);
+            const fineVisita = new Date(v.dataVisita + 3600000); // Calcola 1 ora di durata
+
+            // Formattazione data universale per i Calendari (iPhone/Google)
+            const formatData = (d) => d.toISOString().replace(/-|:|\.\d+/g, '');
+
+            // Testo del file di Calendario con gli allarmi a -10 Giorni e -1 Giorno
+            const icsTesto = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//SmartFDiet//IT
+BEGIN:VEVENT
+UID:${id}@smartfdiet
+DTSTAMP:${formatData(new Date())}
+DTSTART:${formatData(dataVisita)}
+DTEND:${formatData(fineVisita)}
+SUMMARY:⚕️ Visita: ${v.tipo}
+DESCRIPTION:Luogo: ${v.luogo || 'Non specificato'}\\nMedico: ${v.dottore || 'Non specificato'}\\nNote: ${v.note || 'Nessuna'}
+LOCATION:${v.luogo || ''}
+BEGIN:VALARM
+TRIGGER:-P10D
+ACTION:DISPLAY
+DESCRIPTION:Promemoria: Visita tra 10 giorni!
+END:VALARM
+BEGIN:VALARM
+TRIGGER:-P1D
+ACTION:DISPLAY
+DESCRIPTION:Promemoria: Visita domani!
+END:VALARM
+END:VEVENT
+END:VCALENDAR`;
+
+            const blob = new Blob([icsTesto], { type: 'text/calendar;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `Promemoria_${v.tipo.replace(/\s+/g, '_')}.ics`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            
+            showToast("Evento scaricato! Aprilo per salvarlo nel Calendario.", "success");
+        };
+
         function renderVisite() {
             const list = document.getElementById('visite-lista');
             list.innerHTML = '';
@@ -1354,6 +1402,11 @@
                     </span>`;
                 }
 
+                // Nuovo Bottone Promemoria Calendario
+                let promemoriaBadge = `<button onclick="scaricaPromemoria('${id}')" title="Salva nel Calendario" class="bg-amber-500/20 text-amber-500 border border-amber-500/30 px-2 py-0.5 rounded text-[10px] font-bold flex items-center hover:opacity-70 hover:scale-105 transition-all cursor-pointer shadow-sm">
+                    <i class="fa-regular fa-bell mr-1"></i> Calendario
+                </button>`;
+
                 // Colori Icone intelligenti in base al testo inserito
                 let icon = 'fa-user-doctor';
                 let iconColor = 'text-blue-400';
@@ -1386,6 +1439,7 @@
                         <div class="flex items-center gap-2 flex-wrap mt-1">
                             ${badge}
                             ${ticketBadge}
+                            ${promemoriaBadge}
                             ${v.note ? `<span class="text-[10px] text-slate-400 italic bg-slate-900 px-2 py-1 rounded-md truncate max-w-[150px]"><i class="fa-solid fa-quote-left mr-1 opacity-50"></i>${v.note}</span>` : ''}
                         </div>
                     </div>
