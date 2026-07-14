@@ -1269,6 +1269,23 @@
             if(appConfig.db) await deleteDoc(doc(appConfig.db, "users", appConfig.userId, "visite", id));
         };
 
+        window.ciclaStatoTicket = async function(id) {
+            if(appConfig.role !== 'admin') return;
+            
+            const stati = ['Da Pagare', 'Pagato', 'Esente'];
+            let currentIndex = stati.indexOf(state.visite[id].ticket);
+            let nextIndex = (currentIndex + 1) % stati.length;
+            
+            state.visite[id].ticket = stati[nextIndex];
+            
+            renderVisite(); // Aggiorna l'interfaccia istantaneamente
+            showToast(`Ticket aggiornato a: ${stati[nextIndex]}`, "success");
+
+            if(appConfig.db) {
+                await setDoc(doc(appConfig.db, "users", appConfig.userId, "visite", id), state.visite[id]);
+            }
+        };
+
         function renderVisite() {
             const list = document.getElementById('visite-lista');
             list.innerHTML = '';
@@ -1313,13 +1330,28 @@
                 }
 
                 // Generazione Badge del Ticket
-                let ticketBadge = '';
-                if(v.ticket === 'Pagato') {
-                    ticketBadge = `<span class="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded text-[10px] font-bold border border-emerald-500/30"><i class="fa-solid fa-check mr-1"></i>Pagato</span>`;
-                } else if(v.ticket === 'Esente') {
-                    ticketBadge = `<span class="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded text-[10px] font-bold border border-blue-500/30"><i class="fa-solid fa-certificate mr-1"></i>Esente</span>`;
+                let badgeStyle = "";
+                let iconBadge = "";
+                if (v.ticket === 'Pagato') {
+                    badgeStyle = "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
+                    iconBadge = "fa-check";
+                } else if (v.ticket === 'Esente') {
+                    badgeStyle = "bg-blue-500/20 text-blue-400 border-blue-500/30";
+                    iconBadge = "fa-certificate";
                 } else {
-                    ticketBadge = `<span class="bg-rose-500/20 text-rose-400 px-2 py-0.5 rounded text-[10px] font-bold border border-rose-500/30"><i class="fa-solid fa-wallet mr-1"></i>Da Pagare</span>`;
+                    badgeStyle = "bg-rose-500/20 text-rose-400 border-rose-500/30";
+                    iconBadge = "fa-wallet";
+                }
+
+                let ticketBadge = '';
+                if (appConfig.role === 'admin') {
+                    ticketBadge = `<button onclick="ciclaStatoTicket('${id}')" title="Clicca per cambiare stato" class="${badgeStyle} px-2 py-0.5 rounded text-[10px] font-bold border flex items-center hover:opacity-70 hover:scale-105 transition-all cursor-pointer shadow-sm">
+                        <i class="fa-solid ${iconBadge} mr-1"></i>${v.ticket} <i class="fa-solid fa-arrows-rotate ml-1.5 opacity-50 text-[8px]"></i>
+                    </button>`;
+                } else {
+                    ticketBadge = `<span class="${badgeStyle} px-2 py-0.5 rounded text-[10px] font-bold border flex items-center">
+                        <i class="fa-solid ${iconBadge} mr-1"></i>${v.ticket}
+                    </span>`;
                 }
 
                 // Colori Icone intelligenti in base al testo inserito
